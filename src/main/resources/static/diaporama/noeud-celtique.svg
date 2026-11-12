@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="fond" cx=".5" cy=".5" r=".8">
+      <stop offset="0" stop-color="#1c4a33"/><stop offset="1" stop-color="#0a1f15"/>
+    </radialGradient>
+    <g id="noeud" fill="none" stroke-linecap="round">
+      <g id="anneaux">
+        <ellipse rx="250" ry="105" transform="rotate(0)"/>
+        <ellipse rx="250" ry="105" transform="rotate(60)"/>
+        <ellipse rx="250" ry="105" transform="rotate(120)"/>
+        <circle r="190"/>
+      </g>
+    </g>
+  </defs>
+  <rect width="1600" height="900" fill="url(#fond)"/>
+  <rect x="40" y="40" width="1520" height="820" fill="none" stroke="#d4af37" stroke-width="6"/>
+  <rect x="64" y="64" width="1472" height="772" fill="none" stroke="#d4af37" stroke-width="2"/>
+  <g transform="translate(800 450)">
+    <g stroke="#0a1f15" stroke-width="38" fill="none"><use href="#anneaux"/></g>
+    <g stroke="#d4af37" stroke-width="22" fill="none"><use href="#anneaux"/></g>
+    <g stroke="#f3d76b" stroke-width="6" fill="none"><use href="#anneaux"/></g>
+  </g>
+  <g id="coin" fill="none">
+    <g transform="translate(170 150)"><circle r="60" stroke="#0a1f15" stroke-width="26"/><circle r="60" stroke="#d4af37" stroke-width="14"/><circle r="28" stroke="#d4af37" stroke-width="10"/></g>
+    <g transform="translate(1430 150)"><circle r="60" stroke="#0a1f15" stroke-width="26"/><circle r="60" stroke="#d4af37" stroke-width="14"/><circle r="28" stroke="#d4af37" stroke-width="10"/></g>
+    <g transform="translate(170 750)"><circle r="60" stroke="#0a1f15" stroke-width="26"/><circle r="60" stroke="#d4af37" stroke-width="14"/><circle r="28" stroke="#d4af37" stroke-width="10"/></g>
+    <g transform="translate(1430 750)"><circle r="60" stroke="#0a1f15" stroke-width="26"/><circle r="60" stroke="#d4af37" stroke-width="14"/><circle r="28" stroke="#d4af37" stroke-width="10"/></g>
+  </g>
+  <g stroke="#d4af37" stroke-width="10" stroke-linecap="round" opacity=".8">
+    <path d="M260 150 H540"/><path d="M1060 150 H1340"/><path d="M260 750 H540"/><path d="M1060 750 H1340"/>
+    <path d="M170 240 V360"/><path d="M170 540 V660"/><path d="M1430 240 V360"/><path d="M1430 540 V660"/>
+  </g>
+</svg>

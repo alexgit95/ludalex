@@ -117,6 +117,16 @@ class SecuriteProdTest {
     }
 
     @Test
+    void exigeLeJwtPourLEcranAffichage() throws Exception {
+        mvc.perform(get("/affichage")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/affichage/etat")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/affichage").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+        mvc.perform(get("/affichage/etat").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void protegeParCsrfLesRequetesModifiantes() throws Exception {
         mvc.perform(post("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().isForbidden());

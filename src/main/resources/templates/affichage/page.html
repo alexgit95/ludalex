@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111111">
+    <title>LUDALEX - Affichage</title>
+    <link rel="icon" href="/icons/icon-192.png" type="image/png">
+    <link rel="stylesheet" href="/css/ludalex.css">
+    <link rel="stylesheet" href="/css/affichage.css">
+    <script src="/js/htmx.min.js" defer></script>
+    <script src="/js/affichage.js" defer></script>
+</head>
+<body class="kiosque">
+<div th:replace="~{affichage/etat :: etat}"></div>
+</body>
+</html>

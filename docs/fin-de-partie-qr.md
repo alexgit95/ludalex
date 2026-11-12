@@ -30,12 +30,23 @@ Permet de valider le résultat d'une partie depuis l'appareil de n'importe qui, 
 
 Une mise en pause consomme aussi le token ; un nouveau token est généré à la reprise de la partie.
 
+### Côté écran Affichage
+
+- Le QR code est généré en SVG par le serveur (ZXing) ; le token en clair n'est jamais stocké en base, il n'est gardé qu'en mémoire du processus pour la partie affichée.
+- **Chaque ouverture ou rechargement de `/affichage` génère un nouveau token** et invalide l'ancien non utilisé : un QR scanné avant le rechargement ne fonctionne plus, il faut rescanner.
+- L'interrogation toutes les 3 s (`/affichage/etat`) ne génère pas de token ; elle en crée un nouveau uniquement s'il est absent, consommé ou s'il expire dans moins de 24 h.
+- Pendant la pause, aucun QR n'est affiché ; il revient (avec un nouveau token) à la reprise.
+- L'adresse encodée utilise le schéma et le domaine publics (`X-Forwarded-*`) ou `ludalex.affichage.url-publique` si renseignée (utile en `dev` pour qu'un téléphone joigne le poste).
+
 ## Réglages applicatifs
 
 | Propriété | Défaut | Rôle |
 |---|---|---|
 | `ludalex.fin.validite` | `7d` | Durée de validité d'un token |
 | `ludalex.fin.limite-par-minute` | `30` | Requêtes par minute et par adresse sur `/fin/**` (429 au-delà) |
+| `ludalex.affichage.url-publique` | vide (déduite de la requête) | Origine imposée pour l'adresse du QR code |
+| `ludalex.affichage.duree-victoire` | `15s` | Durée de l'animation de victoire |
+| `ludalex.affichage.renouvellement-token` | `24h` | Un token expirant plus tôt est renouvelé |
 | `ludalex.fin.en-tete-ip` | vide (`CF-Connecting-IP` en `prod`) | En-tête qui porte l'adresse du client ; Cloudflare l'écrase, un client ne peut donc pas le falsifier derrière lui |
 
 Conséquence : l'application ne doit pas être joignable autrement que par Cloudflare en `prod`, sinon l'en-tête d'adresse pourrait être falsifié pour contourner la limitation.

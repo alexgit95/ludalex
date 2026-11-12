@@ -1,0 +1,60 @@
+/* Écran Affichage : lisible de loin, sans chaîne de build */
+body.kiosque { margin: 0; background: #111; color: #fff; overflow: hidden; display: block; }
+
+.zone { min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center;
+        background-color: #1d1d1d; transition: background-color .6s ease; }
+.zone section { width: 100%; }
+
+/* Partie en cours */
+.partie-en-cours { display: grid; grid-template-columns: 1fr minmax(14rem, 22vw); grid-template-rows: 1fr auto;
+                   gap: 2vh 3vw; padding: 3vh 3vw; min-height: 100vh; box-sizing: border-box; }
+.partie-en-cours .jeu { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2vh; }
+.image-jeu { max-width: 100%; max-height: 62vh; border-radius: 1rem; box-shadow: 0 1rem 3rem rgba(0,0,0,.5); }
+.titre-jeu { margin: 0; font-size: clamp(1.5rem, 4vw, 3.5rem); text-shadow: 0 2px 8px rgba(0,0,0,.6); text-align: center; }
+.titre-seul { font-size: clamp(3rem, 9vw, 8rem); }
+.partie-en-cours .qr { grid-row: 1; align-self: center; background: #fff; color: #222; padding: 1rem; border-radius: 1rem; text-align: center; }
+.qr-code svg { width: 100%; height: auto; display: block; }
+.qr p { margin: .5rem 0 0; font-weight: 600; }
+.joueurs { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap;
+           justify-content: center; gap: 2vh 3vw; }
+.joueurs li { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.avatar { width: clamp(4rem, 9vw, 8rem); height: clamp(4rem, 9vw, 8rem); object-fit: cover; border-radius: 50%;
+          border: .3rem solid rgba(255,255,255,.85); background: #fff; }
+.avatar-geant { width: clamp(8rem, 22vw, 18rem); height: clamp(8rem, 22vw, 18rem); }
+.nom { font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+
+/* Pause */
+.partie-en-pause { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 3vh; padding: 3vh; }
+.bandeau { font-size: clamp(1.5rem, 3vw, 2.5rem); letter-spacing: .15em; text-transform: uppercase; margin: 0; opacity: .85; }
+.suivant { display: flex; flex-direction: column; align-items: center; gap: 2vh; }
+.suivant h1 { margin: 0; font-size: clamp(2rem, 6vw, 5rem); }
+
+/* Victoire */
+.victoire { text-align: center; padding: 3vh; }
+.victoire h1 { font-size: clamp(2.5rem, 8vw, 7rem); margin: 0 0 3vh; text-shadow: 0 0 2rem rgba(255,215,0,.8); }
+.vainqueurs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4vh 5vw; }
+.vainqueur { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5vh; isolation: isolate; }
+.image-victoire { max-width: clamp(8rem, 24vw, 20rem); max-height: 28vh; }
+.vainqueur.anime { animation: apparition .8s ease-out both; }
+.vainqueur.anime .avatar { animation: pulsation .9s ease-in-out infinite alternate; border-color: gold; }
+.vainqueur.anime .image-victoire { animation: balancement 1.4s ease-in-out infinite alternate; }
+.vainqueur.anime::before { content: ''; position: absolute; width: 150%; aspect-ratio: 1; left: -25%; top: -20%; z-index: -1;
+    background: conic-gradient(from 0deg, transparent, rgba(255,215,0,.55), transparent 25%, rgba(255,215,0,.55) 50%, transparent 75%);
+    border-radius: 50%; animation: rayons 6s linear infinite; }
+
+@keyframes pulsation { from { transform: scale(1); } to { transform: scale(1.12); } }
+@keyframes balancement { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes rayons { to { transform: rotate(360deg); } }
+@keyframes apparition { from { opacity: 0; transform: translateY(3rem) scale(.9); } to { opacity: 1; transform: none; } }
+
+/* Veille : diaporama plein écran */
+.veille { min-height: 100vh; }
+.diaporama { position: fixed; inset: 0; background: #000; }
+.couche { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease; }
+.couche.visible { opacity: 1; }
+.veille-vide { text-align: center; font-size: clamp(3rem, 10vw, 9rem); letter-spacing: .3em; opacity: .5; }
+
+@media (max-width: 48rem) {
+    .partie-en-cours { grid-template-columns: 1fr; }
+    .partie-en-cours .qr { grid-row: auto; justify-self: center; max-width: 14rem; }
+}

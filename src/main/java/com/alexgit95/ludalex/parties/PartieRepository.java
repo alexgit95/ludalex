@@ -25,6 +25,11 @@ public interface PartieRepository extends JpaRepository<Partie, Long> {
 
     boolean existsByJeuId(Long jeuId);
 
+    /** Parties terminées en direct après l'instant donné, de la plus récente à la plus ancienne. */
+    @Query("select p from Partie p join fetch p.jeu where p.statut = com.alexgit95.ludalex.parties.StatutPartie.TERMINEE "
+            + "and p.termineeLe > :depuis order by p.termineeLe desc")
+    List<Partie> terminesDepuis(@Param("depuis") java.time.Instant depuis, Pageable pageable);
+
     /** Partie en cours ou en pause (au plus une). */
     @Query("select p from Partie p join fetch p.jeu where p.statut in "
             + "(com.alexgit95.ludalex.parties.StatutPartie.EN_COURS, com.alexgit95.ludalex.parties.StatutPartie.EN_PAUSE)")

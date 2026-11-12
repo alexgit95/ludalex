@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b4b8a"/><stop offset=".5" stop-color="#e0877a"/><stop offset="1" stop-color="#f6c177"/>
+    </linearGradient>
+    <radialGradient id="soleil" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#fff7d6"/><stop offset=".5" stop-color="#ffd27a"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/>
+    </radialGradient>
+    <g id="maison">
+      <rect x="0" y="60" width="180" height="120" fill="#c9a27a"/>
+      <path d="M-20 62 L90 -30 L200 62 Z" fill="#8c3b2f"/>
+      <g stroke="#5a3e2b" stroke-width="6"><path d="M0 60 V180"/><path d="M60 60 V180"/><path d="M120 60 V180"/><path d="M180 60 V180"/><path d="M0 120 H180"/></g>
+      <rect x="72" y="104" width="36" height="76" fill="#4a2f1f"/>
+      <rect x="14" y="80" width="30" height="30" fill="#ffd166"/><rect x="136" y="80" width="30" height="30" fill="#ffd166"/>
+      <rect x="130" y="-20" width="22" height="50" fill="#6b4a38"/>
+    </g>
+  </defs>
+  <rect width="1600" height="900" fill="url(#ciel)"/>
+  <circle cx="1150" cy="560" r="300" fill="url(#soleil)"/>
+  <path d="M0 560 Q300 440 640 540 T1300 500 T1600 540 V900 H0 Z" fill="#6d597a"/>
+  <path d="M0 640 Q400 540 800 630 T1600 610 V900 H0 Z" fill="#4a6b4f"/>
+  <g transform="translate(240 520) scale(1.15)"><use href="#maison"/></g>
+  <g transform="translate(700 560) scale(.9)"><use href="#maison"/></g>
+  <g transform="translate(1100 500) scale(1.3)"><use href="#maison"/></g>
+  <g fill="#e9e9e9" opacity=".35">
+    <ellipse cx="1295" cy="440" rx="22" ry="14"/><ellipse cx="1310" cy="400" rx="30" ry="18"/><ellipse cx="1335" cy="350" rx="40" ry="22"/>
+    <ellipse cx="435" cy="500" rx="20" ry="12"/><ellipse cx="450" cy="462" rx="26" ry="15"/>
+  </g>
+  <path d="M0 760 Q500 680 1000 750 T1600 730 V900 H0 Z" fill="#2f4f3a"/>
+  <path d="M760 900 Q700 800 640 740" stroke="#c9a27a" stroke-width="40" fill="none" opacity=".7"/>
+  <g fill="#1f3a2a">
+    <path d="M60 760 L110 640 L160 760 Z"/><path d="M130 780 L190 650 L250 780 Z"/><path d="M1380 770 L1430 650 L1480 770 Z"/>
+    <path d="M1450 790 L1510 660 L1570 790 Z"/>
+  </g>
+  <g fill="#5a3e2b"><rect x="104" y="760" width="12" height="40"/><rect x="184" y="778" width="12" height="40"/><rect x="1424" y="770" width="12" height="40"/><rect x="1504" y="788" width="12" height="40"/></g>
+</svg>

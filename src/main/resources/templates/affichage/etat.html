@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+<!-- Fragment remplacé toutes les 3 secondes tant que l'état change ; la signature évite les remplacements inutiles -->
+<div th:fragment="etat" id="zone-affichage" class="zone" th:classappend="'etat-' + ${etat.type.name().toLowerCase()}"
+     th:style="${etat.fond != null} ? 'background-color:' + ${etat.fond}"
+     hx-get="/affichage/etat" hx-trigger="every 3s" hx-swap="outerHTML" hx-include="#signature">
+    <input type="hidden" id="signature" name="signature" th:value="${etat.signature}">
+
+    <th:block th:switch="${etat.type.name()}">
+
+        <section th:case="'EN_COURS'" class="partie-en-cours">
+            <div class="jeu">
+                <img th:if="${etat.vue.jeu.image != null}" class="image-jeu"
+                     th:src="${etat.vue.jeu.image.url}" th:alt="${etat.vue.jeu.nom}"
+                     onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                <h1 th:class="${etat.vue.jeu.image != null} ? 'titre-jeu' : 'titre-jeu titre-seul'"
+                    th:text="${etat.vue.jeu.nom}">Jeu</h1>
+            </div>
+            <ul class="joueurs">
+                <li th:each="p : ${etat.vue.participations}">
+                    <img class="avatar" th:src="${p.joueur.avatar != null} ? ${p.joueur.avatar.url} : '/icons/defaut.svg'"
+                         th:alt="${p.joueur.nom}" onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                    <span class="nom" th:text="${p.joueur.nom}">Joueur</span>
+                </li>
+            </ul>
+            <div class="qr">
+                <div class="qr-code" th:utext="${etat.qrSvg}"></div>
+                <p>Scannez pour terminer la partie</p>
+            </div>
+        </section>
+
+        <section th:case="'EN_PAUSE'" class="partie-en-pause">
+            <p class="bandeau">Partie en pause</p>
+            <div th:if="${etat.vue.joueurSuivant != null}" class="suivant">
+                <img class="avatar avatar-geant"
+                     th:src="${etat.vue.joueurSuivant.avatar != null} ? ${etat.vue.joueurSuivant.avatar.url} : '/icons/defaut.svg'"
+                     th:alt="${etat.vue.joueurSuivant.nom}" onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                <h1>À <strong th:text="${etat.vue.joueurSuivant.nom}">Marie</strong> de jouer</h1>
+            </div>
+            <p class="titre-jeu" th:text="${etat.vue.jeu.nom}">Jeu</p>
+        </section>
+
+        <section th:case="'VICTOIRE'" class="victoire">
+            <th:block th:if="${etat.defaite}">
+                <h1>Défaite collective</h1>
+                <p class="titre-jeu" th:text="${etat.vue.jeu.nom}">Jeu</p>
+            </th:block>
+            <th:block th:unless="${etat.defaite}">
+                <h1 th:text="${etat.vainqueurs.size() > 1} ? 'Victoire des joueurs !' : 'Victoire !'">Victoire !</h1>
+                <ul class="vainqueurs">
+                    <li class="vainqueur anime" th:each="v : ${etat.vainqueurs}">
+                        <img class="avatar avatar-geant"
+                             th:src="${v.avatar != null} ? ${v.avatar.url} : '/icons/defaut.svg'" th:alt="${v.nom}"
+                             onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                        <img th:if="${v.imageVictoire != null}" class="image-victoire" th:src="${v.imageVictoire.url}"
+                             alt="" onerror="this.remove()">
+                        <span class="nom" th:text="${v.nom}">Joueur</span>
+                    </li>
+                </ul>
+            </th:block>
+        </section>
+
+        <section th:case="*" class="veille">
+            <div th:if="${!etat.images.empty}" id="diaporama" class="diaporama"
+                 th:attr="data-images=${#strings.listJoin(etat.images, '|')}">
+                <div class="couche"></div>
+                <div class="couche"></div>
+            </div>
+            <h1 th:if="${etat.images.empty}" class="veille-vide">LUDALEX</h1>
+        </section>
+
+    </th:block>
+</div>
+</body>
+</html>

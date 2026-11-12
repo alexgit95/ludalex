@@ -2,6 +2,20 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.8.0] - 2026-11-12
+
+### Added
+- Écran Affichage (`/affichage`, JWT Cloudflare exigé en `prod`) : partie en cours (image et couleur de fond du jeu, avatars, QR code), pause (joueur suivant en grand, sans QR), victoire animée (15 s, défaite coopérative incluse) et veille.
+- Mise à jour par interrogation HTMX toutes les 3 s de `/affichage/etat` : réponse 204 tant que l'état (signature) n'a pas changé, fragment sinon ; rechargement complet après trois échecs (session Cloudflare expirée) et demande de maintien d'écran allumé.
+- QR code de fin de partie généré côté serveur en SVG avec ZXing `core` (nouvelle dépendance Java pure, compatible arm64). Le token en clair n'est jamais stocké en base : gardé en mémoire, il est régénéré à chaque ouverture de la page (l'ancien est invalidé) et renouvelé lorsqu'il expire dans moins de 24 h.
+- Origine publique du QR déduite de la requête (`X-Forwarded-*`) ou imposée par `ludalex.affichage.url-publique` ; réglages `ludalex.affichage.duree-victoire` (15s) et `ludalex.affichage.renouvellement-token` (24h).
+- Diaporama de veille : fondu à deux couches avec une seule image préchargée, images de `static/diaporama/` énumérées au démarrage, quatre illustrations SVG embarquées, fond neutre LUDALEX si le dossier est vide.
+- Tests : QR (décodage réel, fidélité du SVG), origine publique, renouvellement du token, états de l'écran (horloge figée), parcours web sur base réelle (QR, pause, victoire, défaite, 204), images du diaporama, JWT exigé en `prod`.
+
+### Changed
+- `docs/fin-de-partie-qr.md` : comportement du QR côté écran Affichage et nouveaux réglages.
+- Aucun changement de schéma de base de données.
+
 ## [0.7.0] - 2026-11-12
 
 ### Added

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#06142e"/><stop offset=".7" stop-color="#2d4a6b"/><stop offset="1" stop-color="#5d7f8f"/>
+    </linearGradient>
+    <radialGradient id="halo" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#e8f0ff" stop-opacity=".9"/><stop offset="1" stop-color="#e8f0ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brume" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfe3ea" stop-opacity="0"/><stop offset="1" stop-color="#cfe3ea" stop-opacity=".45"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#ciel)"/>
+  <g fill="#fff" opacity=".85">
+    <circle cx="120" cy="80" r="2"/><circle cx="310" cy="150" r="1.6"/><circle cx="480" cy="60" r="2.2"/><circle cx="700" cy="120" r="1.6"/>
+    <circle cx="920" cy="60" r="2"/><circle cx="1380" cy="90" r="2.2"/><circle cx="1500" cy="200" r="1.6"/><circle cx="230" cy="250" r="1.4"/>
+    <circle cx="590" cy="240" r="1.4"/><circle cx="1280" cy="260" r="1.4"/>
+  </g>
+  <circle cx="1100" cy="240" r="260" fill="url(#halo)"/>
+  <circle cx="1100" cy="240" r="95" fill="#f2f6ff"/>
+  <circle cx="1070" cy="215" r="14" fill="#d5ddee"/><circle cx="1125" cy="262" r="20" fill="#d5ddee"/><circle cx="1130" cy="205" r="9" fill="#d5ddee"/>
+  <path d="M0 610 Q320 500 700 590 T1350 570 T1600 600 V900 H0 Z" fill="#1c3a2c"/>
+  <g>
+    <path d="M330 640 L350 420 L380 380 L420 400 L440 640 Z" fill="#2b2f36"/>
+    <path d="M330 640 L350 420 L368 396 L372 640 Z" fill="#3b414b"/>
+    <path d="M560 650 L575 470 L610 440 L650 460 L665 650 Z" fill="#2b2f36"/>
+    <path d="M560 650 L575 470 L592 452 L596 650 Z" fill="#3b414b"/>
+    <path d="M760 660 L770 400 L800 350 L850 372 L865 660 Z" fill="#2b2f36"/>
+    <path d="M760 660 L770 400 L790 366 L796 660 Z" fill="#3b414b"/>
+    <path d="M980 650 L990 480 L1020 455 L1060 470 L1075 650 Z" fill="#2b2f36"/>
+    <path d="M980 650 L990 480 L1008 462 L1012 650 Z" fill="#3b414b"/>
+    <path d="M1180 640 L1195 440 L1230 410 L1270 430 L1285 640 Z" fill="#2b2f36"/>
+    <path d="M1180 640 L1195 440 L1212 418 L1216 640 Z" fill="#3b414b"/>
+    <path d="M500 450 H710 V478 H500 Z" fill="#2b2f36"/>
+  </g>
+  <rect y="560" width="1600" height="200" fill="url(#brume)"/>
+  <g fill="#e8f0ff" opacity=".12"><ellipse cx="400" cy="700" rx="420" ry="40"/><ellipse cx="1100" cy="720" rx="520" ry="46"/><ellipse cx="800" cy="780" rx="600" ry="50"/></g>
+  <path d="M0 740 Q500 690 1000 735 T1600 720 V900 H0 Z" fill="#0f241b"/>
+</svg>

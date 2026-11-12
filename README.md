@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.7.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques et parties en direct. Les fonctionnalités restantes (écran Affichage, sauvegarde) arrivent avec les changes suivants.
+Version courante : **0.8.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct et écran Affichage. La sauvegarde arrive avec le change suivant.
 
 ## Parties en direct
 
@@ -21,7 +21,22 @@ L'écran **Parties > Partie en direct** (`/parties/direct`) suit une partie pend
 
 N'importe quel appareil peut terminer ou mettre en pause la partie via ce lien, **sans authentification Cloudflare**. Le token est la seule autorisation : aléatoire (256 bits), stocké haché, à usage unique, valable 7 jours, limité à sa partie, et il ne révèle rien d'autre que le jeu et les joueurs de cette partie. Un lien inconnu, expiré ou déjà utilisé donne toujours la même page neutre. Le nombre de requêtes par adresse est limité (30 par minute).
 
-Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir `docs/fin-de-partie-qr.md`. Le QR code qui encode ce lien est affiché par l'écran Affichage (change suivant).
+Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir `docs/fin-de-partie-qr.md`. Le QR code qui encode ce lien est affiché par l'écran Affichage (ci-dessous).
+
+## Écran Affichage
+
+`/affichage` est conçu pour tourner en continu sur une télé ou une tablette (plein écran, lisible de loin). Il se met à jour tout seul (interrogation légère toutes les 3 s) :
+
+- **Partie en cours** : image du jeu sur sa couleur de fond (ou titre seul sans image), avatars et noms des joueurs, QR code de fin de partie.
+- **Partie en pause** : le joueur à qui c'est de jouer, en grand, sans QR code.
+- **Victoire** : animation du ou des vainqueurs pendant 15 s après la fin de la partie (message de défaite pour une défaite coopérative), puis retour à la veille.
+- **Veille** : diaporama en fondu d'illustrations (château, village, nœud celtique, menhirs). Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; sans image, l'écran affiche LUDALEX.
+
+Le QR change à chaque ouverture ou rechargement de la page (un QR scanné avant le rechargement n'est plus valable). L'écran demande au navigateur de rester allumé lorsque c'est possible.
+
+La session Cloudflare Access dure un mois : à l'expiration, après trois échecs de mise à jour, la page se recharge et Cloudflare redemande la connexion ; une intervention humaine est donc nécessaire une fois par mois.
+
+Réglages : `ludalex.affichage.url-publique` (origine du QR, déduite de la requête par défaut ; utile en `dev` pour qu'un téléphone joigne le poste), `ludalex.affichage.duree-victoire` (`15s`), `ludalex.affichage.renouvellement-token` (`24h`).
 
 ## Statistiques
 

@@ -13,7 +13,7 @@
 
     <groupId>com.alexgit95</groupId>
     <artifactId>ludalex</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <packaging>jar</packaging>
     <name>ludalex</name>
     <description></description>
@@ -83,6 +83,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
+        </dependency>
+        <!-- Écran Affichage : génération du QR code (Java pur, compatible arm64) -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
         </dependency>
 
         <!-- Lombok -->

@@ -16,7 +16,7 @@ Le système SHALL afficher sur `/affichage`, lorsqu'une partie est en cours, l'i
 - **THEN** l'écran affiche l'avatar par défaut avec son nom
 
 ### Requirement: QR code de fin de partie
-Le système SHALL afficher un QR code encodant l'URL `/fin/{token}` de l'origine publique de la requête, généré côté serveur ; le token en clair n'est jamais stocké.
+Le système SHALL afficher un QR code encodant l'URL `/fin/{token}` de l'origine publique de la requête, généré côté serveur ; le token en clair n'est jamais stocké en base (il n'est conservé qu'en mémoire du processus pour être réutilisé tant qu'il est valide). L'origine peut être imposée par `ludalex.affichage.url-publique`.
 
 #### Scenario: QR code valide
 - **WHEN** l'écran affiche la partie en cours
@@ -61,7 +61,7 @@ Lorsqu'une partie se termine alors que l'écran est ouvert, le système SHALL d�
 - **THEN** l'écran affiche un message de défaite sans animation de victoire
 
 #### Scenario: Écran ouvert après coup
-- **WHEN** l'écran est ouvert plus de 30 secondes après la fin d'une partie
+- **WHEN** l'écran est ouvert plus de 15 secondes après la fin d'une partie
 - **THEN** il n'affiche pas l'animation
 
 ### Requirement: Mise à jour automatique sobre
