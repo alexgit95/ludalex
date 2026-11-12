@@ -9,42 +9,42 @@
         887961431186
     ],
     "Date": "2026-10-11",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
+            "Score": 0,
+            "Victoire": true
+        },  
+        {
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
-            "Score": 0,
-            "Victoire": true
-        },
-        {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -73,23 +73,23 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 29,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 29,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 33,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -118,23 +118,23 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 31,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 31,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 32,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -158,28 +158,28 @@
     "Type": "basegame",
     "EAN": [],
     "Date": "2026-10-04",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 5,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 29,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 28,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 33,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -208,23 +208,23 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 8,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 10,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 6,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -253,23 +253,23 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 7,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 8,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 9,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -295,42 +295,42 @@
         887961431186
     ],
     "Date": "2026-09-05",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -356,42 +356,42 @@
         887961431186
     ],
     "Date": "2026-08-13",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -417,32 +417,32 @@
         887961431186
     ],
     "Date": "2026-08-13",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -472,42 +472,42 @@
         3770000282689
     ],
     "Date": "2026-08-09",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -533,30 +533,30 @@
         807658000761
     ],
     "Date": "2026-07-12",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 5,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -582,30 +582,30 @@
         807658000761
     ],
     "Date": "2026-07-11",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 5,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -631,30 +631,30 @@
         807658000761
     ],
     "Date": "2026-07-11",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 5,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -680,32 +680,32 @@
         887961431186
     ],
     "Date": "2026-05-08",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -735,32 +735,32 @@
         887961431186
     ],
     "Date": "2026-05-08",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -790,42 +790,42 @@
         3770000282689
     ],
     "Date": "2026-05-08",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -851,32 +851,32 @@
         3770000282689
     ],
     "Date": "2026-04-05",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -911,37 +911,37 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -967,22 +967,22 @@
         3421271815211
     ],
     "Date": "2026-02-15",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 20,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         },
@@ -998,9 +998,9 @@
         }
     ],
     "Vainqueurs": [
-        "Jess",
-        "Moumou",
-        "Clara",
+        "Bruno",
+        "David",
+        "Emma",
         "Anonyme",
         "Anonyme"
     ],
@@ -1028,27 +1028,27 @@
         3421271815211
     ],
     "Date": "2026-02-15",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 20,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         },
@@ -1059,10 +1059,10 @@
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Poupou",
-        "Moumou",
-        "Clara",
+        "Alice",
+        "Camille",
+        "David",
+        "Emma",
         "Anonyme"
     ],
     "Incomplète": "Non",
@@ -1089,32 +1089,32 @@
         3770000282689
     ],
     "Date": "2026-02-15",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -1144,32 +1144,32 @@
         3770000282689
     ],
     "Date": "2026-02-15",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -1199,23 +1199,23 @@
         5425016928486
     ],
     "Date": "2025-09-11",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1241,23 +1241,23 @@
         5425016928486
     ],
     "Date": "2025-09-11",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1283,23 +1283,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1325,23 +1325,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1367,23 +1367,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1409,23 +1409,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1451,23 +1451,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1493,23 +1493,23 @@
         5425016928486
     ],
     "Date": "2025-09-07",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1540,23 +1540,23 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 4,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1582,28 +1582,28 @@
         4260470080087
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 10,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 9,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 9,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 19,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1629,23 +1629,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1671,23 +1671,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1713,23 +1713,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1755,23 +1755,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1797,23 +1797,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1839,23 +1839,23 @@
         5425016928486
     ],
     "Date": "2025-08-31",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1881,23 +1881,23 @@
         5425016928486
     ],
     "Date": "2025-08-30",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1923,42 +1923,42 @@
         3770000282689
     ],
     "Date": "2025-08-29",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -1984,42 +1984,42 @@
         3770000282689
     ],
     "Date": "2025-08-29",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2045,23 +2045,23 @@
         5425016928486
     ],
     "Date": "2025-08-29",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2087,42 +2087,42 @@
         3770000282689
     ],
     "Date": "2025-08-28",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2148,42 +2148,42 @@
         3770000282689
     ],
     "Date": "2025-08-28",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2209,42 +2209,42 @@
         3770000282689
     ],
     "Date": "2025-08-28",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2270,42 +2270,42 @@
         3770000282689
     ],
     "Date": "2025-08-25",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2331,42 +2331,42 @@
         3770000282689
     ],
     "Date": "2025-08-25",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2392,33 +2392,33 @@
         3760425810215
     ],
     "Date": "2025-08-25",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 42,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Moumou"
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2444,23 +2444,23 @@
         5425016928486
     ],
     "Date": "2025-08-23",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Poupou"
+        "Camille"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2486,38 +2486,38 @@
         3760425810215
     ],
     "Date": "2025-08-23",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 42,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Moumou"
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2543,23 +2543,23 @@
         4260470080087
     ],
     "Date": "2025-08-08",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 10,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 10,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 17,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Clara"
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2590,24 +2590,24 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Clara"
+        "Alice",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2633,31 +2633,31 @@
         5425016928486
     ],
     "Date": "2025-08-08",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true,
             "Équipe": "blue"
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false,
             "Équipe": "green"
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false,
             "Équipe": "green"
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2683,31 +2683,31 @@
         5425016928486
     ],
     "Date": "2025-08-08",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true,
             "Équipe": "blue"
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false,
             "Équipe": "green"
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false,
             "Équipe": "green"
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2733,23 +2733,23 @@
         3760425810215
     ],
     "Date": "2025-08-03",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 42,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2775,23 +2775,23 @@
         3760052142666
     ],
     "Date": "2025-08-03",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2817,23 +2817,23 @@
         3760052142666
     ],
     "Date": "2025-08-03",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 15,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2859,23 +2859,23 @@
         5425016925553
     ],
     "Date": "2025-08-02",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 25,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 38,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 55,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -2901,17 +2901,17 @@
         8435407620155
     ],
     "Date": "2025-08-02",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 45,
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         }
@@ -2941,42 +2941,42 @@
         3770000282580
     ],
     "Date": "2025-06-09",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 40,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3002,42 +3002,42 @@
         3770000282580
     ],
     "Date": "2025-06-09",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 20,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3068,27 +3068,27 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -3118,42 +3118,42 @@
         887961431186
     ],
     "Date": "2025-05-03",
-    "Lieu": "Cormeilles-en-Parisis",
+    "Lieu": "Lieu A",
     "Durée": 30,
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3179,36 +3179,36 @@
         3770000282580
     ],
     "Date": "2025-04-20",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 10,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3234,36 +3234,36 @@
         3770000282580
     ],
     "Date": "2025-04-20",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 20,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3294,18 +3294,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 56,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 45,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3336,37 +3336,37 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3397,37 +3397,37 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3458,22 +3458,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -3508,31 +3508,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3563,37 +3563,37 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3624,37 +3624,37 @@
     "NB Joueurs": 5,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3685,22 +3685,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -3735,31 +3735,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3790,22 +3790,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -3840,22 +3840,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -3890,31 +3890,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -3945,31 +3945,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4000,31 +4000,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4055,22 +4055,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4105,31 +4105,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4160,31 +4160,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4215,31 +4215,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4270,31 +4270,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4325,31 +4325,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4380,28 +4380,28 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 4,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 1,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 1,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4432,22 +4432,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4482,22 +4482,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4532,28 +4532,28 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 43,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 39,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 19,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 34,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4584,31 +4584,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4639,22 +4639,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4689,31 +4689,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4739,33 +4739,33 @@
         3770004936052
     ],
     "Date": "2024-08-23",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 4,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4791,27 +4791,27 @@
         887961431186
     ],
     "Date": "2024-08-23",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 30,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4846,22 +4846,22 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
@@ -4896,31 +4896,31 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Poupou",
-        "Moumou"
+        "Alice",
+        "Bruno",
+        "Camille",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4951,29 +4951,29 @@
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Poupou"
+        "Alice",
+        "Camille"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -4999,34 +4999,34 @@
         3760175513428
     ],
     "Date": "2024-08-23",
-    "Lieu": "Moutiers",
+    "Lieu": "Lieu C",
     "Durée": 15,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Moumou"
+        "Alice",
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5057,18 +5057,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 41,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 38,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5099,25 +5099,25 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5148,25 +5148,25 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Alex",
-        "Jess",
-        "Clara"
+        "Alice",
+        "Bruno",
+        "Emma"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5197,17 +5197,17 @@
     "NB Joueurs": 3,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Clara",
+            "Nom": "Emma",
             "Score": 0,
             "Victoire": false
         }
@@ -5237,33 +5237,33 @@
         5425016925553
     ],
     "Date": "2024-01-07",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 25,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 24,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 23,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 30,
             "Victoire": true
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 20,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Poupou"
+        "Camille"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5289,33 +5289,33 @@
         5425016925553
     ],
     "Date": "2024-01-07",
-    "Lieu": "Argenteuil",
+    "Lieu": "Lieu B",
     "Durée": 25,
     "NB Joueurs": 4,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 28,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 47,
             "Victoire": false
         },
         {
-            "Nom": "Poupou",
+            "Nom": "Camille",
             "Score": 42,
             "Victoire": false
         },
         {
-            "Nom": "Moumou",
+            "Nom": "David",
             "Score": 48,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Moumou"
+        "David"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5344,18 +5344,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 15,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 20,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5384,18 +5384,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 23,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 17,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5426,18 +5426,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 18,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 31,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5468,18 +5468,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5510,18 +5510,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5552,18 +5552,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5594,18 +5594,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 0,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 0,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5636,18 +5636,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 43,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 50,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5678,18 +5678,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 18,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 32,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5720,18 +5720,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 108,
             "Victoire": true
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 99,
             "Victoire": false
         }
     ],
     "Vainqueurs": [
-        "Alex"
+        "Alice"
     ],
     "Incomplète": "Non",
     "Solo": "Non",
@@ -5762,18 +5762,18 @@
     "NB Joueurs": 2,
     "Joueurs": [
         {
-            "Nom": "Alex",
+            "Nom": "Alice",
             "Score": 36,
             "Victoire": false
         },
         {
-            "Nom": "Jess",
+            "Nom": "Bruno",
             "Score": 52,
             "Victoire": true
         }
     ],
     "Vainqueurs": [
-        "Jess"
+        "Bruno"
     ],
     "Incomplète": "Non",
     "Solo": "Non",

@@ -2,6 +2,22 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.9.0] - 2026-11-12
+
+### Added
+- Page Admin **Sauvegarde et restauration** (`/admin/sauvegarde`, JWT Cloudflare exigé en `prod`).
+- Export : un seul ZIP `ludalex-sauvegarde-<date>.zip` écrit en flux dans la réponse HTTP (lecture par lots de 500 sans entités gérées, images copiées par flux). Format v1 : `donnees/*.json` (joueurs, jeux, parties, équipes, participations, prêts) indépendant du moteur, `images/*` pour les images uploadées réellement présentes (une image manquante est exportée comme absente), `manifest.json` (version du format, version applicative, date, compteurs). Tokens de fin de partie exclus ; images par URL conservées comme simple adresse.
+- Restauration par réupload du ZIP sans modification, y compris d'un moteur à l'autre (SQLite ↔ PostgreSQL) : nouveaux identifiants générés avec table de correspondance, sans dépendre des séquences ni auto-incréments.
+- Protection de la restauration : mot de confirmation `RESTAURER` (en-tête), jeton CSRF, ZIP reçu en corps brut puis écrit dans un fichier temporaire plafonné (`ludalex.sauvegarde.taille-max`, 512MB), supprimé en toutes circonstances, une seule restauration à la fois (409 sinon), contrôle de l'espace disque.
+- Validation complète avant toute suppression : chemins dangereux (zip slip), entrées hors liste, nombre d'entrées, taille et taux de décompression mesurés à la lecture, images de format réel autorisé et de 2 Mo maximum, noms d'images générés par l'application, version de format, valeurs des enregistrements, adresses d'image http(s), références entre fichiers et compteurs du manifeste.
+- Application atomique : suppression et insertion par lots dans une seule transaction (rollback complet en cas d'échec) ; images préparées dans un répertoire caché du volume puis installées après le commit, images orphelines supprimées, restes d'une restauration interrompue nettoyés au démarrage.
+- Réglages `ludalex.sauvegarde.taille-max`, `taille-decompressee-max` (1GB), `entrees-max` (10000), `ratio-max` (200) et `repertoire-temporaire`.
+- Tests : validation (51 cas dont zip slip, bombe de décompression, images non conformes, version inconnue, références incohérentes, ZIP corrompu), orchestration (nettoyage, verrou, taille), aller-retour sur base réelle (relations, images, tokens, orphelines, 1 100 enregistrements par lots, archive aux identifiants quelconques, atomicité), exhaustivité des entités exportées, contrôleur (CSRF, confirmation, 400/413) et JWT exigé en `prod`.
+
+### Changed
+- `StockageImages` expose le volume (`racine()`) et la validation d'un nom de fichier (`estNomValide`).
+- Aucun changement de schéma de base de données.
+
 ## [0.8.0] - 2026-11-12
 
 ### Added

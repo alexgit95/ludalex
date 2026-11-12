@@ -30,6 +30,15 @@ public class StockageImages {
         this.racine = Path.of(proprietes.repertoire()).toAbsolutePath().normalize();
     }
 
+    public Path racine() {
+        return racine;
+    }
+
+    /** Vrai pour un nom de fichier tel que l'application les génère (UUID et extension d'un format autorisé). */
+    public static boolean estNomValide(String nom) {
+        return nom != null && NOM_VALIDE.matcher(nom).matches();
+    }
+
     public ImageSource enregistrer(byte[] octets) {
         FormatImage format = FormatImage.detecter(octets).orElseThrow(() -> new ImageInvalideException(
                 "Format d'image non autorisé (JPEG, PNG, GIF ou WebP uniquement)"));

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Sauvegarde', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Sauvegarde et restauration</h1>
+
+    <section>
+        <h2>Sauvegarde</h2>
+        <p>Un seul fichier ZIP contient toutes les données (joueurs, jeux, prêts, parties) et les images uploadées.
+            Les images saisies par adresse web ne sont conservées que sous forme d'adresse.</p>
+        <p><a class="bouton" th:href="@{/admin/sauvegarde/telecharger}">Télécharger la sauvegarde</a></p>
+    </section>
+
+    <section>
+        <h2>Restauration</h2>
+        <p class="erreur"><strong>Attention :</strong> la restauration remplace <strong>toutes</strong> les données
+            et toutes les images actuelles par celles de la sauvegarde. Les liens de fin de partie existants
+            deviennent invalides.</p>
+        <form id="formulaire-restauration" class="formulaire" th:attr="data-entete-confirmation=${enteteConfirmation}">
+            <label>Fichier de sauvegarde (ZIP, <span th:text="${tailleMaxMo}">512</span> Mo maximum)
+                <input type="file" name="sauvegarde" accept=".zip,application/zip" required>
+            </label>
+            <label>Saisissez <strong th:text="${motConfirmation}">RESTAURER</strong> pour confirmer
+                <input type="text" name="confirmation" autocomplete="off" required>
+            </label>
+            <button type="submit">Restaurer</button>
+        </form>
+        <div id="resultat-restauration" role="status" aria-live="polite"></div>
+    </section>
+    <script src="/js/sauvegarde.js" defer></script>
+</main>
+</body>
+</html>

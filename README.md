@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.8.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct et écran Affichage. La sauvegarde arrive avec le change suivant.
+Version courante : **0.9.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage et sauvegarde/restauration.
 
 ## Parties en direct
 
@@ -37,6 +37,25 @@ Le QR change à chaque ouverture ou rechargement de la page (un QR scanné avant
 La session Cloudflare Access dure un mois : à l'expiration, après trois échecs de mise à jour, la page se recharge et Cloudflare redemande la connexion ; une intervention humaine est donc nécessaire une fois par mois.
 
 Réglages : `ludalex.affichage.url-publique` (origine du QR, déduite de la requête par défaut ; utile en `dev` pour qu'un téléphone joigne le poste), `ludalex.affichage.duree-victoire` (`15s`), `ludalex.affichage.renouvellement-token` (`24h`).
+
+## Sauvegarde et restauration
+
+L'écran **Admin > Sauvegarde et restauration** (`/admin/sauvegarde`) permet de ne rien perdre si la carte SD du Raspberry Pi meurt ou si le moteur de base change.
+
+- **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes) et les images uploadées. Les images saisies par adresse web ne sont conservées que sous forme d'adresse. Les tokens de fin de partie et la configuration ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
+- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les liens de fin de partie existants deviennent invalides.
+- **Sûreté** : le ZIP est entièrement validé avant la moindre suppression (chemins dangereux ou « zip slip », entrées hors `manifest.json`, `donnees/`, `images/`, nombre d'entrées, taille et taux de décompression, images réelles PNG/JPEG/GIF/WebP de 2 Mo maximum, version du format, références cohérentes, compteurs du manifeste). Le remplacement des données est une seule transaction : en cas d'échec, données et images précédentes sont conservées. Une seule restauration à la fois.
+- **Limites** : le ZIP est reçu comme corps brut de la requête (pas en multipart) et écrit dans un fichier temporaire. Réglages : `ludalex.sauvegarde.taille-max` (512MB), `ludalex.sauvegarde.taille-decompressee-max` (1GB), `ludalex.sauvegarde.entrees-max` (10000), `ludalex.sauvegarde.ratio-max` (200) et `ludalex.sauvegarde.repertoire-temporaire` (répertoire temporaire du système par défaut, variable Docker `LUDALEX_SAUVEGARDE_REPERTOIRE_TEMPORAIRE`). Derrière Cloudflare, l'envoi est limité par l'offre (100 Mo en gratuit).
+
+### Format de sauvegarde (version 1)
+
+```
+manifest.json            formatVersion, appVersion, date, compteurs par type
+donnees/joueurs.json     un tableau JSON par type : joueurs, jeux, parties, equipes, participations, prets
+images/<uuid>.<ext>      images uploadées référencées par les données
+```
+
+Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference}`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
 
 ## Statistiques
 
@@ -152,5 +171,6 @@ C:\USINE_LOGICIELLE\apache-maven\bin\mvn test
 
 - `docs/database.puml` : modèle de données (PlantUML)
 - `docs/fin-de-partie-qr.md` : fin de partie par QR code et configuration Cloudflare
+- `docs/exemple-my-ludo/` : exports MyLudo anonymisés servant de jeu d'essai
 - `docs/plan-des-changes.md` : plan et décisions du projet
 - `CHANGELOG.md` : journal des modifications

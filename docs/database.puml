@@ -3,8 +3,9 @@ title LUDALEX - Modèle de données
 hide circle
 skinparam linetype ortho
 
-' Aucune autre table pour l'instant. Les entités sont ajoutées par les changes suivants :
-' (aucune prévue avant la sauvegarde).
+' Aucune autre table pour l'instant. Les entités sont ajoutées par les changes suivants.
+' La sauvegarde (0.9.0) n'ajoute aucune table : elle exporte joueur, jeu, pret, partie, participation et equipe
+' (token_fin_partie est exclue et vidée à la restauration).
 
 ' Composant embarqué dans les entités qui portent une image (jeu, joueur)
 class ImageSource <<Embeddable>> {

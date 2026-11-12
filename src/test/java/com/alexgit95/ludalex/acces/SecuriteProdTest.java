@@ -127,6 +127,17 @@ class SecuriteProdTest {
     }
 
     @Test
+    void exigeLeJwtPourLaSauvegardeEtLaRestauration() throws Exception {
+        mvc.perform(get("/admin/sauvegarde")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/admin/sauvegarde/telecharger")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/admin/sauvegarde/restaurer").with(csrf()).header("X-Confirmation", "RESTAURER")
+                .contentType("application/zip").content(new byte[] { 1 })).andExpect(status().isUnauthorized());
+        mvc.perform(get("/fin/admin/sauvegarde/telecharger")).andExpect(status().isNotFound());
+        mvc.perform(get("/admin/sauvegarde").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void protegeParCsrfLesRequetesModifiantes() throws Exception {
         mvc.perform(post("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().isForbidden());
