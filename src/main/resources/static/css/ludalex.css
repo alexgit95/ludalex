@@ -1,8 +1,29 @@
+/*
+ * Charte graphique LUDALEX : heroic fantasy sobre.
+ * Crème / parchemin très discrets, petits lierres en filigrane, typographie lisible.
+ * Toutes les couleurs sont des variables ci-dessous (aucune couleur en dur ailleurs, sauf rgba d'ombres).
+ * Aucune ressource externe : polices du système uniquement.
+ */
 :root {
-    --fond: #f1faee;
-    --encre: #2f3e46;
-    --accent: #52796f;
-    --bordure: #cad2c5;
+    --fond: #fbf6ea;            /* crème / blanc cassé */
+    --surface: #fffdf7;         /* cartouches, cartes, champs */
+    --parchemin: #f3e9d2;       /* en-tête, bandeaux, messages */
+    --parchemin-fonce: #e6d8b6; /* survols, séparations marquées */
+    --bordure: #d6c8a6;
+    --encre: #2b2118;           /* texte principal */
+    --encre-douce: #5a4a3a;     /* texte secondaire */
+    --lierre: #3f5e37;          /* accent, boutons, liens */
+    --lierre-fonce: #2f4a2a;
+    --or: #a8873f;              /* filets et focus (jamais pour du texte) */
+    --or-clair: #d9b95b;        /* décor sur fond sombre (Affichage) */
+    --erreur: #8c2f2f;
+    --nuit: #1e1710;            /* fond sombre de l'Affichage */
+
+    --police-titre: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --police-texte: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    --decor-parchemin: url("/decor/parchemin.svg");
+    --decor-coin: url("/decor/lierre-coin.svg");
+    --decor-separateur: url("/decor/lierre-separateur.svg");
 }
 
 * { box-sizing: border-box; }
@@ -12,77 +33,173 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--police-texte);
+    font-size: 1.0625rem;
+    line-height: 1.55;
     color: var(--encre);
-    background: var(--fond);
+    background: var(--fond) var(--decor-parchemin);
 }
 
+h1, h2, h3, .marque {
+    font-family: var(--police-titre);
+    color: var(--encre);
+    line-height: 1.25;
+}
+h1 { font-size: 1.9rem; margin: 0.5rem 0 1rem; }
+h2 { font-size: 1.4rem; margin: 1.5rem 0 0.75rem; }
+h3 { font-size: 1.15rem; }
+
+:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
+
 .entete {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem 1.5rem;
-    padding: 0.75rem 1rem;
-    background: var(--encre);
+    padding: 0.75rem 7rem 0.75rem 1rem;
+    background: var(--parchemin) var(--decor-parchemin);
+    border-bottom: 2px solid var(--or);
+    box-shadow: 0 1px 0 var(--surface) inset, 0 2px 6px rgba(43, 33, 24, 0.08);
+}
+.entete::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 6rem; height: 100%;
+    background: var(--decor-coin) no-repeat right -1.5rem top -2.5rem / 6rem 6rem;
+    pointer-events: none;
 }
 
 .marque {
-    color: var(--fond);
+    font-size: 1.35rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-decoration: none;
 }
 
-.navigation { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
-.navigation a { color: var(--bordure); text-decoration: none; }
-.navigation a:hover, .navigation a:focus { color: #fff; text-decoration: underline; }
+.navigation { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.navigation a { color: var(--encre); text-decoration: none; padding: 0.15rem 0; border-bottom: 2px solid transparent; }
+.navigation a:hover, .navigation a:focus { color: var(--lierre-fonce); border-bottom-color: var(--or); }
 
-.contenu { flex: 1; width: 100%; max-width: 60rem; margin: 0 auto; padding: 1rem; }
-.pied { padding: 0.75rem 1rem; text-align: center; font-size: 0.8rem; color: var(--accent); }
+.contenu { flex: 1; width: 100%; max-width: 60rem; margin: 0 auto; padding: 1.25rem 1rem; }
+.contenu > h1 {
+    padding-bottom: 1.6rem;
+    background: var(--decor-separateur) no-repeat left bottom / 16rem 1.5rem;
+}
+.pied {
+    padding: 1rem;
+    text-align: center;
+    font-family: var(--police-titre);
+    letter-spacing: 0.2em;
+    font-size: 0.85rem;
+    color: var(--encre-douce);
+    border-top: 1px solid var(--bordure);
+    background: var(--decor-separateur) no-repeat center top / 16rem 1.5rem;
+    padding-top: 1.75rem;
+}
 
-a { color: var(--accent); }
+a { color: var(--lierre); text-underline-offset: 0.18em; }
+a:hover { color: var(--lierre-fonce); }
 
 .image { display: block; max-width: 100%; height: auto; border-radius: 0.5rem; }
+
+input, select, textarea {
+    font: inherit;
+    color: var(--encre);
+    background: var(--surface);
+    border: 1px solid var(--bordure);
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.5rem;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--lierre); }
+label { color: var(--encre); }
+fieldset { border: 1px solid var(--bordure); border-radius: 0.5rem; background: var(--surface); }
+legend { font-family: var(--police-titre); padding: 0 0.4rem; }
 
 .saisie-image { display: grid; gap: 0.5rem; border: 1px solid var(--bordure); border-radius: 0.5rem; }
 .saisie-image .apercu { max-width: 8rem; max-height: 8rem; object-fit: cover; border-radius: 0.5rem; }
 .saisie-couleur { display: flex; align-items: center; gap: 0.5rem; }
 
-.bouton, button { padding: 0.4rem 0.9rem; border: 1px solid var(--accent); border-radius: 0.4rem; background: var(--accent); color: #fff; text-decoration: none; cursor: pointer; }
-.message { padding: 0.5rem 0.75rem; border-radius: 0.4rem; background: var(--bordure); }
-.erreur { color: #9b2226; margin: 0.25rem 0; }
+.bouton, button {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--lierre-fonce);
+    border-radius: 0.4rem;
+    background: var(--lierre);
+    color: var(--fond);
+    font: inherit;
+    font-size: 0.98rem;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(43, 33, 24, 0.2);
+}
+.bouton:hover, button:hover { background: var(--lierre-fonce); color: var(--fond); }
+.message {
+    padding: 0.6rem 0.85rem;
+    border-radius: 0.4rem;
+    background: var(--parchemin);
+    border-left: 4px solid var(--or);
+}
+.erreur { color: var(--erreur); margin: 0.25rem 0; font-weight: 600; }
 .formulaire { display: grid; gap: 0.75rem; max-width: 32rem; }
-.formulaire input[type="text"], .formulaire input[type="url"] { width: 100%; padding: 0.4rem; }
+.formulaire input[type="text"], .formulaire input[type="url"] { width: 100%; }
 .liste-joueurs { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
-.liste-joueurs li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
-.liste-joueurs .image { width: 3rem; height: 3rem; object-fit: cover; border-radius: 50%; }
+.liste-joueurs li {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem;
+    padding: 0.6rem 0.8rem; background: var(--surface); border: 1px solid var(--bordure); border-radius: 0.5rem;
+}
+.liste-joueurs .image { width: 3rem; height: 3rem; object-fit: cover; border-radius: 50%; border: 2px solid var(--or); }
 .liste-joueurs .nom { flex: 1; min-width: 8rem; }
-.confirmation { flex-basis: 100%; padding: 0.5rem; border: 1px solid var(--bordure); border-radius: 0.4rem; }
+.confirmation {
+    flex-basis: 100%; padding: 0.6rem; border: 1px solid var(--or); border-radius: 0.4rem;
+    background: var(--surface); color: var(--encre);
+}
 .pagination { display: flex; gap: 1rem; align-items: center; }
 
+/* Ludothèque : la couleur du jeu (inline) forme un cadre, le texte repose toujours sur un cartouche clair. */
 .grille-jeux { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 1rem; }
-.vignette { position: relative; padding: 0.5rem; border-radius: 0.6rem; display: flex; flex-direction: column; gap: 0.25rem; text-align: center; }
-.vignette a { color: #fff; text-decoration: none; display: flex; flex-direction: column; gap: 0.35rem; }
+.vignette {
+    position: relative; padding: 0.5rem; border-radius: 0.6rem; border: 2px solid var(--or);
+    display: flex; flex-direction: column; gap: 0.35rem; text-align: center;
+    box-shadow: 0 2px 6px rgba(43, 33, 24, 0.18);
+}
+.vignette a { color: var(--encre); text-decoration: none; display: flex; flex-direction: column; gap: 0.35rem; }
 .vignette .image { width: 100%; aspect-ratio: 1; object-fit: cover; }
-.vignette .titre { font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.vignette .titre {
+    font-family: var(--police-titre); font-weight: 700; background: var(--surface); color: var(--encre);
+    border-radius: 0.35rem; padding: 0.15rem 0.35rem;
+}
 .vignette .champion { position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.15rem; }
-.vignette .pret { font-size: 0.8rem; color: #fff; background: rgba(0,0,0,.45); border-radius: 0.3rem; padding: 0.1rem 0.3rem; }
-.fiche-jeu { padding: 1rem; border-radius: 0.6rem; color: #fff; }
+.vignette .pret { font-size: 0.8rem; color: var(--encre); background: var(--surface); border-radius: 0.3rem; padding: 0.1rem 0.3rem; }
+.fiche-jeu {
+    padding: 0.75rem; border-radius: 0.6rem; border: 2px solid var(--or);
+    box-shadow: 0 2px 8px rgba(43, 33, 24, 0.18);
+}
+.fiche-jeu > :not(.image) {
+    background: var(--surface); color: var(--encre); padding: 0.5rem 0.9rem; margin: 0.6rem 0; border-radius: 0.4rem;
+}
+.fiche-jeu > h1 { margin: 0.6rem 0; }
 .fiche-jeu .image { max-width: 16rem; margin: 0 auto 0.75rem; }
 .fiche-jeu dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
 .fiche-jeu dt { font-weight: 600; }
-.fiche-jeu .confirmation { color: var(--encre); background: var(--fond); }
+.fiche-jeu dd { margin: 0; }
+.fiche-jeu #zone-suppression:empty { display: none; }
 .historique { border-collapse: collapse; width: 100%; }
 .historique th, .historique td { border-bottom: 1px solid var(--bordure); padding: 0.35rem 0.5rem; text-align: left; }
+th { font-family: var(--police-titre); }
 
 .liste-parties { list-style: none; padding: 0; display: grid; gap: 1rem; }
-.liste-parties > li { border: 1px solid var(--bordure); border-radius: 0.5rem; padding: 0.75rem; }
+.liste-parties > li {
+    position: relative; background: var(--surface) var(--decor-coin) no-repeat right -1.2rem bottom -1.2rem / 5rem 5rem;
+    border: 1px solid var(--bordure); border-radius: 0.5rem; padding: 0.75rem 3.5rem 0.75rem 0.75rem;
+    box-shadow: 0 1px 3px rgba(43, 33, 24, 0.1);
+}
 .entete-partie { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; align-items: baseline; }
 .participants { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
 .participants li { display: flex; align-items: center; gap: 0.35rem; }
 .participants .image { width: 2rem; height: 2rem; object-fit: cover; border-radius: 50%; }
 .participants .gagnant { font-weight: 700; }
-.participants .score { background: var(--bordure); border-radius: 0.3rem; padding: 0 0.3rem; }
+.participants .score { background: var(--parchemin); border-radius: 0.3rem; padding: 0 0.3rem; }
 .formulaire-partie { max-width: 46rem; }
 .joueurs-partie { border-collapse: collapse; width: 100%; }
 .joueurs-partie td, .joueurs-partie th { padding: 0.3rem 0.5rem; text-align: left; border-bottom: 1px solid var(--bordure); }
@@ -90,7 +207,7 @@ a { color: var(--accent); }
 .gagnants, .equipes, .resultat-cooperatif { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; border: 1px solid var(--bordure); border-radius: 0.5rem; }
 .filtre { margin: 0.75rem 0; }
 
-.vignette .champion { align-items: center; background: rgba(0,0,0,.45); border-radius: 1rem; padding: 0.1rem 0.35rem; }
+.vignette .champion { align-items: center; background: var(--surface); border-radius: 1rem; padding: 0.1rem 0.35rem; }
 .vignette .champion .image { width: 1.6rem; height: 1.6rem; aspect-ratio: auto; border-radius: 50%; object-fit: cover; }
 .champions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
 .champion-fiche { display: inline-flex; align-items: center; gap: 0.35rem; }
@@ -98,8 +215,19 @@ a { color: var(--accent); }
 .classement { border-collapse: collapse; width: 100%; }
 .classement th, .classement td { border-bottom: 1px solid var(--bordure); padding: 0.35rem 0.5rem; text-align: left; }
 
-.progression { width: 100%; height: 1.2rem; accent-color: var(--accent); }
-.aide { font-size: 0.85rem; color: #52606a; }
-.detail { font-size: 0.85rem; max-height: 16rem; overflow: auto; }
-button.secondaire { background: transparent; color: var(--accent); }
-details { margin: 0.5rem 0; }
+.progression { width: 100%; height: 1.2rem; accent-color: var(--lierre); }
+.aide { font-size: 0.88rem; color: var(--encre-douce); }
+.detail { font-size: 0.88rem; max-height: 16rem; overflow: auto; }
+button.secondaire { background: var(--surface); color: var(--lierre-fonce); border-color: var(--lierre); }
+button.secondaire:hover { background: var(--parchemin-fonce); color: var(--encre); }
+details {
+    margin: 0.5rem 0; padding: 0.4rem 0.75rem; background: var(--surface);
+    border: 1px solid var(--bordure); border-radius: 0.4rem;
+}
+summary { cursor: pointer; font-family: var(--police-titre); }
+
+@media (max-width: 40rem) {
+    h1 { font-size: 1.6rem; }
+    .entete { padding-right: 4.5rem; }
+    .entete::after { width: 4.5rem; background-size: 4.5rem 4.5rem; background-position: right -1.2rem top -1.8rem; }
+}

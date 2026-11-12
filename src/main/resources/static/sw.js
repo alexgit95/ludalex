@@ -1,6 +1,6 @@
 // Cache limité aux ressources statiques ; incrémenter la version à chaque release.
-const CACHE = 'ludalex-statique-0.1.0';
-const PREFIXES = ['/css/', '/js/', '/icons/'];
+const CACHE = 'ludalex-statique-0.11.0';
+const PREFIXES = ['/css/', '/js/', '/icons/', '/decor/'];
 
 self.addEventListener('install', function () {
     self.skipWaiting();

@@ -2,6 +2,17 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.11.0] - 2026-11-13
+
+### Added
+- Charte graphique « heroic fantasy » sobre : palette crème / parchemin en variables CSS, lierres SVG très discrets (`static/decor/`), titres en serif, texte lisible, focus visible doré.
+- `CharteGraphiqueTest` : contrastes WCAG AA des couples texte/fond, absence de ressource externe et de couleur en dur hors variables, présence des décors.
+
+### Changed
+- `ludalex.css` et `affichage.css` entièrement restylés (en-tête, navigation, formulaires, boutons, cartes, tableaux, `details`, progression, pages d'erreur, page publique de fin de partie, Affichage avec cartouches parchemin lisibles sur toute couleur de jeu) ; aucun changement fonctionnel.
+- Couleurs de thème PWA (`theme-color`, manifeste) alignées ; cache du service worker `ludalex-statique-0.11.0` incluant `/decor/`.
+- Les couleurs de fond des jeux servent de cadre ; le texte repose sur un cartouche clair.
+
 ## [0.10.0] - 2026-11-12
 
 ### Added

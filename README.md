@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.10.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration et import MyLudo.
+Version courante : **0.11.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -70,6 +70,15 @@ L'écran **Admin > Import MyLudo** (`/admin/import-myludo`) reprend votre histor
 **Conversion** : un jeu est coopératif si une de ses parties l'est (ou par le mécanisme « Coopération ») ; une partie coopérative devient une victoire ou une défaite ; scores tous nuls = pas de score ; deux joueurs de même nom dans une partie (« Anonyme ») deviennent « Anonyme » et « Anonyme 2 » ; un prix de 0 est considéré inconnu. **Parties ignorées** (listées avec leur raison) : exclues dans MyLudo, datées dans le futur, sans joueur, ou sans gagnant dans un jeu non coopératif. **Non importés** : durée, commentaire, notes, images et métadonnées des jeux (éditeurs, thèmes...).
 
 L'analyse ou le rapport est conservé en mémoire 30 minutes (`ludalex.import-myludo.duree-session`), les listes détaillées sont limitées à 200 lignes (`ludalex.import-myludo.lignes-max`). Une seule analyse ou un seul import à la fois.
+
+## Charte graphique
+
+Thème « heroic fantasy » sobre, sur toute l'application (y compris l'écran Affichage) : fond crème et parchemin très discret, petits lierres en filigrane (coin de l'en-tête, séparateurs de titres, coins des cartes), titres en police à empattements et texte en sans-serif pour rester très lisible. Aucune police ni ressource externe : polices du système uniquement.
+
+- Les couleurs sont des variables CSS au début de `static/css/ludalex.css` (`:root`) ; `affichage.css` les réutilise. Les contrastes texte/fond respectent WCAG AA (vérifié par `CharteGraphiqueTest`).
+- Les décors sont de petits SVG dans `static/decor/` (`parchemin.svg`, `lierre-coin.svg`, `lierre-separateur.svg`) ; pour en ajouter un, le déposer dans ce dossier et le référencer par une variable `--decor-*`.
+- La couleur de fond propre à chaque jeu est conservée comme cadre ; le texte repose toujours sur un cartouche clair.
+- Pour changer de police, modifier `--police-titre` / `--police-texte` (une police embarquée devra être placée dans `static/`, jamais chargée depuis un CDN).
 
 ## Statistiques
 

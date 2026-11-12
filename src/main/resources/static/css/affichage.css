@@ -1,45 +1,60 @@
-/* Écran Affichage : lisible de loin, sans chaîne de build */
-body.kiosque { margin: 0; background: #111; color: #fff; overflow: hidden; display: block; }
+/*
+ * Écran Affichage : lisible de loin, thème heroic fantasy.
+ * Tout texte repose sur un cartouche parchemin : lisible quelle que soit la couleur de fond du jeu.
+ * Les couleurs viennent des variables de ludalex.css.
+ */
+body.kiosque { margin: 0; background: var(--nuit); color: var(--encre); overflow: hidden; display: block; }
 
-.zone { min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center;
-        background-color: #1d1d1d; transition: background-color .6s ease; }
-.zone section { width: 100%; }
+.zone { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center;
+        background-color: var(--nuit); transition: background-color .6s ease; }
+.zone::before, .zone::after { content: ''; position: absolute; width: 18vmin; height: 18vmin; pointer-events: none;
+        background: var(--decor-coin) no-repeat center / contain; opacity: .9; }
+.zone::before { top: 0; left: 0; transform: scaleX(-1); }
+.zone::after { bottom: 0; right: 0; transform: scaleY(-1); }
+.zone section { position: relative; z-index: 1; width: 100%; }
+
+/* Cartouche parchemin réutilisé pour tous les textes */
+.titre-jeu, .nom, .bandeau, .victoire h1, .suivant h1, .veille-vide {
+    background: var(--parchemin) var(--decor-parchemin); color: var(--encre); border: 2px solid var(--or);
+    border-radius: .6rem; box-shadow: 0 .4rem 1.2rem rgba(0,0,0,.45); font-family: var(--police-titre); }
 
 /* Partie en cours */
 .partie-en-cours { display: grid; grid-template-columns: 1fr minmax(14rem, 22vw); grid-template-rows: 1fr auto;
                    gap: 2vh 3vw; padding: 3vh 3vw; min-height: 100vh; box-sizing: border-box; }
 .partie-en-cours .jeu { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2vh; }
-.image-jeu { max-width: 100%; max-height: 62vh; border-radius: 1rem; box-shadow: 0 1rem 3rem rgba(0,0,0,.5); }
-.titre-jeu { margin: 0; font-size: clamp(1.5rem, 4vw, 3.5rem); text-shadow: 0 2px 8px rgba(0,0,0,.6); text-align: center; }
+.image-jeu { max-width: 100%; max-height: 62vh; border-radius: 1rem; border: .3rem solid var(--or); box-shadow: 0 1rem 3rem rgba(0,0,0,.5); }
+.titre-jeu { margin: 0; font-size: clamp(1.5rem, 4vw, 3.5rem); text-align: center; padding: .2em .8em; }
 .titre-seul { font-size: clamp(3rem, 9vw, 8rem); }
-.partie-en-cours .qr { grid-row: 1; align-self: center; background: #fff; color: #222; padding: 1rem; border-radius: 1rem; text-align: center; }
+.partie-en-cours .qr { grid-row: 1; align-self: center; background: var(--surface); color: var(--encre); padding: 1rem;
+                       border: 2px solid var(--or); border-radius: 1rem; text-align: center; }
 .qr-code svg { width: 100%; height: auto; display: block; }
 .qr p { margin: .5rem 0 0; font-weight: 600; }
 .joueurs { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap;
            justify-content: center; gap: 2vh 3vw; }
 .joueurs li { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
 .avatar { width: clamp(4rem, 9vw, 8rem); height: clamp(4rem, 9vw, 8rem); object-fit: cover; border-radius: 50%;
-          border: .3rem solid rgba(255,255,255,.85); background: #fff; }
+          border: .3rem solid var(--or-clair); background: var(--surface); }
 .avatar-geant { width: clamp(8rem, 22vw, 18rem); height: clamp(8rem, 22vw, 18rem); }
-.nom { font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+.nom { font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 600; padding: .1em .7em; }
 
 /* Pause */
 .partie-en-pause { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 3vh; padding: 3vh; }
-.bandeau { font-size: clamp(1.5rem, 3vw, 2.5rem); letter-spacing: .15em; text-transform: uppercase; margin: 0; opacity: .85; }
+.bandeau { font-size: clamp(1.5rem, 3vw, 2.5rem); letter-spacing: .15em; text-transform: uppercase; margin: 0; padding: .2em .8em; }
 .suivant { display: flex; flex-direction: column; align-items: center; gap: 2vh; }
-.suivant h1 { margin: 0; font-size: clamp(2rem, 6vw, 5rem); }
+.suivant h1 { margin: 0; font-size: clamp(2rem, 6vw, 5rem); padding: .1em .6em; }
 
 /* Victoire */
 .victoire { text-align: center; padding: 3vh; }
-.victoire h1 { font-size: clamp(2.5rem, 8vw, 7rem); margin: 0 0 3vh; text-shadow: 0 0 2rem rgba(255,215,0,.8); }
+.victoire h1 { display: inline-block; font-size: clamp(2.5rem, 8vw, 7rem); margin: 0 0 3vh; padding: .1em .6em;
+               box-shadow: 0 0 2.5rem rgba(217,185,91,.8), 0 .4rem 1.2rem rgba(0,0,0,.45); }
 .vainqueurs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4vh 5vw; }
 .vainqueur { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5vh; isolation: isolate; }
 .image-victoire { max-width: clamp(8rem, 24vw, 20rem); max-height: 28vh; }
 .vainqueur.anime { animation: apparition .8s ease-out both; }
-.vainqueur.anime .avatar { animation: pulsation .9s ease-in-out infinite alternate; border-color: gold; }
+.vainqueur.anime .avatar { animation: pulsation .9s ease-in-out infinite alternate; border-color: var(--or-clair); }
 .vainqueur.anime .image-victoire { animation: balancement 1.4s ease-in-out infinite alternate; }
 .vainqueur.anime::before { content: ''; position: absolute; width: 150%; aspect-ratio: 1; left: -25%; top: -20%; z-index: -1;
-    background: conic-gradient(from 0deg, transparent, rgba(255,215,0,.55), transparent 25%, rgba(255,215,0,.55) 50%, transparent 75%);
+    background: conic-gradient(from 0deg, transparent, rgba(217,185,91,.55), transparent 25%, rgba(217,185,91,.55) 50%, transparent 75%);
     border-radius: 50%; animation: rayons 6s linear infinite; }
 
 @keyframes pulsation { from { transform: scale(1); } to { transform: scale(1.12); } }
@@ -49,10 +64,10 @@ body.kiosque { margin: 0; background: #111; color: #fff; overflow: hidden; displ
 
 /* Veille : diaporama plein écran */
 .veille { min-height: 100vh; }
-.diaporama { position: fixed; inset: 0; background: #000; }
+.diaporama { position: fixed; inset: 0; background: var(--nuit); }
 .couche { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease; }
 .couche.visible { opacity: 1; }
-.veille-vide { text-align: center; font-size: clamp(3rem, 10vw, 9rem); letter-spacing: .3em; opacity: .5; }
+.veille-vide { display: inline-block; text-align: center; font-size: clamp(3rem, 10vw, 9rem); letter-spacing: .3em; padding: .1em .5em; }
 
 @media (max-width: 48rem) {
     .partie-en-cours { grid-template-columns: 1fr; }
