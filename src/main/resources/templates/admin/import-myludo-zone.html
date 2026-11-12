@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+<div th:fragment="zone" id="zone-import">
+
+    <!-- Envoi des fichiers -->
+    <section th:if="${vue == null}">
+        <h2>1. Choisir les fichiers</h2>
+        <form method="post" enctype="multipart/form-data" th:action="@{/admin/import-myludo/analyser}"
+              class="formulaire" id="formulaire-import">
+            <label>Collection (export des jeux, JSON)
+                <input type="file" name="collection" accept=".json,application/json">
+            </label>
+            <label>Parties (export des parties, JSON)
+                <input type="file" name="parties" accept=".json,application/json">
+            </label>
+            <p class="aide">Un seul des deux fichiers suffit. Taille maximale : 2 Mo par fichier.</p>
+            <button type="submit">Analyser</button>
+        </form>
+    </section>
+
+    <!-- Traitement en cours : suivi toutes les secondes -->
+    <section th:if="${vue != null and vue.enCours}" hx-get="/admin/import-myludo/progression"
+             hx-trigger="every 1s" hx-target="#zone-import" hx-swap="outerHTML" hx-include="#signature-import">
+        <input type="hidden" id="signature-import" name="signature" th:value="${vue.signature}">
+        <h2 th:text="${vue.etat.name() == 'IMPORT_EN_COURS'} ? 'Import en cours' : 'Analyse en cours'">Analyse</h2>
+        <p th:text="${vue.progression.phase().libelle()}">Phase</p>
+        <progress th:if="${vue.progression.total() > 0}" class="progression" th:max="${vue.progression.total()}"
+                  th:value="${vue.progression.fait()}"
+                  th:aria-label="${vue.progression.phase().libelle()}"></progress>
+        <progress th:unless="${vue.progression.total() > 0}" class="progression"
+                  th:aria-label="${vue.progression.phase().libelle()}"></progress>
+        <p>
+            <span th:if="${vue.progression.total() > 0}"
+                  th:text="${vue.progression.fait()} + ' sur ' + ${vue.progression.total()}">0 sur 0</span>
+            <span th:text="${vue.progression.courant()}"></span>
+        </p>
+        <p class="aide">Ne fermez pas la page : le traitement continue côté serveur.</p>
+    </section>
+
+    <!-- Analyse prête : correspondance des joueurs et confirmation -->
+    <section th:if="${vue != null and vue.etat.name() == 'ANALYSE_PRETE'}">
+        <h2>2. Vérifier avant d'importer</h2>
+        <p class="message">Rien n'a encore été enregistré. Fichiers analysés :
+            <span th:each="fichier, etat : ${vue.fichiers}"><strong th:text="${fichier}">fichier</strong><span
+                    th:unless="${etat.last}">, </span></span></p>
+        <ul>
+            <li><strong th:text="${vue.plan.jeuxACreer}">0</strong> jeu(x) à créer,
+                <strong th:text="${vue.plan.jeuxACompleter}">0</strong> complété(s) (prix ou date d'achat vides),
+                <strong th:text="${vue.plan.jeuxInchanges}">0</strong> déjà présent(s) et inchangé(s)</li>
+            <li><strong th:text="${vue.plan.parties.size()}">0</strong> partie(s) à ajouter,
+                <strong th:text="${vue.plan.dejaPresentes}">0</strong> déjà présente(s) (non modifiées),
+                <strong th:text="${vue.plan.totalIgnorees}">0</strong> ignorée(s)</li>
+            <li><strong th:text="${vue.plan.joueurs.size()}">0</strong> nom(s) de joueur dans l'export</li>
+        </ul>
+
+        <details th:if="${vue.plan.totalIgnorees > 0}">
+            <summary>Parties ignorées et raisons</summary>
+            <ul>
+                <li th:each="raison : ${vue.plan.ignoreesParRaison}"
+                    th:text="${raison.value} + ' × ' + ${raison.key}">raison</li>
+            </ul>
+            <ul class="detail">
+                <li th:each="ligne : ${vue.plan.detailsIgnorees}" th:text="${ligne}">détail</li>
+            </ul>
+            <p th:if="${vue.plan.totalIgnorees > vue.plan.detailsIgnorees.size()}"
+               th:text="'… et ' + ${vue.plan.totalIgnorees - vue.plan.detailsIgnorees.size()} + ' autre(s)'"></p>
+        </details>
+
+        <details th:if="${vue.plan.totalAvertissements > 0}">
+            <summary><span th:text="${vue.plan.totalAvertissements}">0</span> avertissement(s)</summary>
+            <ul class="detail">
+                <li th:each="ligne : ${vue.plan.avertissements}" th:text="${ligne}">avertissement</li>
+            </ul>
+        </details>
+
+        <form method="post" th:action="@{/admin/import-myludo/importer}" class="formulaire-import">
+            <h3>Correspondance des joueurs</h3>
+            <p class="aide">Pour chaque nom de l'export, choisissez la fiche existante à utiliser ou la création d'un
+                nouveau joueur.</p>
+            <table class="historique">
+                <thead>
+                <tr><th>Nom dans l'export</th><th>Participations</th><th>Joueur LUDALEX</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="joueur : ${vue.plan.joueurs}">
+                    <td th:text="${joueur.nom}">Nom</td>
+                    <td th:text="${joueur.participations}">0</td>
+                    <td>
+                        <select th:name="'joueur-' + ${joueur.index}" th:aria-label="'Joueur pour ' + ${joueur.nom}">
+                            <option value="">Créer un nouveau joueur</option>
+                            <option th:each="existant : ${vue.joueursExistants}" th:value="${existant.id}"
+                                    th:text="${existant.nom}"
+                                    th:selected="${joueur.propose != null and existant.id == joueur.propose}">Joueur
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p>
+                <button type="submit" th:disabled="${vue.plan.parties.isEmpty() and vue.plan.jeuxACreer == 0 and vue.plan.jeuxACompleter == 0}">
+                    Importer
+                </button>
+            </p>
+        </form>
+        <form method="post" th:action="@{/admin/import-myludo/annuler}">
+            <button type="submit" class="secondaire">Annuler</button>
+        </form>
+    </section>
+
+    <!-- Rapport de réussite -->
+    <section th:if="${vue != null and vue.etat.name() == 'TERMINE'}">
+        <h2>Import réussi</h2>
+        <p class="message" role="status">
+            L'import s'est bien déroulé : <strong th:text="${vue.rapport.partiesAjoutees}">0</strong> partie(s)
+            ajoutée(s).</p>
+        <ul>
+            <li>Jeux : <span th:text="${vue.rapport.jeuxCrees}">0</span> créé(s),
+                <span th:text="${vue.rapport.jeuxCompletes}">0</span> complété(s),
+                <span th:text="${vue.rapport.jeuxInchanges}">0</span> inchangé(s)</li>
+            <li>Joueurs : <span th:text="${vue.rapport.joueursCrees}">0</span> créé(s),
+                <span th:text="${vue.rapport.joueursAssocies}">0</span> associé(s) à une fiche existante</li>
+            <li>Parties : <span th:text="${vue.rapport.partiesAjoutees}">0</span> ajoutée(s),
+                <span th:text="${vue.rapport.partiesDejaPresentes}">0</span> déjà présente(s),
+                <span th:text="${vue.rapport.totalIgnorees}">0</span> ignorée(s)</li>
+        </ul>
+        <details th:if="${vue.rapport.totalIgnorees > 0}">
+            <summary>Parties ignorées et raisons</summary>
+            <ul>
+                <li th:each="raison : ${vue.rapport.ignoreesParRaison}"
+                    th:text="${raison.value} + ' × ' + ${raison.key}">raison</li>
+            </ul>
+            <ul class="detail">
+                <li th:each="ligne : ${vue.rapport.detailsIgnorees}" th:text="${ligne}">détail</li>
+            </ul>
+            <p th:if="${vue.rapport.totalIgnorees > vue.rapport.detailsIgnorees.size()}"
+               th:text="'… et ' + ${vue.rapport.totalIgnorees - vue.rapport.detailsIgnorees.size()} + ' autre(s)'"></p>
+        </details>
+        <details th:if="${vue.rapport.totalAvertissements > 0}">
+            <summary><span th:text="${vue.rapport.totalAvertissements}">0</span> avertissement(s)</summary>
+            <ul class="detail">
+                <li th:each="ligne : ${vue.rapport.avertissements}" th:text="${ligne}">avertissement</li>
+            </ul>
+        </details>
+        <p><a class="bouton" th:href="@{/parties}">Voir les parties</a></p>
+        <form method="post" th:action="@{/admin/import-myludo/annuler}">
+            <button type="submit">Nouvel import</button>
+        </form>
+    </section>
+
+    <!-- Erreur diagnostiquable -->
+    <section th:if="${vue != null and vue.etat.name() == 'ERREUR'}">
+        <h2>L'import a échoué</h2>
+        <p class="erreur" role="alert" th:text="${vue.erreur}">Erreur</p>
+        <ul class="detail" th:if="${!vue.detailsErreur.isEmpty()}">
+            <li th:each="ligne : ${vue.detailsErreur}" th:text="${ligne}">détail</li>
+        </ul>
+        <p class="message">Aucune donnée n'a été modifiée.</p>
+        <form method="post" th:action="@{/admin/import-myludo/annuler}">
+            <button type="submit">Recommencer</button>
+        </form>
+    </section>
+</div>
+</body>
+</html>

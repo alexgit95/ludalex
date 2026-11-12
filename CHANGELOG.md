@@ -2,6 +2,23 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.10.0] - 2026-11-12
+
+### Added
+- Page Admin **Import MyLudo** (`/admin/import-myludo`, JWT Cloudflare exigé en `prod`, CSRF) : envoi des exports JSON de la collection et/ou des parties, analyse à blanc, correspondance des joueurs, confirmation, import.
+- Import du **delta seul** : une partie du fichier est déjà présente si une partie en base du même jeu et du même jour partage au moins un joueur avec elle, chaque partie en base n'en couvrant qu'une (appariement exact d'abord, puis meilleur recouvrement). Les manches identiques d'un même jour sont conservées, un réimport n'ajoute rien, les parties existantes ne sont jamais modifiées.
+- Jeux : créés depuis la collection (nom, prix, date d'acquisition) ou depuis les parties ; jeu existant non modifié hormis prix et date d'achat vides ; caractère coopératif déduit des parties puis du mécanisme « Coopération ». Joueurs : rapprochement par nom normalisé, choix modifiable, doublons de nom d'une partie numérotés (« Anonyme », « Anonyme 2 »).
+- Conversion des parties : scores, gagnants, équipes (4 maximum), résultat victoire/défaite des jeux coopératifs, lieu ; parties ignorées avec leur raison (exclue, future, sans joueur, sans gagnant en jeu non coopératif) ; avertissements (lieu tronqué, équipes ignorées, prix ou date d'achat invalides).
+- Barre de progression par phases avec compteur et élément en cours, suivie par interrogation HTMX toutes les secondes (204 tant que l'état est à jour) ; une seule analyse ou un seul import à la fois, sur un fil dédié.
+- Rapport de réussite (compteurs, ignorées par raison, avertissements) ou d'erreur diagnostiquable (fichier, entrée, jeu et date, champ, cause, ligne et colonne d'un JSON mal formé) ; message générique et journalisation pour une erreur inattendue ; contenu des fichiers toujours échappé à l'affichage.
+- Import atomique (une transaction, lots de 500) : le plan est recalculé sur l'état réel de la base juste avant l'écriture ; aucune modification de schéma ni du format de sauvegarde.
+- Réglages `ludalex.import-myludo.duree-session` (30m) et `ludalex.import-myludo.lignes-max` (200). Durée, commentaire, notes, images et métadonnées MyLudo ne sont pas importés.
+- Tests : lecteurs, appariement, import sur base réelle avec les exports d'exemple (manches multiples, coopératif, équipes, « Anonyme », deuxième import, export plus récent, existants intacts, échec annulé), orchestration (verrou, expiration, erreurs), contrôleur et rendu (progression, plan, rapport échappé, erreur), JWT exigé en `prod`.
+
+### Changed
+- Page Admin : lien vers l'import ; styles de progression et de détails dans `ludalex.css`.
+- Aucun changement de schéma de base de données.
+
 ## [0.9.0] - 2026-11-12
 
 ### Added

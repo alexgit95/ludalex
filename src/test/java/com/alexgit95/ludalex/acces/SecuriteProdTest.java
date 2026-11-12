@@ -138,6 +138,16 @@ class SecuriteProdTest {
     }
 
     @Test
+    void exigeLeJwtPourLImportMyLudo() throws Exception {
+        mvc.perform(get("/admin/import-myludo")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/admin/import-myludo/progression")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/admin/import-myludo/analyser").with(csrf())).andExpect(status().isUnauthorized());
+        mvc.perform(post("/admin/import-myludo/importer").with(csrf())).andExpect(status().isUnauthorized());
+        mvc.perform(get("/admin/import-myludo").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void protegeParCsrfLesRequetesModifiantes() throws Exception {
         mvc.perform(post("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().isForbidden());

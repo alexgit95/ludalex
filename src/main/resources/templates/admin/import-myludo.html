@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Import MyLudo', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Import MyLudo</h1>
+    <p>Reprend vos jeux, joueurs et parties (dates, lieux, scores) depuis les deux exports de MyLudo.
+        Seules les parties absentes sont ajoutées : rien de ce qui existe déjà n'est écrasé.</p>
+    <p th:if="${message}" class="erreur" role="alert" th:text="${message}">Message</p>
+    <div th:replace="~{admin/import-myludo-zone :: zone}"></div>
+</main>
+</body>
+</html>

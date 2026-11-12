@@ -1,9 +1,0 @@
-Je voudrais maintenant permettre depuis la page d'admin d'importer toutes mes stats, parties, jeu possedés et personnes avec date et lieu depuis l'export de l'application MyLudo
-Cela se rattache au change import-myludo
-Je veux le faire depuis un upload depusi la page d'admin depuis les 2 fichier my ludo, tu  trouveras un exemple en PJ, un concerne la collection, l'autre les parties
-Je veux que cet import n'ecrase pas les parties deja renseigne en conflit (meme jeu meme jour meme personne), cela ne doit ajouter que le delta
-Je veux voir sur l'ihm la barre de progression de l'import et un message indiquant si l'import a bien reussit ou un message d'erreur permettant le diagnistique en cas d'erreur
-
-
-Je veux revoir la charte graphique de toute l'application, je veux quelquechose de propre minimaliste et tourné vers la thematique de l'heroic fantasy, mais la typographie doit rester bien lisible
-Je voudrais des couleurs crème blanc cassé et des parchemins très subtil mais aussi des sortes de petits lierres très subtil aussi

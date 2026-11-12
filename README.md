@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.9.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage et sauvegarde/restauration.
+Version courante : **0.10.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration et import MyLudo.
 
 ## Parties en direct
 
@@ -56,6 +56,20 @@ images/<uuid>.<ext>      images uploadées référencées par les données
 ```
 
 Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference}`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
+
+## Import MyLudo
+
+L'écran **Admin > Import MyLudo** (`/admin/import-myludo`) reprend votre historique MyLudo : jeux possédés, joueurs et parties (date, lieu, scores, équipes, résultat coopératif) ; les statistiques se recalculent ensuite depuis les parties.
+
+1. **Fichiers** : envoyer l'export de la **collection** et/ou celui des **parties** (JSON, 2 Mo maximum chacun). Exemples anonymisés : `docs/exemple-my-ludo/`.
+2. **Analyse** (rien n'est écrit) : nombre de jeux et de parties à ajouter, déjà présentes ou ignorées (avec la raison), avertissements, et **correspondance des joueurs** : chaque nom de l'export est associé par défaut à la fiche de même nom (casse, accents et espaces ignorés), au choix à une autre fiche ou à un nouveau joueur.
+3. **Import** avec barre de progression (phase, `n sur total`, élément en cours), puis un message de réussite avec les compteurs, ou un message d'erreur précis : fichier, numéro d'entrée, jeu et date, champ, cause, et ligne/colonne d'un JSON mal formé. En cas d'erreur, rien n'est enregistré (une seule transaction).
+
+**Delta seulement, rien n'est écrasé.** Une partie du fichier est considérée comme déjà présente si, pour le même jeu et le même jour, une partie en base partage au moins un joueur avec elle ; chaque partie en base ne « couvre » qu'une seule partie du fichier, si bien que plusieurs manches identiques le même jour sont conservées. Réimporter le même fichier n'ajoute rien, un export plus récent n'ajoute que les nouvelles parties. Les parties existantes ne sont jamais modifiées ; un jeu existant n'est pas modifié (seuls son prix et sa date d'achat vides sont complétés).
+
+**Conversion** : un jeu est coopératif si une de ses parties l'est (ou par le mécanisme « Coopération ») ; une partie coopérative devient une victoire ou une défaite ; scores tous nuls = pas de score ; deux joueurs de même nom dans une partie (« Anonyme ») deviennent « Anonyme » et « Anonyme 2 » ; un prix de 0 est considéré inconnu. **Parties ignorées** (listées avec leur raison) : exclues dans MyLudo, datées dans le futur, sans joueur, ou sans gagnant dans un jeu non coopératif. **Non importés** : durée, commentaire, notes, images et métadonnées des jeux (éditeurs, thèmes...).
+
+L'analyse ou le rapport est conservé en mémoire 30 minutes (`ludalex.import-myludo.duree-session`), les listes détaillées sont limitées à 200 lignes (`ludalex.import-myludo.lignes-max`). Une seule analyse ou un seul import à la fois.
 
 ## Statistiques
 
