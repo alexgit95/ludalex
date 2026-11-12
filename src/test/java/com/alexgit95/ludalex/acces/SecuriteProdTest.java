@@ -1,0 +1,125 @@
+package com.alexgit95.ludalex.acces;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+
+@SpringBootTest(properties = {
+        "DB_URL=jdbc:h2:mem:prod;DB_CLOSE_DELAY=-1",
+        "DB_USERNAME=sa",
+        "DB_PASSWORD=",
+        "CF_ACCESS_TEAM_DOMAIN=equipe.cloudflareaccess.com",
+        "CF_ACCESS_AUD=audience-ludalex"
+})
+@ActiveProfiles("prod")
+@AutoConfigureMockMvc
+@Import(SecuriteProdTest.DecodeurDeTest.class)
+class SecuriteProdTest {
+
+    private static final JwtDeTest EMETTEUR = new JwtDeTest();
+
+    @TestConfiguration
+    static class DecodeurDeTest {
+        @Bean
+        @Primary
+        JwtDecoder decodeurDeTest() {
+            return EMETTEUR.decodeur();
+        }
+    }
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private Environment environnement;
+
+    @Test
+    void refuseSansJwt() throws Exception {
+        mvc.perform(get("/")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void accepteUnJwtValide() throws Exception {
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void refuseUnJwtExpire() throws Exception {
+        String jeton = EMETTEUR.jeton(JwtDeTest.EMETTEUR, JwtDeTest.AUDIENCE, Instant.now().minusSeconds(600));
+
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, jeton)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void refuseUneMauvaiseAudienceEn403() throws Exception {
+        String jeton = EMETTEUR.jeton(JwtDeTest.EMETTEUR, "autre-application", Instant.now().plusSeconds(600));
+
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, jeton)).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void refuseUneSignatureInconnue() throws Exception {
+        String jeton = new JwtDeTest().jetonValide();
+
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, jeton)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void refuseUnJwtIllisible() throws Exception {
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, "pas-un-jwt"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void ignoreUnHeaderDIdentiteForge() throws Exception {
+        mvc.perform(get("/").header("Cf-Access-Authenticated-User-Email", "moi@example.org"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void exempteSeulementLeCheminDeFinDePartie() throws Exception {
+        int statutFin = mvc.perform(get("/fin/un-token")).andReturn().getResponse().getStatus();
+
+        assertThat(statutFin).isNotEqualTo(401).isNotEqualTo(403);
+        mvc.perform(get("/jeux")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/finance")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void protegeParCsrfLesRequetesModifiantes() throws Exception {
+        mvc.perform(post("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/fin/un-token")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void accepteUneRequeteModifianteAvecCsrfEtJwt() throws Exception {
+        mvc.perform(post("/").with(csrf()).header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void configureLesCookiesDeSessionSecureEtLeProxy() {
+        assertThat(environnement.getProperty("server.servlet.session.cookie.secure")).isEqualTo("true");
+        assertThat(environnement.getProperty("server.servlet.session.cookie.http-only")).isEqualTo("true");
+        assertThat(environnement.getProperty("server.forward-headers-strategy")).isEqualTo("framework");
+    }
+}

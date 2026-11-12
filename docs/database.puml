@@ -1,0 +1,25 @@
+@startuml
+title LUDALEX - Modèle de données
+hide circle
+skinparam linetype ortho
+
+' Aucune autre table pour l'instant. Les entités sont ajoutées par les changes suivants :
+' ludotheque, parties, statistiques, partie-en-cours.
+
+' Composant embarqué dans les entités qui portent une image (jeu, joueur)
+class ImageSource <<Embeddable>> {
+  type : VARCHAR(10)  ' UPLOAD | URL
+  reference : VARCHAR(2048)  ' nom de fichier du volume, ou URL
+}
+
+class Joueur <<table joueur>> {
+  id : BIGINT <<PK>>
+  nom : VARCHAR(100)
+  nom_normalise : VARCHAR(100)  ' minuscules, unicité parmi les joueurs actifs
+  avatar_type / avatar_reference  ' ImageSource
+  victoire_type / victoire_reference  ' ImageSource
+  anonymise : BOOLEAN
+}
+Joueur *-- ImageSource : avatar
+Joueur *-- ImageSource : image de victoire
+@enduml

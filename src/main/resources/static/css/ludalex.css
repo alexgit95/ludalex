@@ -1,0 +1,61 @@
+:root {
+    --fond: #f1faee;
+    --encre: #2f3e46;
+    --accent: #52796f;
+    --bordure: #cad2c5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--encre);
+    background: var(--fond);
+}
+
+.entete {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--encre);
+}
+
+.marque {
+    color: var(--fond);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+}
+
+.navigation { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.navigation a { color: var(--bordure); text-decoration: none; }
+.navigation a:hover, .navigation a:focus { color: #fff; text-decoration: underline; }
+
+.contenu { flex: 1; width: 100%; max-width: 60rem; margin: 0 auto; padding: 1rem; }
+.pied { padding: 0.75rem 1rem; text-align: center; font-size: 0.8rem; color: var(--accent); }
+
+a { color: var(--accent); }
+
+.image { display: block; max-width: 100%; height: auto; border-radius: 0.5rem; }
+
+.saisie-image { display: grid; gap: 0.5rem; border: 1px solid var(--bordure); border-radius: 0.5rem; }
+.saisie-image .apercu { max-width: 8rem; max-height: 8rem; object-fit: cover; border-radius: 0.5rem; }
+.saisie-couleur { display: flex; align-items: center; gap: 0.5rem; }
+
+.bouton, button { padding: 0.4rem 0.9rem; border: 1px solid var(--accent); border-radius: 0.4rem; background: var(--accent); color: #fff; text-decoration: none; cursor: pointer; }
+.message { padding: 0.5rem 0.75rem; border-radius: 0.4rem; background: var(--bordure); }
+.erreur { color: #9b2226; margin: 0.25rem 0; }
+.formulaire { display: grid; gap: 0.75rem; max-width: 32rem; }
+.formulaire input[type="text"], .formulaire input[type="url"] { width: 100%; padding: 0.4rem; }
+.liste-joueurs { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+.liste-joueurs li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+.liste-joueurs .image { width: 3rem; height: 3rem; object-fit: cover; border-radius: 50%; }
+.liste-joueurs .nom { flex: 1; min-width: 8rem; }
+.confirmation { flex-basis: 100%; padding: 0.5rem; border: 1px solid var(--bordure); border-radius: 0.4rem; }
+.pagination { display: flex; gap: 1rem; align-items: center; }

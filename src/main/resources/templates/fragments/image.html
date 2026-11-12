@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<!-- Affichage d'une image (fichier du volume ou URL) avec image par défaut -->
+<img th:fragment="affichage(image, alt)" class="image"
+     th:src="${image != null} ? ${image.url} : '/icons/defaut.svg'"
+     th:alt="${alt}" loading="lazy"
+     onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+
+<!-- Saisie : champs <champ>Mode (UPLOAD|URL), <champ>Fichier et <champ>Url -->
+<fieldset th:fragment="saisie(champ, image)" class="saisie-image"
+          th:with="estUrl=${image != null and image.type.name() == 'URL'}">
+    <legend>Image</legend>
+    <label>
+        <input type="radio" th:name="${champ + 'Mode'}" value="UPLOAD" th:checked="${!estUrl}">
+        Fichier (2 Mo maximum)
+    </label>
+    <input type="file" th:name="${champ + 'Fichier'}" accept="image/png,image/jpeg,image/gif,image/webp">
+    <label>
+        <input type="radio" th:name="${champ + 'Mode'}" value="URL" th:checked="${estUrl}">
+        Adresse web
+    </label>
+    <input type="url" th:name="${champ + 'Url'}" maxlength="2048" placeholder="https://..."
+           th:value="${estUrl} ? ${image.reference}">
+    <img class="apercu" alt="Aperçu"
+         th:src="${image != null} ? ${image.url} : '/icons/defaut.svg'">
+</fieldset>
+
+<!-- Couleur de fond modifiable -->
+<label th:fragment="couleur(champ, valeur)" class="saisie-couleur">
+    Couleur de fond
+    <input type="color" th:name="${champ}" th:value="${valeur != null} ? ${valeur} : '#3a3a3a'">
+</label>
+
+</body>
+</html>

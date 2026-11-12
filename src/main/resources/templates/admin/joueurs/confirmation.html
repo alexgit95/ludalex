@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+<div th:fragment="confirmation" class="confirmation">
+    <p>
+        Supprimer <strong th:text="${joueur.nom}">joueur</strong> ? Ses parties seront conservées
+        sous la mention « Joueur supprimé ».
+    </p>
+    <form method="post" th:action="@{/admin/joueurs/{id}/supprimer(id=${joueur.id})}">
+        <button type="submit">Confirmer la suppression</button>
+        <button type="button" onclick="this.closest('.confirmation').remove()">Annuler</button>
+    </form>
+</div>
+</body>
+</html>

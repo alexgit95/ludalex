@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Joueurs', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Joueurs</h1>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p><a class="bouton" th:href="@{/admin/joueurs/nouveau}">Ajouter un joueur</a></p>
+
+    <p th:if="${page.empty}">Aucun joueur déclaré.</p>
+    <ul class="liste-joueurs">
+        <li th:each="joueur : ${page.content}">
+            <img th:replace="~{fragments/image :: affichage(${joueur.avatar}, ${joueur.nom})}">
+            <span class="nom" th:text="${joueur.nom}">Nom</span>
+            <a th:href="@{/admin/joueurs/{id}/modifier(id=${joueur.id})}">Modifier</a>
+            <button type="button"
+                    th:attr="hx-get=@{/admin/joueurs/{id}/suppression(id=${joueur.id})},hx-target='#confirmation-' + ${joueur.id}"
+                    hx-swap="innerHTML">Supprimer</button>
+            <div th:id="'confirmation-' + ${joueur.id}"></div>
+        </li>
+    </ul>
+
+    <nav class="pagination" th:if="${page.totalPages > 1}" aria-label="Pagination">
+        <a th:if="${page.hasPrevious()}" th:href="@{/admin/joueurs(page=${page.number - 1})}">Précédent</a>
+        <span th:text="${page.number + 1} + ' / ' + ${page.totalPages}">1 / 1</span>
+        <a th:if="${page.hasNext()}" th:href="@{/admin/joueurs(page=${page.number + 1})}">Suivant</a>
+    </nav>
+</main>
+</body>
+</html>

@@ -1,0 +1,9 @@
+target/
+.env
+*.db
+*.db-journal
+data/
+cloned-by-copilot/
+.idea/
+*.iml
+.vscode/

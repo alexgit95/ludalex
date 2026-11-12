@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Admin', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Administration</h1>
+    <ul>
+        <li><a th:href="@{/admin/joueurs}">Joueurs</a></li>
+    </ul>
+</main>
+</body>
+</html>

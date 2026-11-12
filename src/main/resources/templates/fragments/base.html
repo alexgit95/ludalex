@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr" th:fragment="layout(titre, contenu)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2f3e46">
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
+    <title th:text="${titre} + ' - LUDALEX'">LUDALEX</title>
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="icon" href="/icons/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="stylesheet" href="/css/ludalex.css">
+    <script src="/js/htmx.min.js" defer></script>
+    <script src="/js/app.js" defer></script>
+</head>
+<body>
+<header class="entete">
+    <a class="marque" href="/">LUDALEX</a>
+    <nav class="navigation" aria-label="Navigation principale">
+        <a href="/jeux">Ludothèque</a>
+        <a href="/parties">Parties</a>
+        <a href="/affichage">Affichage</a>
+        <a href="/admin">Admin</a>
+    </nav>
+</header>
+<main class="contenu" th:replace="${contenu}">
+    <p>Contenu</p>
+</main>
+<footer class="pied">LUDALEX</footer>
+</body>
+</html>

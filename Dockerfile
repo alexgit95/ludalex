@@ -33,16 +33,18 @@ WORKDIR /app
 
 COPY --from=backend-build /app/target/ludalex-*.jar app.jar
 
-RUN groupadd --system appgroup && useradd --system --gid appgroup --no-create-home appuser
+RUN groupadd --system appgroup && useradd --system --gid appgroup --no-create-home appuser \
+    && mkdir -p /data/images && chown -R appuser:appgroup /data
 USER appuser
 
 EXPOSE 8181
 
 ENV APP_TIMEZONE=Europe/Paris
+# Raspberry Pi : tas borné, GC série, mode headless (décodage d'image sans écran)
+ENV JAVA_OPTS="-Xmx384m -XX:+UseSerialGC -Djava.awt.headless=true"
+ENV LUDALEX_IMAGES_REPERTOIRE=/data/images
 
-# Profil prod → PostgreSQL
-ENTRYPOINT ["java", \
-    "-Djava.security.egd=file:/dev/./urandom", \
-    "-Duser.timezone=Europe/Paris", \
-    "-Dspring.profiles.active=prod", \
-    "-jar", "app.jar"]
+VOLUME /data/images
+
+# Profil prod → PostgreSQL + Cloudflare Access
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Paris -Dspring.profiles.active=prod -jar app.jar"]
