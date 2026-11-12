@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.11.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **0.12.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -76,6 +76,7 @@ L'analyse ou le rapport est conservé en mémoire 30 minutes (`ludalex.import-my
 Thème « heroic fantasy » sobre, sur toute l'application (y compris l'écran Affichage) : fond crème et parchemin très discret, petits lierres en filigrane (coin de l'en-tête, séparateurs de titres, coins des cartes), titres en police à empattements et texte en sans-serif pour rester très lisible. Aucune police ni ressource externe : polices du système uniquement.
 
 - Les couleurs sont des variables CSS au début de `static/css/ludalex.css` (`:root`) ; `affichage.css` les réutilise. Les contrastes texte/fond respectent WCAG AA (vérifié par `CharteGraphiqueTest`).
+- **Menu burger** : sur petit écran (< 40 rem) avec JavaScript, la navigation est repliée derrière un bouton (icône en trois lianes) qui ouvre un panneau parchemin sous l'en-tête ; fermeture au clic extérieur ou sur Échap ; sans JavaScript, la navigation reste affichée.
 - Les décors sont de petits SVG dans `static/decor/` (`parchemin.svg`, `lierre-coin.svg`, `lierre-separateur.svg`) ; pour en ajouter un, le déposer dans ce dossier et le référencer par une variable `--decor-*`.
 - La couleur de fond propre à chaque jeu est conservée comme cadre ; le texte repose toujours sur un cartouche clair.
 - Pour changer de police, modifier `--police-titre` / `--police-texte` (une police embarquée devra être placée dans `static/`, jamais chargée depuis un CDN).
@@ -93,7 +94,7 @@ La fiche d'un jeu affiche ses statistiques, calculées sur les parties **termin�
 
 L'écran **Parties** (`/parties`) liste les parties de la plus récente à la plus ancienne (filtre par jeu) et permet d'en déclarer après coup.
 
-- **Déclaration** : choisir le jeu, cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs).
+- **Déclaration** : choisir le jeu (son image s'affiche dès le choix pour confirmer visuellement), cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs).
 - **Jeu compétitif** : désigner au moins un gagnant parmi les participants ; plusieurs gagnants sont possibles.
 - **Jeu coopératif** : choisir « Victoire » ou « Défaite » ; une victoire compte pour chaque participant.
 - **Équipes** : jusqu'à 4 équipes propres à la partie (nom facultatif) ; désigner une équipe gagnante rend gagnants tous ses membres.
@@ -103,7 +104,7 @@ L'écran **Parties** (`/parties`) liste les parties de la plus récente à la pl
 
 ## Ludothèque
 
-L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu).
+L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu), 2 par ligne sur petit écran et 3 sur grand écran. Sous le titre, un petit parchemin affiche la coupe, l'avatar et le nom du ou des champions (à la ligne en cas d'égalité) ; la hauteur est réservée pour les jeux sans champion.
 
 - **Jeu** : nom (obligatoire), image (upload ou URL), prix (positif, deux décimales), date d'achat (pas dans le futur), jeu coopératif ou non. Sans image, une image par défaut est affichée.
 - **Couleur de fond** : calculée à l'enregistrement depuis l'image ; « Choisir la couleur manuellement » permet de la corriger. Elle est conservée tant que l'image ne change pas.

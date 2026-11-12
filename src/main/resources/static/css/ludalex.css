@@ -24,6 +24,7 @@
     --decor-parchemin: url("/decor/parchemin.svg");
     --decor-coin: url("/decor/lierre-coin.svg");
     --decor-separateur: url("/decor/lierre-separateur.svg");
+    --decor-coupe: url("/decor/coupe.svg");
 }
 
 * { box-sizing: border-box; }
@@ -157,7 +158,11 @@ legend { font-family: var(--police-titre); padding: 0 0.4rem; }
 .pagination { display: flex; gap: 1rem; align-items: center; }
 
 /* Ludothèque : la couleur du jeu (inline) forme un cadre, le texte repose toujours sur un cartouche clair. */
-.grille-jeux { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 1rem; }
+.grille-jeux {
+    list-style: none; padding: 0; margin: 0 auto; max-width: 40rem;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+}
+@media (min-width: 40rem) { .grille-jeux { grid-template-columns: repeat(3, 1fr); } }
 .vignette {
     position: relative; padding: 0.5rem; border-radius: 0.6rem; border: 2px solid var(--or);
     display: flex; flex-direction: column; gap: 0.35rem; text-align: center;
@@ -169,8 +174,7 @@ legend { font-family: var(--police-titre); padding: 0 0.4rem; }
     font-family: var(--police-titre); font-weight: 700; background: var(--surface); color: var(--encre);
     border-radius: 0.35rem; padding: 0.15rem 0.35rem;
 }
-.vignette .champion { position: absolute; top: 0.4rem; right: 0.4rem; display: flex; gap: 0.15rem; }
-.vignette .pret { font-size: 0.8rem; color: var(--encre); background: var(--surface); border-radius: 0.3rem; padding: 0.1rem 0.3rem; }
+.vignette .pret { font-size: 0.8rem; color: var(--encre); background: var(--surface); border-radius: 0.3rem; padding: 0.1rem 0.3rem; align-self: center; }
 .fiche-jeu {
     padding: 0.75rem; border-radius: 0.6rem; border: 2px solid var(--or);
     box-shadow: 0 2px 8px rgba(43, 33, 24, 0.18);
@@ -207,8 +211,15 @@ th { font-family: var(--police-titre); }
 .gagnants, .equipes, .resultat-cooperatif { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; border: 1px solid var(--bordure); border-radius: 0.5rem; }
 .filtre { margin: 0.75rem 0; }
 
-.vignette .champion { align-items: center; background: var(--surface); border-radius: 1rem; padding: 0.1rem 0.35rem; }
-.vignette .champion .image { width: 1.6rem; height: 1.6rem; aspect-ratio: auto; border-radius: 50%; object-fit: cover; }
+.vignette .champions-vignette {
+    margin: 0; min-height: 3.4rem; padding: 0.25rem 0.4rem; border-radius: 0.35rem;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.2rem 0.6rem;
+    font-size: 0.85rem; line-height: 1.2;
+}
+.vignette .champions-vignette.avec-champion { background: var(--surface) var(--decor-parchemin); border: 1px solid var(--or); }
+.coupe { width: 1.3rem; height: 1.3rem; background: var(--decor-coupe) no-repeat center / contain; flex: none; }
+.champion-nom { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--encre); font-family: var(--police-titre); font-weight: 700; }
+.vignette .champion-nom .image { width: 1.5rem; height: 1.5rem; aspect-ratio: auto; border-radius: 50%; object-fit: cover; border: 1px solid var(--or); }
 .champions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
 .champion-fiche { display: inline-flex; align-items: center; gap: 0.35rem; }
 .champion-fiche .image, .classement .image { width: 2rem; height: 2rem; object-fit: cover; border-radius: 50%; display: inline-block; vertical-align: middle; }
@@ -230,4 +241,27 @@ summary { cursor: pointer; font-family: var(--police-titre); }
     h1 { font-size: 1.6rem; }
     .entete { padding-right: 4.5rem; }
     .entete::after { width: 4.5rem; background-size: 4.5rem 4.5rem; background-position: right -1.2rem top -1.8rem; }
+}
+
+.apercu-jeu { display: flex; align-items: center; gap: 0.75rem; }
+.apercu-jeu.vide { display: none; }
+.apercu-jeu .image { width: 6rem; height: 6rem; object-fit: cover; border: 2px solid var(--or); }
+.apercu-jeu .nom-jeu { font-family: var(--police-titre); font-weight: 700; }
+
+/* Menu burger : seulement sur petit écran et si JavaScript est actif (sinon la navigation reste visible) */
+.burger { display: none; }
+@media (max-width: 39.99rem) {
+    .js .burger {
+        display: inline-flex; margin-left: auto; padding: 0.3rem; background: transparent; color: var(--encre);
+        border: 1px solid var(--bordure); box-shadow: none;
+    }
+    .js .burger:hover { background: var(--parchemin-fonce); color: var(--encre); }
+    .burger svg { width: 1.6rem; height: 1.6rem; display: block; }
+    .js .navigation {
+        display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 10; flex-direction: column;
+        gap: 0.25rem; padding: 0.75rem 1rem 1rem; background: var(--parchemin) var(--decor-parchemin);
+        border-bottom: 2px solid var(--or); box-shadow: 0 6px 10px rgba(43, 33, 24, 0.15);
+    }
+    .js .navigation.ouvert { display: flex; }
+    .js .navigation a { padding: 0.5rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--bordure); }
 }

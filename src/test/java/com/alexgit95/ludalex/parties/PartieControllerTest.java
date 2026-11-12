@@ -96,6 +96,23 @@ class PartieControllerTest {
     }
 
     @Test
+    void apercuDuJeuChoisiDansLeFormulaireEtLeFragment() throws Exception {
+        Jeu catan = jeu(false);
+
+        mvc.perform(get("/parties/resultat?jeuId=" + catan.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString("id=\"apercu-jeu\"")))
+                .andExpect(content().string(containsString("hx-swap-oob=\"true\"")))
+                .andExpect(content().string(containsString(catan.getNom())));
+        mvc.perform(get("/parties/resultat")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("apercu-jeu vide")));
+        mvc.perform(get("/parties/nouveau?jeu=" + catan.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString("class=\"apercu-jeu\"")))
+                .andExpect(content().string(containsString("class=\"nom-jeu\">" + catan.getNom())));
+        mvc.perform(get("/parties/nouveau")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("apercu-jeu vide")));
+    }
+
+    @Test
     void proposeLesLieuxDejaSaisis() throws Exception {
         Jeu catan = jeu(false);
         Joueur marie = joueur();

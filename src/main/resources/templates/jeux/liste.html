@@ -14,12 +14,15 @@
                 <img th:replace="~{fragments/image :: affichage(${vignette.jeu.image}, ${vignette.jeu.nom})}">
                 <span class="titre" th:text="${vignette.jeu.nom}">Jeu</span>
             </a>
-            <span class="champion" th:if="${champions.get(vignette.jeu.id) != null}" title="Champion">
-                <span aria-hidden="true">&#128081;</span>
-                <th:block th:each="champion : ${champions.get(vignette.jeu.id)}">
-                    <img th:replace="~{fragments/image :: affichage(${champion.avatar}, ${champion.nom})}">
+            <p class="champions-vignette" th:classappend="${champions.get(vignette.jeu.id) != null} ? 'avec-champion'">
+                <th:block th:if="${champions.get(vignette.jeu.id) != null}">
+                    <span class="coupe" role="img" aria-label="Champion"></span>
+                    <span class="champion-nom" th:each="champion : ${champions.get(vignette.jeu.id)}">
+                        <img th:replace="~{fragments/image :: affichage(${champion.avatar}, ${champion.nom})}">
+                        <span th:text="${champion.nom}">Alice</span>
+                    </span>
                 </th:block>
-            </span>
+            </p>
             <span class="pret" th:if="${vignette.emprunteur != null}"
                   th:text="'Prêté à ' + ${vignette.emprunteur}"></span>
         </li>

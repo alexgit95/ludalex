@@ -16,6 +16,7 @@
                 <option th:each="j : ${jeux}" th:value="${j.id}" th:text="${j.nom}"></option>
             </select>
         </label>
+        <div th:replace="~{parties/resultat :: apercu(false)}"></div>
 
         <label>Date
             <input type="date" th:field="*{date}">

@@ -84,6 +84,18 @@ class JeuControllerTest {
     }
 
     @Test
+    void reserveLaLigneChampionEtExposeLeBurgerAccessible() throws Exception {
+        jeuExistant();
+
+        mvc.perform(get("/jeux")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("class=\"champions-vignette\"")))
+                .andExpect(content().string(containsString("aria-expanded=\"false\"")))
+                .andExpect(content().string(containsString("aria-controls=\"navigation\"")))
+                .andExpect(content().string(containsString("id=\"navigation\"")))
+                .andExpect(content().string(containsString("href=\"/parties\"")));
+    }
+
+    @Test
     void creeUnJeuAvecImageUploadeeEtCouleurCalculee() throws Exception {
         String nom = nomUnique();
 

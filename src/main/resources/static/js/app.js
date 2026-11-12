@@ -23,6 +23,31 @@
         }
     });
 
+    // Menu burger : actif seulement avec JavaScript (sans lui, la navigation reste visible)
+    document.documentElement.classList.add('js');
+    var burger = document.querySelector('.burger');
+    var navigation = document.getElementById('navigation');
+    if (burger && navigation) {
+        var basculer = function (ouvrir) {
+            navigation.classList.toggle('ouvert', ouvrir);
+            burger.setAttribute('aria-expanded', String(ouvrir));
+        };
+        burger.addEventListener('click', function () {
+            basculer(burger.getAttribute('aria-expanded') !== 'true');
+        });
+        document.addEventListener('click', function (evenement) {
+            if (!navigation.contains(evenement.target) && !burger.contains(evenement.target)) {
+                basculer(false);
+            }
+        });
+        document.addEventListener('keydown', function (evenement) {
+            if (evenement.key === 'Escape') {
+                basculer(false);
+                burger.focus();
+            }
+        });
+    }
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(function () { /* PWA facultative */ });
     }

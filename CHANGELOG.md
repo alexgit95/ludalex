@@ -2,6 +2,19 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.12.0] - 2026-11-12
+
+### Added
+- Menu burger sur petit écran (icône en trois lianes, panneau parchemin sous l'en-tête, `aria-expanded`, fermeture au clic extérieur et sur Échap) ; sans JavaScript la navigation reste visible.
+- Aperçu (image et nom) du jeu choisi dans le formulaire de déclaration d'une partie, mis à jour par le fragment HTMX existant (`hx-swap-oob`).
+- Décor SVG de coupe (`static/decor/coupe.svg`).
+
+### Changed
+- Ludothèque : le champion passe sous le titre, sur un petit parchemin avec coupe, avatar et nom (tous les champions à égalité, à la ligne), hauteur réservée pour l'alignement.
+- Ludothèque : grille limitée à 2 colonnes puis 3 dès 40 rem, centrée (largeur 40 rem).
+- `PartieController` expose le jeu sélectionné au formulaire et au fragment de résultat ; cache du service worker `ludalex-statique-0.12.0`.
+- Tests : aperçu du jeu, ligne champion réservée, burger accessible, grille, décors.
+
 ## [0.11.0] - 2026-11-13
 
 ### Added

@@ -23,5 +23,18 @@
     </fieldset>
 </div>
 
+<!-- Aperçu du jeu choisi ; en mode oob il remplace #apercu-jeu du formulaire lors d'un changement de jeu -->
+<div th:fragment="apercu(oob)" id="apercu-jeu" class="apercu-jeu" th:classappend="${jeuApercu == null} ? 'vide'" th:attr="hx-swap-oob=${oob} ? 'true'">
+    <th:block th:if="${jeuApercu != null}">
+        <img th:replace="~{fragments/image :: affichage(${jeuApercu.image}, ${jeuApercu.nom})}">
+        <span class="nom-jeu" th:text="${jeuApercu.nom}">Jeu</span>
+    </th:block>
+</div>
+
+<div th:fragment="resultat-et-apercu">
+    <div th:replace="~{:: resultat}"></div>
+    <div th:replace="~{:: apercu(true)}"></div>
+</div>
+
 </body>
 </html>

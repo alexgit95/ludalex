@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alexgit95.ludalex.jeux.Jeu;
 import com.alexgit95.ludalex.jeux.JeuService;
 import com.alexgit95.ludalex.joueurs.Joueur;
 import com.alexgit95.ludalex.joueurs.JoueurService;
@@ -104,8 +105,9 @@ public class PartieController {
         model.addAttribute("form", form);
         model.addAttribute("joueurs", joueurs.selectionnables());
         model.addAttribute("cooperatif", estCooperatif(jeuId));
+        model.addAttribute("jeuApercu", jeuChoisi(jeuId));
         model.addAttribute("equipesMax", PartieService.EQUIPES_MAX);
-        return "parties/resultat :: resultat";
+        return "parties/resultat :: resultat-et-apercu";
     }
 
     /** Fragment HTMX : lieux déjà saisis commençant par le texte tapé. */
@@ -135,6 +137,7 @@ public class PartieController {
         model.addAttribute("jeux", jeux.tousParNom());
         model.addAttribute("joueurs", proposes);
         model.addAttribute("cooperatif", estCooperatif(form.getJeuId()));
+        model.addAttribute("jeuApercu", jeuChoisi(form.getJeuId()));
         model.addAttribute("equipesMax", PartieService.EQUIPES_MAX);
     }
 
@@ -151,8 +154,13 @@ public class PartieController {
     }
 
     private boolean estCooperatif(Long jeuId) {
-        return jeuId != null && jeux.tousParNom().stream()
-                .anyMatch(jeu -> jeu.getId().equals(jeuId) && jeu.isCooperatif());
+        Jeu jeu = jeuChoisi(jeuId);
+        return jeu != null && jeu.isCooperatif();
+    }
+
+    private Jeu jeuChoisi(Long jeuId) {
+        return jeuId == null ? null : jeux.tousParNom().stream()
+                .filter(jeu -> jeu.getId().equals(jeuId)).findFirst().orElse(null);
     }
 
     private static void signaler(BindingResult erreurs, PartieInvalideException e) {

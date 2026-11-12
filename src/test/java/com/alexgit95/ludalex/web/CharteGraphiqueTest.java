@@ -98,12 +98,20 @@ class CharteGraphiqueTest {
 
     @Test
     void lesDecorsExistentEtSontLegers() throws IOException {
-        for (String nom : new String[] {"parchemin.svg", "lierre-coin.svg", "lierre-separateur.svg"}) {
+        for (String nom : new String[] {"parchemin.svg", "lierre-coin.svg", "lierre-separateur.svg", "coupe.svg"}) {
             Path decor = STATIC.resolve("decor").resolve(nom);
             assertThat(decor).exists();
             assertThat(Files.size(decor)).as(nom).isLessThan(4096);
             assertThat(lire(STATIC.resolve("css/ludalex.css"))).contains("/decor/" + nom);
         }
+    }
+
+    @Test
+    void leBurgerEstAccessibleEtLaGrilleLimiteeADeuxPuisTroisColonnes() throws IOException {
+        String js = lire(STATIC.resolve("js/app.js"));
+        assertThat(js).contains("aria-expanded").contains("Escape").contains("classList.add('js')");
+        String css = lire(STATIC.resolve("css/ludalex.css"));
+        assertThat(css).contains("repeat(2, 1fr)").contains("repeat(3, 1fr)").contains(".js .navigation.ouvert");
     }
 
     @Test

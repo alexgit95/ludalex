@@ -17,7 +17,15 @@
 <body>
 <header class="entete">
     <a class="marque" href="/">LUDALEX</a>
-    <nav class="navigation" aria-label="Navigation principale">
+    <button type="button" class="burger" aria-expanded="false" aria-controls="navigation" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 6c3-2 6 2 9 0s6-2 9 0"/>
+            <path d="M3 12c3-2 6 2 9 0s6-2 9 0"/>
+            <path d="M3 18c3-2 6 2 9 0s6-2 9 0"/>
+            <path d="M7 4.6c.6-1 1.6-1.2 2.2-.8M16 10.4c.6-1 1.6-1.2 2.2-.8M9 16.4c.6-1 1.6-1.2 2.2-.8"/>
+        </svg>
+    </button>
+    <nav id="navigation" class="navigation" aria-label="Navigation principale">
         <a href="/jeux">Ludothèque</a>
         <a href="/parties">Parties</a>
         <a href="/affichage">Affichage</a>
