@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Ludothèque', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Ma ludothèque</h1>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p><a class="bouton" th:href="@{/jeux/nouveau}">Ajouter un jeu</a></p>
+
+    <p th:if="${page.empty}">Aucun jeu pour l'instant.</p>
+    <ul class="grille-jeux">
+        <li class="vignette" th:each="vignette : ${page.content}"
+            th:style="'background-color:' + ${vignette.jeu.couleurFond}">
+            <a th:href="@{/jeux/{id}(id=${vignette.jeu.id})}">
+                <img th:replace="~{fragments/image :: affichage(${vignette.jeu.image}, ${vignette.jeu.nom})}">
+                <span class="titre" th:text="${vignette.jeu.nom}">Jeu</span>
+            </a>
+            <!-- Emplacement du symbole de champion (alimenté par le change « statistiques ») -->
+            <span class="champion" aria-hidden="true"></span>
+            <span class="pret" th:if="${vignette.emprunteur != null}"
+                  th:text="'Prêté à ' + ${vignette.emprunteur}"></span>
+        </li>
+    </ul>
+
+    <nav class="pagination" th:if="${page.totalPages > 1}" aria-label="Pagination">
+        <a th:if="${page.hasPrevious()}" th:href="@{/jeux(page=${page.number - 1})}">Précédent</a>
+        <span th:text="${page.number + 1} + ' / ' + ${page.totalPages}">1 / 1</span>
+        <a th:if="${page.hasNext()}" th:href="@{/jeux(page=${page.number + 1})}">Suivant</a>
+    </nav>
+</main>
+</body>
+</html>

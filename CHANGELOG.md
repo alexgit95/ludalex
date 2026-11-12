@@ -2,6 +2,22 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.4.0] - 2026-11-12
+
+### Added
+- Ludothèque (`/jeux`) : jeux avec nom, image (upload ou URL), prix, date d'achat et indicateur coopératif ; liste en vignettes paginées (24 par page, fond de la couleur du jeu), fiche détail, création, modification et suppression avec confirmation HTMX.
+- Couleur de fond calculée à l'enregistrement, modifiable à la main (case « Choisir la couleur manuellement ») ; conservée si l'image ne change pas, recalculée si elle change. Seules les couleurs `#RRGGBB` sont acceptées.
+- Contrôles : nom obligatoire (200 caractères), prix positif avec deux décimales au plus, date d'achat non future.
+- Prêts : prêter un jeu à une personne (texte libre, 100 caractères), enregistrer le retour, historique complet sur la fiche, emprunteur courant sur la vignette. Un seul prêt en cours par jeu, garanti par un verrou pessimiste (test de concurrence).
+- Suppression d'un jeu refusée s'il a des parties (interface `PartiesJeu`, implémentation provisoire à remplacer par le change `parties`) ; sinon suppression du jeu, de ses prêts et de son image.
+- Emplacements réservés pour le symbole de champion (liste) et les statistiques (fiche), alimentés par le change `statistiques`.
+- Tables `jeu` et `pret` (voir `docs/database.puml`) ; bean `Clock` pour les dates du jour.
+- Tests : services, dépôts JPA, contrôleur, concurrence des prêts.
+
+### Changed
+- `EntreeImage` déplacé du package `joueurs` vers `images` pour être partagé avec les jeux.
+- Fragment de saisie de couleur : case à cocher pour choisir la couleur à la main.
+
 ## [0.3.0] - 2026-11-12
 
 ### Added

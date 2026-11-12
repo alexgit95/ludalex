@@ -6,7 +6,17 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.3.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, gestion des images et des joueurs. Les fonctionnalités métier restantes (jeux, parties, affichage, sauvegarde) arrivent avec les changes suivants.
+Version courante : **0.4.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs et ludothèque. Les fonctionnalités restantes (parties, statistiques, affichage, sauvegarde) arrivent avec les changes suivants.
+
+## Ludothèque
+
+L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu).
+
+- **Jeu** : nom (obligatoire), image (upload ou URL), prix (positif, deux décimales), date d'achat (pas dans le futur), jeu coopératif ou non. Sans image, une image par défaut est affichée.
+- **Couleur de fond** : calculée à l'enregistrement depuis l'image ; « Choisir la couleur manuellement » permet de la corriger. Elle est conservée tant que l'image ne change pas.
+- **Fiche** : date d'achat, prix, type, prêt en cours et historique des prêts ; zone réservée aux statistiques de parties.
+- **Prêts** : « Prêter » demande l'emprunteur (texte libre) et la date (aujourd'hui par défaut) ; « Enregistrer le retour » clot le prêt. Un jeu ne peut être prêché qu'à une personne à la fois ; l'historique est conservé, l'emprunteur courant apparaît sur la vignette.
+- **Suppression** : avec confirmation ; refusée si le jeu a des parties. Elle supprime aussi l'historique des prêts et l'image uploadée.
 
 ## Administration des joueurs
 

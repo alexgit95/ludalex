@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Jeu', ~{::main})}">
+<body>
+<main class="contenu">
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+    <article class="fiche-jeu" th:style="'background-color:' + ${fiche.jeu.couleurFond}">
+        <img th:replace="~{fragments/image :: affichage(${fiche.jeu.image}, ${fiche.jeu.nom})}">
+        <h1 th:text="${fiche.jeu.nom}">Jeu</h1>
+        <dl>
+            <dt>Type</dt>
+            <dd th:text="${fiche.jeu.cooperatif} ? 'Coopératif' : 'Compétitif'">Compétitif</dd>
+            <dt>Date d'achat</dt>
+            <dd th:text="${fiche.jeu.dateAchat != null} ? ${#temporals.format(fiche.jeu.dateAchat, 'dd/MM/yyyy')} : 'Non renseignée'">-</dd>
+            <dt>Prix</dt>
+            <dd th:text="${fiche.jeu.prix != null} ? ${#numbers.formatDecimal(fiche.jeu.prix, 1, 'WHITESPACE', 2, 'COMMA')} + ' €' : 'Non renseigné'">-</dd>
+        </dl>
+        <p>
+            <a class="bouton" th:href="@{/jeux/{id}/modifier(id=${fiche.jeu.id})}">Modifier</a>
+            <button type="button"
+                    th:attr="hx-get=@{/jeux/{id}/suppression(id=${fiche.jeu.id})}"
+                    hx-target="#zone-suppression" hx-swap="innerHTML">Supprimer</button>
+        </p>
+        <div id="zone-suppression"></div>
+    </article>
+
+    <section class="prets" aria-label="Prêt">
+        <h2>Prêt</h2>
+        <div th:if="${fiche.enCours != null}">
+            <p>
+                Prêté à <strong th:text="${fiche.enCours.emprunteur}">Marie</strong>
+                depuis le <span th:text="${#temporals.format(fiche.enCours.datePret, 'dd/MM/yyyy')}">01/01/2026</span>.
+            </p>
+            <button type="button" th:attr="hx-get=@{/jeux/{id}/retour(id=${fiche.jeu.id})}"
+                    hx-target="#zone-pret" hx-swap="innerHTML">Enregistrer le retour</button>
+        </div>
+        <div th:if="${fiche.enCours == null}">
+            <p>Ce jeu est disponible.</p>
+            <button type="button" th:attr="hx-get=@{/jeux/{id}/pret(id=${fiche.jeu.id})}"
+                    hx-target="#zone-pret" hx-swap="innerHTML">Prêter</button>
+        </div>
+        <div id="zone-pret"></div>
+
+        <h3>Historique</h3>
+        <p th:if="${fiche.historique.empty}">Aucun prêt enregistré.</p>
+        <table class="historique" th:unless="${fiche.historique.empty}">
+            <thead><tr><th>Emprunteur</th><th>Prêté le</th><th>Rendu le</th></tr></thead>
+            <tbody>
+            <tr th:each="pret : ${fiche.historique}">
+                <td th:text="${pret.emprunteur}">Marie</td>
+                <td th:text="${#temporals.format(pret.datePret, 'dd/MM/yyyy')}">01/01/2026</td>
+                <td th:text="${pret.dateRetour != null} ? ${#temporals.format(pret.dateRetour, 'dd/MM/yyyy')} : 'En cours'">En cours</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Statistiques de parties (alimentées par le change « statistiques ») -->
+    <section id="statistiques" class="statistiques" aria-label="Statistiques"></section>
+
+    <p><a th:href="@{/jeux}">Retour à la ludothèque</a></p>
+</main>
+</body>
+</html>

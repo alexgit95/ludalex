@@ -1,5 +1,6 @@
 package com.alexgit95.ludalex.joueurs;
 
+import com.alexgit95.ludalex.images.EntreeImage;
 import java.util.List;
 
 import org.springframework.data.domain.Page;

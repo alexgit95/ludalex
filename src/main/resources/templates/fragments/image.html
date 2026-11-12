@@ -28,10 +28,14 @@
 </fieldset>
 
 <!-- Couleur de fond modifiable -->
-<label th:fragment="couleur(champ, valeur)" class="saisie-couleur">
-    Couleur de fond
+<!-- Sans la case cochée, la couleur est calculée (nouvelle image) ou conservée -->
+<div th:fragment="couleur(champ, valeur)" class="saisie-couleur">
+    <label>
+        <input type="checkbox" th:name="${champ + 'Manuelle'}" value="true">
+        Choisir la couleur de fond manuellement
+    </label>
     <input type="color" th:name="${champ}" th:value="${valeur != null} ? ${valeur} : '#3a3a3a'">
-</label>
+</div>
 
 </body>
 </html>

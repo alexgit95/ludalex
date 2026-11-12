@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<div th:fragment="pret" class="formulaire-pret">
+    <form method="post" th:action="@{/jeux/{id}/preter(id=${jeu.id})}" class="formulaire">
+        <label>Emprunteur
+            <input type="text" name="emprunteur" maxlength="100" required>
+        </label>
+        <label>Date du prêt
+            <input type="date" name="datePret" th:value="${aujourdhui}">
+        </label>
+        <p>
+            <button type="submit">Enregistrer le prêt</button>
+            <button type="button" onclick="this.closest('.formulaire-pret').remove()">Annuler</button>
+        </p>
+    </form>
+</div>
+
+<div th:fragment="retour" class="formulaire-pret">
+    <form method="post" th:action="@{/jeux/{id}/retour(id=${jeu.id})}" class="formulaire">
+        <label>Date de retour
+            <input type="date" name="dateRetour" th:value="${aujourdhui}">
+        </label>
+        <p>
+            <button type="submit">Enregistrer le retour</button>
+            <button type="button" onclick="this.closest('.formulaire-pret').remove()">Annuler</button>
+        </p>
+    </form>
+</div>
+
+</body>
+</html>

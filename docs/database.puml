@@ -4,7 +4,7 @@ hide circle
 skinparam linetype ortho
 
 ' Aucune autre table pour l'instant. Les entités sont ajoutées par les changes suivants :
-' ludotheque, parties, statistiques, partie-en-cours.
+' parties, statistiques, partie-en-cours.
 
 ' Composant embarqué dans les entités qui portent une image (jeu, joueur)
 class ImageSource <<Embeddable>> {
@@ -22,4 +22,24 @@ class Joueur <<table joueur>> {
 }
 Joueur *-- ImageSource : avatar
 Joueur *-- ImageSource : image de victoire
+
+class Jeu <<table jeu>> {
+  id : BIGINT <<PK>>
+  nom : VARCHAR(200)
+  image_type / image_reference  ' ImageSource
+  couleur_fond : VARCHAR(7)  ' #RRGGBB
+  prix : DECIMAL(10,2) nullable
+  date_achat : DATE nullable
+  cooperatif : BOOLEAN
+}
+Jeu *-- ImageSource : image
+
+class Pret <<table pret>> {
+  id : BIGINT <<PK>>
+  jeu_id : BIGINT <<FK>>
+  emprunteur : VARCHAR(100)
+  date_pret : DATE
+  date_retour : DATE nullable  ' vide = prêt en cours
+}
+Jeu "1" <-- "0..*" Pret
 @enduml

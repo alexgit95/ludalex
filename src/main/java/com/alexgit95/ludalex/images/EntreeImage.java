@@ -1,4 +1,4 @@
-package com.alexgit95.ludalex.joueurs;
+package com.alexgit95.ludalex.images;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,11 +10,11 @@ public record EntreeImage(MultipartFile fichier, String url, boolean retirer) {
         return new EntreeImage(null, null, false);
     }
 
-    boolean aFichier() {
+    public boolean aFichier() {
         return fichier != null && !fichier.isEmpty();
     }
 
-    boolean aUrl() {
+    public boolean aUrl() {
         return StringUtils.hasText(url);
     }
 }

@@ -1,5 +1,6 @@
 package com.alexgit95.ludalex.joueurs;
 
+import com.alexgit95.ludalex.images.EntreeImage;
 import org.springframework.web.multipart.MultipartFile;
 
 /** Données du formulaire de joueur ; les noms des champs d'image suivent le fragment de saisie. */

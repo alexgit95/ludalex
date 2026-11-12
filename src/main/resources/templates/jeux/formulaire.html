@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Jeu', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1 th:text="${jeu == null} ? 'Nouveau jeu' : 'Modifier le jeu'">Jeu</h1>
+
+    <form method="post" enctype="multipart/form-data" th:action="${action}" th:object="${form}" class="formulaire">
+        <label>Nom
+            <input type="text" th:field="*{nom}" maxlength="200" required>
+        </label>
+        <p class="erreur" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
+
+        <label>Prix (€)
+            <input type="number" th:field="*{prix}" step="0.01" min="0">
+        </label>
+        <p class="erreur" th:if="${#fields.hasErrors('prix')}" th:errors="*{prix}"></p>
+
+        <label>Date d'achat
+            <input type="date" th:field="*{dateAchat}">
+        </label>
+        <p class="erreur" th:if="${#fields.hasErrors('dateAchat')}" th:errors="*{dateAchat}"></p>
+
+        <label><input type="checkbox" th:field="*{cooperatif}"> Jeu coopératif</label>
+
+        <div th:with="image=${jeu != null} ? ${jeu.image} : null">
+            <div th:replace="~{fragments/image :: saisie('image', ${image})}"></div>
+            <p class="erreur" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></p>
+            <label th:if="${image != null}"><input type="checkbox" name="imageRetirer" value="true"> Retirer l'image</label>
+        </div>
+
+        <div th:replace="~{fragments/image :: couleur('couleur', ${form.couleur})}"></div>
+        <p class="erreur" th:if="${#fields.hasErrors('couleur')}" th:errors="*{couleur}"></p>
+
+        <p>
+            <button type="submit">Enregistrer</button>
+            <a th:href="${jeu == null} ? @{/jeux} : @{/jeux/{id}(id=${jeu.id})}">Annuler</a>
+        </p>
+    </form>
+</main>
+</body>
+</html>
