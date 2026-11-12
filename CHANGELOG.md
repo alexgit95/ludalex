@@ -2,6 +2,16 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.12.2] - 2026-11-12
+
+### Added
+- Healthcheck de l'application dans `docker-compose.portainer.yml` : requête HTTP locale sur le port 8181 via bash (`/dev/tcp`, sans curl), toutes les 30 s, 120 s de démarrage toléré ; aucun changement de code.
+
+## [0.12.1] - 2026-11-12
+
+### Added
+- `docker-compose.portainer.yml` : stack prête à déployer dans Portainer ou Arcane (image Docker Hub arm64, PostgreSQL, volumes, variables obligatoires contrôlées) ; aucun changement de code ni de pipeline.
+
 ## [0.12.0] - 2026-11-12
 
 ### Added

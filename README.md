@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.12.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **0.12.2**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -184,6 +184,10 @@ docker compose up --build
 - La JVM est limitée par `-Xmx` (Raspberry Pi) et tourne en mode headless.
 - Les images uploadées seront stockées sur le volume `/data/images`.
 - Cloudflare doit publier l'application derrière Access, avec la règle Bypass limitée à `/fin/*`.
+
+### Portainer / Arcane
+
+`docker-compose.portainer.yml` est une stack prête à coller (Portainer : Stacks > Add stack ; Arcane : Projects) qui utilise l'image Docker Hub `<DOCKERHUB_USERNAME>/ludalex` (arm64). Les deux services ont un healthcheck : PostgreSQL via `pg_isready`, l'application via une requête HTTP sur son port 8181 (sans curl, avec 120 s de démarrage toléré), visible comme « healthy » dans Portainer ou Arcane. Variables à renseigner dans l'interface : `DOCKERHUB_USERNAME`, `DB_USERNAME`, `DB_PASSWORD`, `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD` ; facultatives : `LUDALEX_TAG` (défaut `latest`), `LUDALEX_PORT` (défaut `8181`), `POSTGRES_DB`, `JAVA_OPTS`.
 
 ## Tests
 

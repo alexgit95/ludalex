@@ -1,0 +1,47 @@
+# Stack à coller dans Portainer (Stacks > Add stack > Web editor) ou Arcane (Projects > New project).
+# Utilise l'image publiée sur Docker Hub (arm64) ; renseigner les variables dans l'interface (voir .env.example).
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ludalex}
+      POSTGRES_USER: ${DB_USERNAME:?DB_USERNAME obligatoire}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD obligatoire}
+    volumes:
+      - donnees-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: alexdock95/ludalex:latest
+    platform: linux/arm64
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${LUDALEX_PORT:-8181}:8181"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-ludalex}
+      DB_USERNAME: ${DB_USERNAME:?DB_USERNAME obligatoire}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD obligatoire}
+      CF_ACCESS_TEAM_DOMAIN: ${CF_ACCESS_TEAM_DOMAIN:?CF_ACCESS_TEAM_DOMAIN obligatoire}
+      CF_ACCESS_AUD: ${CF_ACCESS_AUD:?CF_ACCESS_AUD obligatoire}
+      JAVA_OPTS: ${JAVA_OPTS:--Xmx384m -XX:+UseSerialGC -Djava.awt.headless=true}
+    # Sonde sans curl : l'application doit répondre en HTTP (tout code convient, 401/403 Cloudflare inclus) ; démarrage lent sur Raspberry Pi
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8181 && printf 'GET / HTTP/1.0\\r\\n\\r\\n' >&3 && read -r ligne <&3 && [[ $${ligne} == HTTP/* ]]"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    volumes:
+      - images:/data/images
+
+volumes:
+  donnees-postgres:
+  images:
