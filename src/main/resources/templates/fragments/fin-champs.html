@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<!-- Champs de fin de partie : résultat coopératif ou gagnants, et scores facultatifs -->
+<div th:fragment="champs(vue, fin)">
+    <fieldset th:if="${vue.cooperatif}" class="resultat-cooperatif">
+        <legend>Résultat de la partie coopérative</legend>
+        <label><input type="radio" name="resultat" value="VICTOIRE"
+                      th:checked="${fin.resultat != null and fin.resultat.name() == 'VICTOIRE'}"> Victoire</label>
+        <label><input type="radio" name="resultat" value="DEFAITE"
+                      th:checked="${fin.resultat != null and fin.resultat.name() == 'DEFAITE'}"> Défaite</label>
+    </fieldset>
+
+    <fieldset th:unless="${vue.cooperatif}" class="gagnants">
+        <legend>Gagnants</legend>
+        <label th:each="p : ${vue.participations}">
+            <input type="checkbox" name="gagnantIds" th:value="${p.joueur.id}"
+                   th:checked="${fin.gagnantIds.contains(p.joueur.id)}">
+            <span th:text="${p.joueur.nom}">Joueur</span>
+        </label>
+        <label th:each="equipe : ${vue.equipes}">
+            <input type="checkbox" name="equipesGagnantes" th:value="${equipe.id}"
+                   th:checked="${fin.equipesGagnantes.contains(equipe.id)}">
+            <span th:text="'Équipe ' + ${equipe.nom} + ' gagnante'">Équipe gagnante</span>
+        </label>
+    </fieldset>
+
+    <fieldset class="scores">
+        <legend>Scores (facultatif)</legend>
+        <label th:each="p : ${vue.participations}">
+            <span th:text="${p.joueur.nom}">Joueur</span>
+            <input type="number" th:name="|scores[${p.joueur.id}]|" th:value="${fin.scores.get(p.joueur.id)}">
+        </label>
+    </fieldset>
+</div>
+
+</body>
+</html>

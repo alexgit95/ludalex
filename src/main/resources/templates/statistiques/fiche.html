@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+<section th:fragment="statistiques" id="statistiques" class="statistiques" aria-label="Statistiques">
+    <h2>Statistiques</h2>
+
+    <p th:if="${stats.vide}">Aucune partie jouée pour l'instant.</p>
+
+    <div th:unless="${stats.vide}">
+        <p class="champions" th:if="${!stats.champions.empty}">
+            <span th:text="${stats.champions.size() > 1} ? 'Champions' : 'Champion'">Champion</span> :
+            <span class="champion-fiche" th:each="champion : ${stats.champions}">
+                <img th:replace="~{fragments/image :: affichage(${champion.avatar}, ${champion.nom})}">
+                <strong th:text="${champion.nom}">Marie</strong>
+            </span>
+        </p>
+
+        <table class="classement">
+            <thead><tr><th>Joueur</th><th>Parties</th><th>Victoires</th><th>Taux de victoire</th></tr></thead>
+            <tbody>
+            <tr th:each="ligne : ${stats.classement}">
+                <td>
+                    <img th:replace="~{fragments/image :: affichage(${ligne.joueur.avatar}, ${ligne.joueur.nom})}">
+                    <span th:text="${ligne.joueur.nom}">Joueur</span>
+                </td>
+                <td th:text="${ligne.parties}">8</td>
+                <td th:text="${ligne.victoires}">5</td>
+                <td th:text="${ligne.tauxPourcent} + ' %'">63 %</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Dernières parties</h3>
+        <ul class="liste-parties">
+            <li th:each="ligne : ${stats.dernieresParties}">
+                <div class="entete-partie">
+                    <span th:text="${#temporals.format(ligne.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</span>
+                    <span th:if="${ligne.partie.lieu != null}" th:text="'à ' + ${ligne.partie.lieu}">lieu</span>
+                    <span th:if="${ligne.partie.resultatCooperatif != null}"
+                          th:text="${ligne.partie.resultatCooperatif.name() == 'VICTOIRE'} ? 'Victoire collective' : 'Défaite collective'">Victoire</span>
+                </div>
+                <ul class="participants">
+                    <li th:each="p : ${ligne.participations}" th:classappend="${p.gagnant} ? 'gagnant'">
+                        <span th:text="${p.joueur.nom}">Joueur</span>
+                        <span class="score" th:if="${p.score != null}" th:text="${p.score}">10</span>
+                        <span class="trophee" th:if="${p.gagnant}" title="Gagnant">&#127942;</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>
+</body>
+</html>

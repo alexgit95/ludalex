@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Partie en direct', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Partie en direct</h1>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+    <section th:if="${active != null}" class="partie-active">
+        <h2 th:text="${active.jeu.nom}">Jeu</h2>
+        <p>
+            <strong th:text="${active.partie.statut.name() == 'EN_COURS'} ? 'En cours' : 'En pause'">En cours</strong>
+            depuis le <span th:text="${#temporals.format(active.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</span>
+        </p>
+        <ul class="participants">
+            <li th:each="p : ${active.participations}">
+                <img th:replace="~{fragments/image :: affichage(${p.joueur.avatar}, ${p.joueur.nom})}">
+                <span th:text="${p.joueur.nom}">Joueur</span>
+                <span class="equipe" th:if="${p.equipe != null}" th:text="'(' + ${p.equipe.nom} + ')'">(Équipe)</span>
+            </li>
+        </ul>
+        <p th:if="${active.joueurSuivant != null}">
+            À <strong th:text="${active.joueurSuivant.nom}">Marie</strong> de jouer à la reprise.
+        </p>
+
+        <form th:if="${active.partie.statut.name() == 'EN_COURS'}" method="post"
+              th:action="@{/parties/direct/{id}/pause(id=${active.partie.id})}" class="formulaire">
+            <label>Mettre en pause : c'était au tour de
+                <select name="joueurSuivantId" required>
+                    <option value="">Choisir</option>
+                    <option th:each="p : ${active.participations}" th:value="${p.joueur.id}" th:text="${p.joueur.nom}"></option>
+                </select>
+            </label>
+            <button type="submit">Mettre en pause</button>
+        </form>
+        <form th:if="${active.partie.statut.name() == 'EN_PAUSE'}" method="post"
+              th:action="@{/parties/direct/{id}/reprendre(id=${active.partie.id})}">
+            <button type="submit">Reprendre la partie</button>
+        </form>
+        <p><a class="bouton" th:href="@{/parties/direct/{id}/terminer(id=${active.partie.id})}">Terminer la partie</a></p>
+    </section>
+
+    <section th:if="${active == null}">
+        <h2>Lancer une partie</h2>
+        <form method="post" th:action="@{/parties/direct/lancer}" th:object="${form}" class="formulaire formulaire-partie">
+            <p class="erreur" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+            <label>Jeu
+                <select th:field="*{jeuId}" required>
+                    <option value="">Choisir un jeu</option>
+                    <option th:each="j : ${jeux}" th:value="${j.id}" th:text="${j.nom}"></option>
+                </select>
+            </label>
+
+            <table class="joueurs-partie">
+                <thead><tr><th>Joue</th><th>Joueur</th><th>Équipe</th></tr></thead>
+                <tbody>
+                <tr th:each="j : ${joueurs}">
+                    <td><input type="checkbox" name="joueurIds" th:value="${j.id}"
+                               th:checked="${form.joueurIds.contains(j.id)}"></td>
+                    <td th:text="${j.nom}">Joueur</td>
+                    <td>
+                        <select th:name="|equipeDe[${j.id}]|">
+                            <option value="">-</option>
+                            <option th:each="n : ${#numbers.sequence(1, equipesMax)}" th:value="${n}"
+                                    th:text="'Équipe ' + ${n}" th:selected="${form.equipeDe.get(j.id) == n}"></option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:if="${joueurs.empty}">Aucun joueur déclaré : ajoutez-en dans l'administration.</p>
+
+            <fieldset class="equipes">
+                <legend>Noms des équipes (facultatif)</legend>
+                <label th:each="n : ${#numbers.sequence(1, equipesMax)}">Équipe <span th:text="${n}">1</span>
+                    <input type="text" maxlength="100" th:name="|equipeNoms[${n}]|" th:value="${form.equipeNoms.get(n)}">
+                </label>
+            </fieldset>
+            <p><button type="submit">Lancer la partie</button></p>
+        </form>
+    </section>
+
+    <p><a th:href="@{/parties}">Retour aux parties</a></p>
+</main>
+</body>
+</html>

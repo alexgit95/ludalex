@@ -6,7 +6,43 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.4.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs et ludothèque. Les fonctionnalités restantes (parties, statistiques, affichage, sauvegarde) arrivent avec les changes suivants.
+Version courante : **0.7.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques et parties en direct. Les fonctionnalités restantes (écran Affichage, sauvegarde) arrivent avec les changes suivants.
+
+## Parties en direct
+
+L'écran **Parties > Partie en direct** (`/parties/direct`) suit une partie pendant qu'elle se joue.
+
+- **Lancer** : choisir le jeu et les joueurs (équipes facultatives). Un lien/QR de fin de partie est alors généré.
+- **Une seule partie à la fois** : lancer une seconde partie demande d'abord de terminer la précédente (gagnants, scores facultatifs ou victoire/défaite). Si le lancement est invalide, la partie précédente reste inchangée.
+- **Pause** : indiquer à quel joueur c'était de jouer ; **Reprendre** relance la partie et génère un nouveau lien.
+- **Terminer** : désigner le ou les gagnants (ou une équipe), scores en option ; pour un jeu coopératif, victoire ou défaite.
+
+### Lien de fin de partie (`/fin/{token}`)
+
+N'importe quel appareil peut terminer ou mettre en pause la partie via ce lien, **sans authentification Cloudflare**. Le token est la seule autorisation : aléatoire (256 bits), stocké haché, à usage unique, valable 7 jours, limité à sa partie, et il ne révèle rien d'autre que le jeu et les joueurs de cette partie. Un lien inconnu, expiré ou déjà utilisé donne toujours la même page neutre. Le nombre de requêtes par adresse est limité (30 par minute).
+
+Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir `docs/fin-de-partie-qr.md`. Le QR code qui encode ce lien est affiché par l'écran Affichage (change suivant).
+
+## Statistiques
+
+La fiche d'un jeu affiche ses statistiques, calculées sur les parties **terminées** :
+
+- **Classement** : parties jouées, victoires et taux de victoire (victoires / parties) de chaque joueur, sans minimum de parties. Jeux coopératifs et compétitifs sont traités de la même façon : une victoire coopérative compte pour chaque participant.
+- **Champion** : le joueur qui a le plus de victoires (au moins une). En cas d'égalité, tous les premiers sont champions. Un joueur anonymisé reste dans le classement mais ne peut pas être champion.
+- **Liste des jeux** : chaque vignette porte l'avatar du ou des champions.
+- **Dix dernières parties** : date, lieu, joueurs, scores et gagnants.
+
+## Parties
+
+L'écran **Parties** (`/parties`) liste les parties de la plus récente à la plus ancienne (filtre par jeu) et permet d'en déclarer après coup.
+
+- **Déclaration** : choisir le jeu, cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs).
+- **Jeu compétitif** : désigner au moins un gagnant parmi les participants ; plusieurs gagnants sont possibles.
+- **Jeu coopératif** : choisir « Victoire » ou « Défaite » ; une victoire compte pour chaque participant.
+- **Équipes** : jusqu'à 4 équipes propres à la partie (nom facultatif) ; désigner une équipe gagnante rend gagnants tous ses membres.
+- **Lieu** : texte libre ; en tapant, les lieux déjà saisis sont proposés (10 au plus).
+- **Modification et suppression** : une partie peut être corrigée ou supprimée (confirmation). Un joueur anonymisé reste dans ses anciennes parties mais ne peut pas être ajouté à une nouvelle.
+- Un jeu ayant des parties ne peut pas être supprimé ; un joueur ayant des parties est anonymisé au lieu d'être supprimé.
 
 ## Ludothèque
 

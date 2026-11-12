@@ -74,3 +74,26 @@ a { color: var(--accent); }
 .fiche-jeu .confirmation { color: var(--encre); background: var(--fond); }
 .historique { border-collapse: collapse; width: 100%; }
 .historique th, .historique td { border-bottom: 1px solid var(--bordure); padding: 0.35rem 0.5rem; text-align: left; }
+
+.liste-parties { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.liste-parties > li { border: 1px solid var(--bordure); border-radius: 0.5rem; padding: 0.75rem; }
+.entete-partie { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; align-items: baseline; }
+.participants { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.participants li { display: flex; align-items: center; gap: 0.35rem; }
+.participants .image { width: 2rem; height: 2rem; object-fit: cover; border-radius: 50%; }
+.participants .gagnant { font-weight: 700; }
+.participants .score { background: var(--bordure); border-radius: 0.3rem; padding: 0 0.3rem; }
+.formulaire-partie { max-width: 46rem; }
+.joueurs-partie { border-collapse: collapse; width: 100%; }
+.joueurs-partie td, .joueurs-partie th { padding: 0.3rem 0.5rem; text-align: left; border-bottom: 1px solid var(--bordure); }
+.joueurs-partie .score { width: 5rem; }
+.gagnants, .equipes, .resultat-cooperatif { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; border: 1px solid var(--bordure); border-radius: 0.5rem; }
+.filtre { margin: 0.75rem 0; }
+
+.vignette .champion { align-items: center; background: rgba(0,0,0,.45); border-radius: 1rem; padding: 0.1rem 0.35rem; }
+.vignette .champion .image { width: 1.6rem; height: 1.6rem; aspect-ratio: auto; border-radius: 50%; object-fit: cover; }
+.champions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+.champion-fiche { display: inline-flex; align-items: center; gap: 0.35rem; }
+.champion-fiche .image, .classement .image { width: 2rem; height: 2rem; object-fit: cover; border-radius: 50%; display: inline-block; vertical-align: middle; }
+.classement { border-collapse: collapse; width: 100%; }
+.classement th, .classement td { border-bottom: 1px solid var(--bordure); padding: 0.35rem 0.5rem; text-align: left; }

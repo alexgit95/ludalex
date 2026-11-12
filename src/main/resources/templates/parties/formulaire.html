@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Partie', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1 th:text="${detail == null} ? 'Déclarer une partie' : 'Modifier la partie'">Partie</h1>
+
+    <form method="post" th:action="${action}" th:object="${form}" class="formulaire formulaire-partie">
+        <p class="erreur" th:each="erreur : ${#fields.globalErrors()}" th:text="${erreur}"></p>
+        <p class="erreur" th:each="erreur : ${#fields.errors('scores*')}" th:text="${erreur}"></p>
+
+        <label>Jeu
+            <select th:field="*{jeuId}" required
+                    th:attr="hx-get=@{/parties/resultat}" hx-target="#zone-resultat" hx-swap="innerHTML"
+                    hx-trigger="change">
+                <option value="">Choisir un jeu</option>
+                <option th:each="j : ${jeux}" th:value="${j.id}" th:text="${j.nom}"></option>
+            </select>
+        </label>
+
+        <label>Date
+            <input type="date" th:field="*{date}">
+        </label>
+        <p class="erreur" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></p>
+
+        <label>Lieu (facultatif)
+            <input type="text" th:field="*{lieu}" list="lieux" maxlength="100" autocomplete="off"
+                   th:attr="hx-get=@{/parties/lieux}" hx-trigger="keyup changed delay:300ms"
+                   hx-target="#lieux" hx-swap="outerHTML">
+            <datalist id="lieux"></datalist>
+        </label>
+        <p class="erreur" th:if="${#fields.hasErrors('lieu')}" th:errors="*{lieu}"></p>
+
+        <table class="joueurs-partie">
+            <thead><tr><th>Joue</th><th>Joueur</th><th>Score</th><th>Équipe</th></tr></thead>
+            <tbody>
+            <tr th:each="j : ${joueurs}">
+                <td><input type="checkbox" name="joueurIds" th:value="${j.id}"
+                           th:checked="${form.joueurIds.contains(j.id)}"></td>
+                <td th:text="${j.nom}">Joueur</td>
+                <td><input type="number" class="score" th:name="|scores[${j.id}]|"
+                           th:value="${form.scores.get(j.id)}"></td>
+                <td>
+                    <select th:name="|equipeDe[${j.id}]|">
+                        <option value="">-</option>
+                        <option th:each="n : ${#numbers.sequence(1, equipesMax)}" th:value="${n}"
+                                th:text="'Équipe ' + ${n}" th:selected="${form.equipeDe.get(j.id) == n}"></option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${joueurs.empty}">Aucun joueur déclaré : ajoutez-en dans l'administration.</p>
+
+        <fieldset class="equipes">
+            <legend>Noms des équipes (facultatif)</legend>
+            <label th:each="n : ${#numbers.sequence(1, equipesMax)}">Équipe <span th:text="${n}">1</span>
+                <input type="text" maxlength="100" th:name="|equipeNoms[${n}]|" th:value="${form.equipeNoms.get(n)}">
+            </label>
+        </fieldset>
+
+        <div id="zone-resultat">
+            <div th:replace="~{parties/resultat :: resultat}"></div>
+        </div>
+
+        <p>
+            <button type="submit">Enregistrer</button>
+            <a th:href="@{/parties}">Annuler</a>
+        </p>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fin/base :: tete('Fin de partie')}"></head>
+<body>
+<main>
+    <h1 th:text="${vue.jeu.nom}">Jeu</h1>
+    <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+    <section>
+        <h2>Terminer la partie</h2>
+        <form method="post" th:action="@{/fin/{token}/terminer(token=${token})}">
+            <div th:replace="~{fragments/fin-champs :: champs(${vue}, ${form})}"></div>
+            <button type="submit">Valider la fin de la partie</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Mettre en pause</h2>
+        <form method="post" th:action="@{/fin/{token}/pause(token=${token})}">
+            <label>C'était au tour de
+                <select name="joueurSuivantId" required>
+                    <option value="">Choisir</option>
+                    <option th:each="p : ${vue.participations}" th:value="${p.joueur.id}" th:text="${p.joueur.nom}"></option>
+                </select>
+            </label>
+            <button type="submit">Mettre en pause</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

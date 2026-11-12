@@ -56,8 +56,11 @@
         </table>
     </section>
 
-    <!-- Statistiques de parties (alimentées par le change « statistiques ») -->
-    <section id="statistiques" class="statistiques" aria-label="Statistiques"></section>
+    <!-- Statistiques de parties, chargées à la demande -->
+    <section id="statistiques" class="statistiques" aria-label="Statistiques"
+             th:attr="hx-get=@{/jeux/{id}/statistiques(id=${fiche.jeu.id})}" hx-trigger="load" hx-swap="outerHTML">
+        <p>Chargement des statistiques...</p>
+    </section>
 
     <p><a th:href="@{/jeux}">Retour à la ludothèque</a></p>
 </main>

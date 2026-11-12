@@ -72,6 +72,11 @@ public class JeuService {
     }
 
     @Transactional(readOnly = true)
+    public List<Jeu> tousParNom() {
+        return jeux.findAll(Sort.by(Sort.Order.asc("nom").ignoreCase(), Sort.Order.asc("id")));
+    }
+
+    @Transactional(readOnly = true)
     public Page<VignetteJeu> lister(int page) {
         Page<Jeu> pageJeux = jeux.findAll(PageRequest.of(Math.max(page, 0), TAILLE_PAGE,
                 Sort.by(Sort.Order.asc("nom").ignoreCase(), Sort.Order.asc("id"))));

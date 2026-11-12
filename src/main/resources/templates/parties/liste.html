@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Parties', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Parties</h1>
+    <p class="message" th:if="${message}" th:text="${message}"></p>
+    <p>
+        <a class="bouton" th:href="@{/parties/nouveau}">Déclarer une partie</a>
+        <a class="bouton" th:href="@{/parties/direct}">Partie en direct</a>
+    </p>
+
+    <form method="get" th:action="@{/parties}" class="filtre">
+        <label>Jeu
+            <select name="jeu" onchange="this.form.submit()">
+                <option value="">Tous les jeux</option>
+                <option th:each="j : ${jeux}" th:value="${j.id}" th:text="${j.nom}"
+                        th:selected="${jeuFiltre != null and jeuFiltre == j.id}"></option>
+            </select>
+        </label>
+        <noscript><button type="submit">Filtrer</button></noscript>
+    </form>
+
+    <p th:if="${page.empty}">Aucune partie.</p>
+    <ul class="liste-parties">
+        <li th:each="ligne : ${page.content}">
+            <div class="entete-partie">
+                <strong th:text="${ligne.partie.jeu.nom}">Jeu</strong>
+                <span th:text="${#temporals.format(ligne.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</span>
+                <span th:if="${ligne.partie.lieu != null}" th:text="'à ' + ${ligne.partie.lieu}">lieu</span>
+                <span class="statut" th:if="${ligne.partie.statut.name() != 'TERMINEE'}"
+                      th:text="${ligne.partie.statut.name() == 'EN_COURS'} ? 'En cours' : 'En pause'">En cours</span>
+                <span class="resultat" th:if="${ligne.partie.resultatCooperatif != null}"
+                      th:text="${ligne.partie.resultatCooperatif.name() == 'VICTOIRE'} ? 'Victoire collective' : 'Défaite collective'">Victoire</span>
+            </div>
+            <ul class="participants">
+                <li th:each="p : ${ligne.participations}" th:classappend="${p.gagnant} ? 'gagnant'">
+                    <img th:replace="~{fragments/image :: affichage(${p.joueur.avatar}, ${p.joueur.nom})}">
+                    <span th:text="${p.joueur.nom}">Joueur</span>
+                    <span class="score" th:if="${p.score != null}" th:text="${p.score}">10</span>
+                    <span class="equipe" th:if="${p.equipe != null}" th:text="'(' + ${p.equipe.nom} + ')'">(Équipe 1)</span>
+                    <span class="trophee" th:if="${p.gagnant}" title="Gagnant">&#127942;</span>
+                </li>
+            </ul>
+            <p>
+                <a th:if="${ligne.partie.statut.name() == 'TERMINEE'}"
+                   th:href="@{/parties/{id}/modifier(id=${ligne.partie.id})}">Modifier</a>
+                <button type="button"
+                        th:attr="hx-get=@{/parties/{id}/suppression(id=${ligne.partie.id})},hx-target='#confirmation-' + ${ligne.partie.id}"
+                        hx-swap="innerHTML">Supprimer</button>
+            </p>
+            <div th:id="'confirmation-' + ${ligne.partie.id}"></div>
+        </li>
+    </ul>
+
+    <nav class="pagination" th:if="${page.totalPages > 1}" aria-label="Pagination">
+        <a th:if="${page.hasPrevious()}" th:href="@{/parties(jeu=${jeuFiltre},page=${page.number - 1})}">Précédent</a>
+        <span th:text="${page.number + 1} + ' / ' + ${page.totalPages}">1 / 1</span>
+        <a th:if="${page.hasNext()}" th:href="@{/parties(jeu=${jeuFiltre},page=${page.number + 1})}">Suivant</a>
+    </nav>
+</main>
+</body>
+</html>

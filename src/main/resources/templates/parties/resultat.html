@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<!-- Utilise form, joueurs, cooperatif et equipesMax du modèle -->
+<div th:fragment="resultat">
+    <fieldset th:if="${cooperatif}" class="resultat-cooperatif">
+        <legend>Résultat de la partie coopérative</legend>
+        <label><input type="radio" name="resultat" value="VICTOIRE" th:checked="${form.resultat != null and form.resultat.name() == 'VICTOIRE'}"> Victoire</label>
+        <label><input type="radio" name="resultat" value="DEFAITE" th:checked="${form.resultat != null and form.resultat.name() == 'DEFAITE'}"> Défaite</label>
+    </fieldset>
+
+    <fieldset th:unless="${cooperatif}" class="gagnants">
+        <legend>Gagnants</legend>
+        <label th:each="j : ${joueurs}">
+            <input type="checkbox" name="gagnantIds" th:value="${j.id}" th:checked="${form.gagnantIds.contains(j.id)}">
+            <span th:text="${j.nom}">Joueur</span>
+        </label>
+        <label th:each="n : ${#numbers.sequence(1, equipesMax)}">
+            <input type="checkbox" name="equipesGagnantes" th:value="${n}" th:checked="${form.equipesGagnantes.contains(n)}">
+            <span th:text="'Équipe ' + ${n} + ' gagnante'">Équipe 1 gagnante</span>
+        </label>
+    </fieldset>
+</div>
+
+</body>
+</html>

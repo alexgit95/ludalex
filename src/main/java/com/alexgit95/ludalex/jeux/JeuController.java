@@ -3,6 +3,7 @@ package com.alexgit95.ludalex.jeux;
 import java.time.Clock;
 import java.time.LocalDate;
 
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,16 +26,21 @@ public class JeuController {
     private final JeuService jeux;
     private final PretService prets;
     private final Clock horloge;
+    private final ChampionsDesJeux champions;
 
-    public JeuController(JeuService jeux, PretService prets, Clock horloge) {
+    public JeuController(JeuService jeux, PretService prets, Clock horloge, ChampionsDesJeux champions) {
         this.jeux = jeux;
         this.prets = prets;
         this.horloge = horloge;
+        this.champions = champions;
     }
 
     @GetMapping
     public String liste(@RequestParam(defaultValue = "0") int page, Model model) {
-        model.addAttribute("page", jeux.lister(page));
+        Page<VignetteJeu> vignettes = jeux.lister(page);
+        model.addAttribute("page", vignettes);
+        model.addAttribute("champions",
+                champions.pour(vignettes.getContent().stream().map(vignette -> vignette.jeu().getId()).toList()));
         return "jeux/liste";
     }
 

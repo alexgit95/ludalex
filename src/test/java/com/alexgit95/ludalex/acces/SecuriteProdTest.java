@@ -104,6 +104,19 @@ class SecuriteProdTest {
     }
 
     @Test
+    void ouvreLeLienDeFinSansJwtMaisExigeLeJwtPourLesEcransDeLApplication() throws Exception {
+        String jeton = "A".repeat(43);
+
+        mvc.perform(get("/fin/" + jeton)).andExpect(status().isNotFound())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header()
+                        .string("X-Robots-Tag", "noindex"));
+        mvc.perform(post("/fin/" + jeton + "/terminer").with(csrf())).andExpect(status().isNotFound());
+        mvc.perform(get("/parties/direct")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/parties")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/parties/direct/lancer").with(csrf())).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void protegeParCsrfLesRequetesModifiantes() throws Exception {
         mvc.perform(post("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().isForbidden());

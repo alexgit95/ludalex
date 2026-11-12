@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Terminer la partie', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Terminer la partie</h1>
+    <p th:if="${lancement != null}" class="message">
+        Une partie est déjà en cours : renseignez sa fin pour lancer la nouvelle.
+    </p>
+    <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+
+    <h2 th:text="${vue.jeu.nom}">Jeu</h2>
+    <form method="post" th:action="${action}" class="formulaire formulaire-partie">
+        <th:block th:if="${lancement != null}">
+            <input type="hidden" name="jeuId" th:value="${lancement.jeuId}">
+            <input type="hidden" name="joueurIds" th:each="id : ${lancement.joueurIds}" th:value="${id}">
+            <input type="hidden" th:each="e : ${lancement.equipeDe}" th:if="${e.value != null}"
+                   th:name="|equipeDe[${e.key}]|" th:value="${e.value}">
+            <input type="hidden" th:each="n : ${lancement.equipeNoms}" th:name="|equipeNoms[${n.key}]|"
+                   th:value="${n.value}">
+        </th:block>
+
+        <div th:replace="~{fragments/fin-champs :: champs(${vue}, ${fin})}"></div>
+
+        <p>
+            <button type="submit" th:text="${lancement != null} ? 'Terminer et lancer la nouvelle partie' : 'Terminer la partie'">Terminer</button>
+            <a th:href="@{/parties/direct}">Annuler</a>
+        </p>
+    </form>
+</main>
+</body>
+</html>

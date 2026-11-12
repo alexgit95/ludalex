@@ -2,6 +2,52 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.7.0] - 2026-11-12
+
+### Added
+- Parties en direct (`/parties/direct`) : lancement (jeu, joueurs actifs, équipes facultatives), pause avec le joueur à qui c'était de jouer (obligatoire et participant), reprise, fin avec gagnants (plusieurs possibles), scores facultatifs ou résultat victoire/défaite pour un jeu coopératif.
+- Une seule partie active (en cours ou en pause) à la fois : lancer une seconde partie impose de terminer d'abord la précédente en renseignant sa fin ; la fin et le lancement sont atomiques (si le lancement est invalide, la partie précédente reste active). Lancements simultanés sérialisés (l'application n'a qu'une instance).
+- Lien public de fin de partie `/fin/{token}`, accessible sans JWT Cloudflare : terminer la partie (gagnants, scores facultatifs, résultat coopératif) ou la mettre en pause. Le token est la seule autorisation : 256 bits aléatoires, seule l'empreinte SHA-256 est stockée, rattaché à une partie, **à usage unique** (consommation atomique, annulée si l'action échoue), valable 7 jours, invalidé par la pause, la fin ou un nouveau token.
+- Réponse identique (404, page neutre) pour un lien inconnu, mal formé, expiré, déjà utilisé ou dont la partie n'est plus en cours ; la page n'expose que le jeu et les joueurs de sa partie, sans lien ni ressource vers le reste de l'application.
+- Protection des liens : limitation de débit par adresse (30 requêtes par minute, 429 avec `Retry-After`) avant Spring Security et avant tout accès à la base ; en-têtes `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, `X-Robots-Tag: noindex`.
+- Réglages `ludalex.fin.validite` (7d), `ludalex.fin.limite-par-minute` (30) et `ludalex.fin.en-tete-ip` ; en `prod`, l'adresse du client est lue dans `CF-Connecting-IP`.
+- Tables `token_fin_partie` et colonne `terminee_le` de `partie` (voir `docs/database.puml`).
+- Tests : règles de la fin en direct, token (génération, hachage, expiration, usage unique), cycle de vie sur base réelle (atomicité, retour arrière, lancements et consommations simultanés), page publique (inconnu, expiré, utilisé, autre partie, CSRF, en-têtes, 429), écrans du propriétaire, accès sans JWT limité à `/fin/**` en `prod`.
+
+### Changed
+- La suppression d'une partie supprime aussi ses tokens de fin de partie.
+- La liste des parties n'offre plus la modification d'une partie en cours ou en pause et propose le lien « Partie en direct ».
+- `PartieService` : constructeur et règles de gagnants partagés entre parties déclarées et parties en direct.
+
+## [0.6.0] - 2026-11-12
+
+### Added
+- Statistiques par jeu sur la fiche (chargement HTMX, `/jeux/{id}/statistiques`) : classement des joueurs (parties jouées, victoires, taux de victoire arrondi), champion(s) et dix dernières parties terminées (date, lieu, joueurs, scores, gagnants).
+- Champion(s) d'un jeu : le ou les joueurs ayant le plus de victoires (au moins une) ; en cas d'égalité tous les ex æquo ; aucun minimum de parties ; jeux coopératifs et compétitifs regroupés (une victoire coopérative compte pour chaque participant) ; les joueurs anonymisés restent dans le classement mais ne peuvent pas être champions.
+- Symbole de champion sur les vignettes de la liste des jeux : avatar de chaque champion, plusieurs en cas d'égalité, rien sans victoire.
+- Calculs par requêtes agrégées sur les parties terminées uniquement (parties en cours ou en pause ignorées) ; les champions d'une page de 24 jeux s'obtiennent en un nombre constant de requêtes (vérifié par test).
+- Interface `ChampionsDesJeux` dans le module des jeux, implémentée par les statistiques.
+- Tests : service, requêtes agrégées JPA, intégration (égalité, anonymisation, coopératif, dix dernières parties, nombre de requêtes), contrôleur.
+
+### Changed
+- La fiche d'un jeu charge désormais sa zone de statistiques ; la vignette de la liste affiche les champions.
+- `PartieRepository` : requête des dernières parties d'un jeu par statut.
+
+## [0.5.0] - 2026-11-12
+
+### Added
+- Parties (`/parties`) : déclaration d'une partie terminée (jeu, joueurs, date du jour par défaut, lieu facultatif, gagnants, scores facultatifs), modification, suppression avec confirmation HTMX, liste paginée (20 par page) de la plus récente à la plus ancienne avec filtre par jeu.
+- Gagnants multiples ; un gagnant doit participer à la partie ; un joueur ne peut figurer qu'une fois ; date non future ; joueurs anonymisés refusés pour une nouvelle partie (conservés dans une partie existante).
+- Équipes propres à une partie (4 au plus, nom facultatif, un joueur par équipe) : une équipe gagnante rend gagnants tous ses membres ; une équipe sans membre est refusée.
+- Jeux coopératifs : résultat victoire ou défaite à la place des gagnants ; une victoire compte pour chaque participant. Le formulaire s'adapte au jeu choisi (HTMX).
+- Lieu en texte libre (100 caractères) avec autocomplétion HTMX sur les lieux déjà saisis (10 suggestions au plus, sans doublon, insensible à la casse, caractères `%` et `_` traités littéralement).
+- Tables `partie`, `participation` et `equipe` (voir `docs/database.puml`) ; champs de pause (`statut`, `joueur_suivant_id`) prévus pour le change `partie-en-cours`.
+- Tests : règles métier (Mockito), persistance réelle (clés étrangères, modification en place, suppression avec équipes, anonymisation), contrôleur et autocomplétion.
+
+### Changed
+- Les interfaces `ParticipationsJoueur` et `PartiesJeu` sont désormais implémentées par les parties réelles : un joueur ayant des parties est anonymisé à la suppression, et la suppression d'un jeu ayant des parties est refusée. Les implémentations provisoires sont supprimées.
+- `JeuService.tousParNom()` ajouté pour les listes de choix.
+
 ## [0.4.0] - 2026-11-12
 
 ### Added

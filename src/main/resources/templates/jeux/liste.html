@@ -14,8 +14,12 @@
                 <img th:replace="~{fragments/image :: affichage(${vignette.jeu.image}, ${vignette.jeu.nom})}">
                 <span class="titre" th:text="${vignette.jeu.nom}">Jeu</span>
             </a>
-            <!-- Emplacement du symbole de champion (alimenté par le change « statistiques ») -->
-            <span class="champion" aria-hidden="true"></span>
+            <span class="champion" th:if="${champions.get(vignette.jeu.id) != null}" title="Champion">
+                <span aria-hidden="true">&#128081;</span>
+                <th:block th:each="champion : ${champions.get(vignette.jeu.id)}">
+                    <img th:replace="~{fragments/image :: affichage(${champion.avatar}, ${champion.nom})}">
+                </th:block>
+            </span>
             <span class="pret" th:if="${vignette.emprunteur != null}"
                   th:text="'Prêté à ' + ${vignette.emprunteur}"></span>
         </li>

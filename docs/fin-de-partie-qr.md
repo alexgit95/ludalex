@@ -30,6 +30,16 @@ Permet de valider le résultat d'une partie depuis l'appareil de n'importe qui, 
 
 Une mise en pause consomme aussi le token ; un nouveau token est généré à la reprise de la partie.
 
+## Réglages applicatifs
+
+| Propriété | Défaut | Rôle |
+|---|---|---|
+| `ludalex.fin.validite` | `7d` | Durée de validité d'un token |
+| `ludalex.fin.limite-par-minute` | `30` | Requêtes par minute et par adresse sur `/fin/**` (429 au-delà) |
+| `ludalex.fin.en-tete-ip` | vide (`CF-Connecting-IP` en `prod`) | En-tête qui porte l'adresse du client ; Cloudflare l'écrase, un client ne peut donc pas le falsifier derrière lui |
+
+Conséquence : l'application ne doit pas être joignable autrement que par Cloudflare en `prod`, sinon l'en-tête d'adresse pourrait être falsifié pour contourner la limitation.
+
 ## À faire côté Cloudflare
 
 Dans Zero Trust, application Access de Ludalex :

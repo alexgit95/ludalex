@@ -4,7 +4,7 @@ hide circle
 skinparam linetype ortho
 
 ' Aucune autre table pour l'instant. Les entités sont ajoutées par les changes suivants :
-' parties, statistiques, partie-en-cours.
+' (aucune prévue avant la sauvegarde).
 
 ' Composant embarqué dans les entités qui portent une image (jeu, joueur)
 class ImageSource <<Embeddable>> {
@@ -42,4 +42,47 @@ class Pret <<table pret>> {
   date_retour : DATE nullable  ' vide = prêt en cours
 }
 Jeu "1" <-- "0..*" Pret
+
+class Partie <<table partie>> {
+  id : BIGINT <<PK>>
+  jeu_id : BIGINT <<FK>>
+  date_partie : DATE
+  lieu : VARCHAR(100) nullable
+  statut : VARCHAR(12)  ' TERMINEE | EN_COURS | EN_PAUSE
+  resultat_cooperatif : VARCHAR(10) nullable  ' VICTOIRE | DEFAITE
+  joueur_suivant_id : BIGINT <<FK>> nullable  ' pause d'une partie en direct
+  terminee_le : TIMESTAMP nullable  ' fin d'une partie en direct (vide si déclarée après coup)
+}
+
+class Participation <<table participation>> {
+  id : BIGINT <<PK>>
+  partie_id : BIGINT <<FK>>
+  joueur_id : BIGINT <<FK>>
+  score : INTEGER nullable
+  gagnant : BOOLEAN
+  equipe_id : BIGINT <<FK>> nullable
+  ' unique (partie_id, joueur_id)
+}
+
+class Equipe <<table equipe>> {
+  id : BIGINT <<PK>>
+  partie_id : BIGINT <<FK>>
+  nom : VARCHAR(100)
+}
+
+Jeu "1" <-- "0..*" Partie
+
+class TokenFinPartie <<table token_fin_partie>> {
+  id : BIGINT <<PK>>
+  partie_id : BIGINT <<FK>>
+  empreinte : VARCHAR(64)  ' SHA-256 du token, unique ; le token en clair n'est jamais stocké
+  expire_le : TIMESTAMP
+  utilise : BOOLEAN  ' usage unique
+}
+Partie "1" <-- "0..*" TokenFinPartie
+Partie "1" *-- "1..*" Participation
+Partie "1" *-- "0..*" Equipe
+Joueur "1" <-- "0..*" Participation
+Equipe "0..1" <-- "0..*" Participation
+Joueur "0..1" <-- "0..*" Partie : joueur suivant
 @enduml

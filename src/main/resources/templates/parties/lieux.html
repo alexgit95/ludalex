@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+<datalist th:fragment="lieux" id="lieux">
+    <option th:each="lieu : ${lieux}" th:value="${lieu}"></option>
+</datalist>
+</body>
+</html>
