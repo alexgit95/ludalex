@@ -29,6 +29,7 @@ services:
       CF_ACCESS_TEAM_DOMAIN: ${CF_ACCESS_TEAM_DOMAIN}
       CF_ACCESS_AUD: ${CF_ACCESS_AUD}
       JAVA_OPTS: ${JAVA_OPTS:--Xmx384m -XX:+UseSerialGC -Djava.awt.headless=true}
+      LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF: ${LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF:-false}
     volumes:
       - images:/data/images
 

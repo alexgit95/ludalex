@@ -84,6 +84,15 @@ class SecuriteProdTest {
     }
 
     @Test
+    void protegeLActivationEtLaPauseDesCopies() throws Exception {
+        for (String chemin : new String[] { "/admin/images/activer", "/admin/images/pause" }) {
+            mvc.perform(post(chemin).with(csrf())).andExpect(status().isUnauthorized());
+            mvc.perform(post(chemin).header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                    .andExpect(status().isForbidden());
+        }
+    }
+
+    @Test
     void accepteUnJwtValide() throws Exception {
         mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));

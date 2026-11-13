@@ -32,6 +32,7 @@ services:
       CF_ACCESS_TEAM_DOMAIN: ${CF_ACCESS_TEAM_DOMAIN:?CF_ACCESS_TEAM_DOMAIN obligatoire}
       CF_ACCESS_AUD: ${CF_ACCESS_AUD:?CF_ACCESS_AUD obligatoire}
       JAVA_OPTS: ${JAVA_OPTS:--Xmx384m -XX:+UseSerialGC -Djava.awt.headless=true}
+      LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF: ${LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF:-false}
     # Sonde sans curl : l'application doit répondre en HTTP (tout code convient, 401/403 Cloudflare inclus) ; démarrage lent sur Raspberry Pi
     healthcheck:
       test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8181 && printf 'GET / HTTP/1.0\\r\\n\\r\\n' >&3 && read -r ligne <&3 && [[ $${ligne} == HTTP/* ]]"]

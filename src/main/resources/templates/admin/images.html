@@ -5,6 +5,25 @@
     <h1>Images distantes</h1>
     <section th:fragment="suivi" id="suivi-images" hx-get="/admin/images/etat"
              th:attr="hx-get=@{/admin/images/etat(page=${page.number})}" hx-trigger="every 5s" hx-swap="outerHTML">
+        <div class="etat-copies" role="status" th:classappend="${traitementConfigure and copiesActives} ? 'actif' : 'pause'">
+            <p th:unless="${traitementConfigure}">Traitement désactivé par la configuration
+                (<code>ludalex.images.copies.actif=false</code>).</p>
+            <th:block th:if="${traitementConfigure}">
+                <p th:if="${copiesActives}"><strong>Récupération active</strong> : les images en attente sont téléchargées une par une.</p>
+                <p th:unless="${copiesActives}"><strong>Récupération en pause</strong> : aucune image n'est téléchargée, les nouvelles restent en attente.
+                    <span th:if="${compteurs['EN_COURS'] > 0}">Le téléchargement en cours se termine.</span></p>
+                <form th:if="${copiesActives}" th:action="@{/admin/images/pause}" method="post"
+                      hx-post="/admin/images/pause" hx-target="#suivi-images" hx-swap="outerHTML">
+                    <input type="hidden" name="page" th:value="${page.number}">
+                    <button type="submit">Mettre en pause</button>
+                </form>
+                <form th:unless="${copiesActives}" th:action="@{/admin/images/activer}" method="post"
+                      hx-post="/admin/images/activer" hx-target="#suivi-images" hx-swap="outerHTML">
+                    <input type="hidden" name="page" th:value="${page.number}">
+                    <button type="submit">Activer la récupération</button>
+                </form>
+            </th:block>
+        </div>
         <dl class="compteurs-images" aria-live="polite">
             <div th:each="compteur : ${compteurs}">
                 <dt th:text="${libellesEtats[compteur.key]}">En attente</dt>

@@ -2,6 +2,21 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [4.0.0] - 2026-11-13
+
+### Added
+- Admin > Copies des images distantes : bandeau d'état de la récupération (active ou en pause) et bouton **Activer / Mettre en pause** (`POST /admin/images/activer` et `/admin/images/pause`, CSRF et Cloudflare Access en prod, idempotents, suivi HTMX actualisé).
+- Propriété `ludalex.images.copies.demarrage-actif` (défaut `false`, variable Docker `LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF`, ajoutée aux fichiers compose et à `.env.example`) pour démarrer actif ; `EtatCopies`, interrupteur en mémoire.
+- Tests : démarrage en pause ou actif, aucun téléchargement ni tentative en pause, inscription des nouvelles références pendant la pause, reprise avec échéances passées, pause laissant finir le téléchargement en cours, commandes répétées, CSRF, JWT exigé en `prod`, page « désactivé par la configuration ».
+
+### Changed
+- Le téléchargement des copies est **en pause à chaque démarrage** et n'est pas mémorisé : un redémarrage remet en pause. L'inscription des références, la purge des orphelins et le nettoyage local continuent ; les copies restent « en attente » sans accès réseau ni tentative consommée.
+- La mise en pause laisse finir le téléchargement déjà commencé sans en démarrer d'autre ; la pause évite aussi la lecture en base chaque seconde. L'affichage des images est inchangé.
+- Si `ludalex.images.copies.actif=false`, la page d'administration l'indique sans proposer de bouton. Cache statique PWA `ludalex-statique-4.0.0`.
+
+### [BREAKING CHANGE]
+- Comportement fonctionnel : après mise à jour, plus aucune image n'est téléchargée tant que la récupération n'est pas activée. **Migration** : cliquer sur « Activer la récupération » dans Admin > Copies des images distantes, ou définir `LUDALEX_IMAGES_COPIES_DEMARRAGE_ACTIF=true` (variable Docker) pour retrouver l'ancien comportement. Aucun changement de base, de volume ni de format de sauvegarde.
+
 ## [3.0.0] - 2026-11-13
 
 ### Added

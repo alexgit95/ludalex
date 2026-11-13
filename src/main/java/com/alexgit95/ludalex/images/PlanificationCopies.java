@@ -13,13 +13,15 @@ import org.slf4j.LoggerFactory;
 @ConditionalOnProperty(name = "ludalex.images.copies.actif", havingValue = "true", matchIfMissing = true)
 public class PlanificationCopies {
     private final CopiesImages copies;
-    public PlanificationCopies(CopiesImages copies) { this.copies = copies; }
+    private final EtatCopies etat;
+    public PlanificationCopies(CopiesImages copies, EtatCopies etat) { this.copies = copies; this.etat = etat; }
 
     @EventListener(ApplicationReadyEvent.class)
     public void initialiser() { copies.initialiser(); }
 
     @Scheduled(fixedDelay = 1000, initialDelay = 2000)
     public void traiter() {
+        if (!etat.actif()) { return; }
         try { copies.traiterUne(); }
         catch (RuntimeException exception) { LoggerFactory.getLogger(getClass()).warn("Traitement des copies temporairement indisponible"); }
     }

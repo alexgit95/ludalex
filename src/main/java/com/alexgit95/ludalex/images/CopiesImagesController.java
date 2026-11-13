@@ -17,11 +17,14 @@ public class CopiesImagesController {
     private final CopieImageRepository copies;
     private final CopiesImages service;
     private final ReferencesImages references;
+    private final EtatCopies etat;
 
-    public CopiesImagesController(CopieImageRepository copies, CopiesImages service, ReferencesImages references) {
+    public CopiesImagesController(CopieImageRepository copies, CopiesImages service, ReferencesImages references,
+            EtatCopies etat) {
         this.copies = copies;
         this.service = service;
         this.references = references;
+        this.etat = etat;
     }
 
     @GetMapping
@@ -44,6 +47,18 @@ public class CopiesImagesController {
         return etat(page, model);
     }
 
+    @PostMapping("/activer")
+    public String activer(@RequestParam(defaultValue = "0") int page, Model model) {
+        etat.activer();
+        return etat(page, model);
+    }
+
+    @PostMapping("/pause")
+    public String pause(@RequestParam(defaultValue = "0") int page, Model model) {
+        etat.mettreEnPause();
+        return etat(page, model);
+    }
+
     private void renseigner(int numero, Model model) {
         var page = copies.findAll(PageRequest.of(Math.max(0, numero), 20, Sort.by("cle")));
         Map<String, Long> compteurs = new LinkedHashMap<>();
@@ -56,6 +71,8 @@ public class CopiesImagesController {
         model.addAttribute("page", page);
         model.addAttribute("compteurs", compteurs);
         model.addAttribute("octetsCopies", taille);
+        model.addAttribute("copiesActives", etat.actif());
+        model.addAttribute("traitementConfigure", etat.traitementConfigure());
         model.addAttribute("fiches", references.fiches(page.getContent().stream().map(CopieImage::getUrl).toList()));
         model.addAttribute("libellesEtats", Map.of("EN_ATTENTE", "En attente", "EN_COURS", "En cours",
                 "DISPONIBLE", "Disponible", "ECHEC", "En échec"));

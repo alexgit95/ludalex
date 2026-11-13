@@ -353,6 +353,11 @@ summary { cursor: pointer; font-family: var(--police-titre); }
 .pret-long th, .pret-long td { color: var(--erreur); }
 .donnees { margin-top: 0.4rem; font-size: 0.85rem; }
 .donnees summary { cursor: pointer; color: var(--lierre); }
+
+/* Bandeau d'état de la récupération des copies d'images */
+.etat-copies { margin: 0 0 1rem; padding: 0.75rem 1rem; border: 1px solid var(--bordure); border-left: 4px solid var(--or); border-radius: 6px; background: var(--parchemin); }
+.etat-copies.actif { border-left-color: var(--lierre); }
+.etat-copies p { margin: 0 0 0.5rem; }
 @media (prefers-reduced-motion: no-preference) {
     .barre .colonne, .barres-h .remplissage { transition: height 0.3s ease, width 0.3s ease; }
 }
