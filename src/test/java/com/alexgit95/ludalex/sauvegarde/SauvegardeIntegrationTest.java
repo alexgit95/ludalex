@@ -48,6 +48,7 @@ import com.alexgit95.ludalex.parties.Partie;
 import com.alexgit95.ludalex.parties.ResultatCooperatif;
 import com.alexgit95.ludalex.parties.StatutPartie;
 import com.alexgit95.ludalex.parties.TokenFinPartie;
+import com.alexgit95.ludalex.reglages.Reglage;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.Manifeste;
 
 import jakarta.persistence.EntityManager;
@@ -184,6 +185,8 @@ class SauvegardeIntegrationTest {
             clos.clore(LocalDate.of(2025, 1, 15));
             em.persist(enCours);
             em.persist(clos);
+            em.persist(new Reglage("statistiques.jeu-dormant-mois", "12"));
+            em.persist(new Reglage("statistiques.pret-long-jours", "45"));
         });
         return new Jeux(imageCatan, avatarAlice);
     }
@@ -203,6 +206,7 @@ class SauvegardeIntegrationTest {
                     + "a.gagnant, e.nom from Participation a left join a.equipe e");
             lignes(r, "pret", "select p.jeu.nom, p.emprunteur, p.datePret, p.dateRetour from Pret p");
             lignes(r, "token", "select t.partie.jeu.nom from TokenFinPartie t");
+            lignes(r, "reglage", "select r.cle, r.valeur from Reglage r");
             Collections.sort(r);
             return r;
         });
@@ -245,15 +249,17 @@ class SauvegardeIntegrationTest {
 
         assertThat(zip.keySet()).containsExactlyInAnyOrder("manifest.json", "donnees/joueurs.json",
                 "donnees/jeux.json", "donnees/parties.json", "donnees/equipes.json", "donnees/participations.json",
-                "donnees/prets.json", "images/" + images.imageCatan().getReference(),
+                "donnees/prets.json", "donnees/reglages.json", "images/" + images.imageCatan().getReference(),
                 "images/" + images.avatarAlice().getReference());
         String tout = zip.entrySet().stream().filter(e -> e.getKey().endsWith(".json"))
                 .map(e -> new String(e.getValue(), StandardCharsets.UTF_8)).collect(Collectors.joining("\n"));
         assertThat(tout).doesNotContain("empreinte").doesNotContain("empreinte-secrete").contains("https://exemple.org/p.png")
                 .contains("\"anonymise\":true").contains("Joueur supprimé");
-        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":3")
+        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":4")
                 .contains("\"joueurs\":3").contains("\"jeux\":2").contains("\"parties\":3").contains("\"equipes\":2")
-                .contains("\"participations\":5").contains("\"prets\":2").contains("\"images\":2");
+                .contains("\"participations\":5").contains("\"prets\":2").contains("\"reglages\":2").contains("\"images\":2");
+        assertThat(new String(zip.get("donnees/reglages.json"), StandardCharsets.UTF_8))
+                .contains("statistiques.jeu-dormant-mois").contains("\"valeur\":\"45\"");
         assertThat(new String(zip.get("donnees/jeux.json"), StandardCharsets.UTF_8))
             .contains("\"plusieursVariantes\":true");
         assertThat(new String(zip.get("donnees/parties.json"), StandardCharsets.UTF_8))
@@ -294,7 +300,7 @@ class SauvegardeIntegrationTest {
 
         assertThat(entites).isEqualTo(couvertes);
         assertThat(FormatSauvegarde.ENTITES_EXPORTEES).doesNotContainAnyElementsOf(FormatSauvegarde.ENTITES_EXCLUES);
-        assertThat(FormatSauvegarde.FICHIERS_DONNEES).hasSize(FormatSauvegarde.ENTITES_EXPORTEES.size() - 1);
+        assertThat(FormatSauvegarde.FICHIERS_DONNEES).hasSize(FormatSauvegarde.ENTITES_EXPORTEES.size() - 2);
     }
 
     // ---- Aller-retour ----
@@ -304,7 +310,7 @@ class SauvegardeIntegrationTest {
     private void viderBase() {
         tx.executeWithoutResult(s -> {
             for (String entite : List.of("CopieImage", "TokenFinPartie", "Participation", "Equipe", "Partie", "Pret", "Jeu",
-                    "Joueur")) {
+                    "Joueur", "Reglage")) {
                 em.createQuery("delete from " + entite).executeUpdate();
             }
         });
@@ -390,13 +396,51 @@ class SauvegardeIntegrationTest {
 
     @Test
     void restaureLesAnciensFormatsAvecCollecteEnAttente() {
-        for (int version : List.of(1, 2)) {
+        for (int version : List.of(1, 2, 3)) {
             restauration.restaurer(new ByteArrayInputStream(ArchiveDeTest.valide()
                     .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":" + version).octets()));
             CopieImage copie = copies.findById(CopieImage.cle("https://exemple.org/b.png")).orElseThrow();
             assertThat(copie.getEtat()).isEqualTo(CopieImage.Etat.EN_ATTENTE);
             assertThat(copie.getFichier()).isNull();
         }
+    }
+
+    @Test
+    void restaurerUnAncienFormatRetabliLesReglagesParDefaut() {
+        creerDonnees();
+        assertThat(compter("Reglage")).isEqualTo(2);
+
+        restauration.restaurer(new ByteArrayInputStream(ArchiveDeTest.valide().octets()));
+
+        assertThat(compter("Reglage")).isZero();
+    }
+
+    @Test
+    void restaureLesReglagesDUneArchiveV4SansEnConserverDAutres() {
+        tx.executeWithoutResult(s -> em.persist(new Reglage("statistiques.pret-long-jours", "99")));
+        ArchiveDeTest archive = ArchiveDeTest.valide()
+                .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4")
+                .modifier("manifest.json", "\"images\":1", "\"images\":1,\"reglages\":1")
+                .avec("donnees/reglages.json", "[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"24\"}]");
+
+        restauration.restaurer(new ByteArrayInputStream(archive.octets()));
+
+        assertThat(instantane()).contains("reglage|[statistiques.jeu-dormant-mois, 24]")
+                .noneMatch(ligne -> ligne.contains("pret-long-jours"));
+    }
+
+    @Test
+    void unReglageInvalideRefuseLaRestaurationSansToucherAuxDonnees() {
+        creerDonnees();
+        List<String> avant = instantane();
+        ArchiveDeTest archive = ArchiveDeTest.valide()
+                .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4")
+                .modifier("manifest.json", "\"images\":1", "\"images\":1,\"reglages\":1")
+                .avec("donnees/reglages.json", "[{\"cle\":\"inconnue\",\"valeur\":\"1\"}]");
+
+        assertThatThrownBy(() -> restauration.restaurer(new ByteArrayInputStream(archive.octets())))
+                .isInstanceOf(SauvegardeInvalideException.class);
+        assertThat(instantane()).containsExactlyElementsOf(avant);
     }
 
     @Test

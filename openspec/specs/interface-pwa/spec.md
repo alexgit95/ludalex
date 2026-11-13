@@ -44,3 +44,14 @@ La page d'administration SHALL afficher la version de l'application issue du POM
 #### Scenario: SHA de commit indisponible
 - **WHEN** l'utilisateur ouvre `/admin` et que le SHA vaut `unknown`, est vide ou absent
 - **THEN** la page affiche la version du POM sans suffixe de commit
+
+### Requirement: Onglet Statistiques dans la navigation
+La navigation principale SHALL contenir un onglet « Statistiques », visible aussi dans le menu burger sur petit écran.
+
+#### Scenario: Navigation
+- **WHEN** une page quelconque est affichée
+- **THEN** la navigation contient le lien « Statistiques » vers `/statistiques`
+
+#### Scenario: Petit écran
+- **WHEN** l'écran est étroit et le menu burger ouvert
+- **THEN** le lien « Statistiques » y figure

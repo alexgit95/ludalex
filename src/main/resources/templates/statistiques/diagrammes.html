@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<!-- Barres verticales (chronologie) -->
+<figure th:fragment="barres(titre, barres)" class="diagramme">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${barres.?[valeur > 0].isEmpty()}">Aucune donnée.</p>
+    <div class="barres" role="img" th:attr="aria-label=${titre}" th:unless="${barres.?[valeur > 0].isEmpty()}">
+        <div class="barre" th:each="b : ${barres}" th:title="${b.libelle} + ' : ' + ${b.valeur}">
+            <span class="valeur" th:text="${b.valeur}">3</span>
+            <span class="colonne" th:style="'height:' + ${b.hauteur} + '%'"></span>
+            <span class="libelle" th:text="${b.libelle}">janv. 26</span>
+        </div>
+    </div>
+    <details class="donnees" th:unless="${barres.?[valeur > 0].isEmpty()}">
+        <summary>Données</summary>
+        <table class="tableau-stats">
+            <tr th:each="b : ${barres}"><th scope="row" th:text="${b.libelle}">janv. 26</th><td th:text="${b.valeur}">3</td></tr>
+        </table>
+    </details>
+</figure>
+
+<!-- Classement en barres horizontales -->
+<figure th:fragment="barresH(titre, barres)" class="diagramme">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${barres.?[valeur > 0].isEmpty()}">Aucune donnée.</p>
+    <ol class="barres-h" th:unless="${barres.?[valeur > 0].isEmpty()}">
+        <li th:each="b : ${barres}">
+            <span class="libelle" th:text="${b.libelle}">Catan</span>
+            <span class="piste"><span class="remplissage" th:style="'width:' + ${b.hauteur} + '%'"></span></span>
+            <span class="valeur" th:text="${b.valeur}">12</span>
+        </li>
+    </ol>
+</figure>
+
+<!-- Anneau -->
+<figure th:fragment="anneau(titre, anneau)" class="diagramme">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${anneau.vide()}">Aucune donnée.</p>
+    <div class="anneau-conteneur" th:unless="${anneau.vide()}">
+        <svg viewBox="0 0 42 42" class="anneau" role="img" th:attr="aria-label=${titre}">
+            <circle class="anneau-fond" cx="21" cy="21" r="15.9155" fill="none" stroke-width="6"/>
+            <circle th:each="t : ${anneau.tranches}" class="anneau-tranche" th:classappend="'c' + ${t.couleur}"
+                    cx="21" cy="21" r="15.9155" fill="none" stroke-width="6"
+                    th:attr="stroke-dasharray=${#numbers.formatDecimal(t.longueur, 1, 2, 'POINT')} + ' ' + ${#numbers.formatDecimal(100 - t.longueur, 1, 2, 'POINT')},stroke-dashoffset=${#numbers.formatDecimal(t.decalage, 1, 2, 'POINT')}">
+                <title th:text="${t.libelle} + ' : ' + ${t.valeur}">Salon : 4</title>
+            </circle>
+        </svg>
+        <ul class="legende">
+            <li th:each="t : ${anneau.tranches}">
+                <span class="pastille" th:classappend="'c' + ${t.couleur}"></span>
+                <span th:text="${t.libelle}">Salon</span>
+                <strong th:text="${t.valeur} + ' (' + ${t.pourcent} + ' %)'">4 (40 %)</strong>
+            </li>
+        </ul>
+    </div>
+</figure>
+
+<!-- Calendrier de chaleur -->
+<figure th:fragment="calendrier(titre, calendrier)" class="diagramme diagramme-large">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${calendrier.vide()}">Aucune donnée.</p>
+    <div class="calendrier" th:unless="${calendrier.vide()}">
+        <svg th:attr="viewBox='0 0 ' + ${calendrier.colonnes * 13} + ' 91'" role="img" aria-label="Calendrier des parties">
+            <rect th:each="c : ${calendrier.cellules}" class="cellule" th:classappend="'n' + ${c.niveau}"
+                  th:attr="x=${c.colonne * 13},y=${c.ligne * 13}" width="11" height="11" rx="2">
+                <title th:text="${c.titre}">01/01/2026 : 1 partie</title>
+            </rect>
+        </svg>
+    </div>
+</figure>
+
+<!-- Courbe cumulée -->
+<figure th:fragment="courbe(titre, courbe, unite)" class="diagramme">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${courbe.vide()}">Pas assez de données.</p>
+    <div class="courbe" th:unless="${courbe.vide()}">
+        <svg viewBox="0 0 100 30" preserveAspectRatio="none" role="img" th:attr="aria-label=${titre}">
+            <polyline fill="none" th:attr="points=${courbe.points}"/>
+        </svg>
+        <p class="total">Total : <strong th:text="${courbe.total} + ' ' + ${unite}">120 parties</strong></p>
+    </div>
+</figure>
+
+<!-- Liste libellé / valeur / précision -->
+<figure th:fragment="lignes(titre, lignes, vide)" class="diagramme">
+    <figcaption th:text="${titre}">Titre</figcaption>
+    <p class="aide" th:if="${lignes.isEmpty()}" th:text="${vide}">Aucune donnée.</p>
+    <table class="tableau-stats" th:unless="${lignes.isEmpty()}">
+        <tr th:each="l : ${lignes}">
+            <th scope="row" th:text="${l.libelle}">Catan</th>
+            <td><strong th:text="${l.valeur}">63 %</strong></td>
+            <td class="detail" th:text="${l.detail}">5 victoires sur 8 parties</td>
+        </tr>
+    </table>
+</figure>
+
+</body>
+</html>

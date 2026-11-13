@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<section th:fragment="kpi" id="bloc-kpi" class="bloc" aria-label="Chiffres clés">
+    <p class="aide maj">Période : <strong th:text="${stats.periode.libelle()}">12 derniers mois</strong>
+        · mis à jour à <span th:text="${#temporals.format(stats.calculeLe, 'HH:mm')}">14:32</span></p>
+    <div class="grille-kpi">
+        <div class="kpi" th:each="k : ${stats.kpis}">
+            <span class="kpi-etiquette" th:text="${k.etiquette}">Parties</span>
+            <strong class="kpi-valeur" th:text="${k.valeur}">42</strong>
+            <span class="kpi-detail" th:text="${k.detail}">+12 %</span>
+        </div>
+    </div>
+</section>
+
+<section th:fragment="activite" id="bloc-activite" class="bloc" aria-labelledby="titre-activite">
+    <h2 id="titre-activite">Activité</h2>
+    <p class="aide" th:if="${stats.activite.vide()}">Aucune partie terminée sur la période.</p>
+    <div class="grille-diagrammes" th:unless="${stats.activite.vide()}">
+        <th:block th:replace="~{statistiques/diagrammes :: barres(${stats.activite.titreChronologie}, ${stats.activite.chronologie})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barres('Parties par jour de la semaine', ${stats.activite.parJourSemaine})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: calendrier('Calendrier des parties', ${stats.activite.calendrier})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: courbe('Parties cumulées', ${stats.activite.cumul}, 'parties')}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: anneau('Parties par lieu', ${stats.activite.lieux})}"></th:block>
+    </div>
+</section>
+
+<section th:fragment="jeux" id="bloc-jeux" class="bloc" aria-labelledby="titre-jeux">
+    <h2 id="titre-jeux">Jeux</h2>
+    <div class="grille-diagrammes">
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Jeux les plus joués', ${stats.jeux.plusJoues})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Jeux coopératifs les plus gagnés', ${stats.jeux.plusGagnes})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: anneau('Compétitif ou coopératif', ${stats.jeux.modes})}"></th:block>
+
+        <figure class="diagramme">
+            <figcaption>Jeux coopératifs</figcaption>
+            <p class="aide" th:if="${stats.jeux.tauxCooperatif == null}">Aucune partie coopérative sur la période.</p>
+            <div th:unless="${stats.jeux.tauxCooperatif == null}">
+                <p class="chiffre"><strong th:text="${stats.jeux.tauxCooperatif} + ' %'">62 %</strong> de victoires</p>
+                <p th:if="${stats.jeux.jeuDifficile != null}">Le plus difficile :
+                    <strong th:text="${stats.jeux.jeuDifficile.libelle}">Pandemic</strong>
+                    (<span th:text="${stats.jeux.jeuDifficile.valeur}">20 %</span>,
+                    <span th:text="${stats.jeux.jeuDifficile.detail}">1 victoire sur 5 parties</span>)</p>
+                <p class="aide" th:if="${stats.jeux.jeuDifficile == null}">Aucun jeu n'a assez de parties pour être comparé.</p>
+            </div>
+        </figure>
+
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Variantes les plus jouées', ${stats.jeux.variantes})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: lignes('Coût par partie (jeux les plus rentabilisés)', ${stats.jeux.coutParPartie}, 'Aucun jeu avec prix et parties.')}"></th:block>
+
+        <figure class="diagramme">
+            <figcaption>Jeux jamais joués : <span th:text="${stats.jeux.jamaisJoues}">3</span></figcaption>
+            <p class="aide" th:if="${stats.jeux.jamaisJouesListe.isEmpty()}">Tous les jeux ont été joués.</p>
+            <ul class="liste-simple" th:unless="${stats.jeux.jamaisJouesListe.isEmpty()}">
+                <li th:each="nom : ${stats.jeux.jamaisJouesListe}" th:text="${nom}">Jeu</li>
+            </ul>
+            <p class="aide" th:if="${stats.jeux.jamaisJoues > stats.jeux.jamaisJouesListe.size()}"
+               th:text="'… et ' + ${stats.jeux.jamaisJoues - stats.jeux.jamaisJouesListe.size()} + ' autres'"></p>
+        </figure>
+
+        <figure class="diagramme">
+            <figcaption>Jeux dormants (sans partie depuis <span th:text="${stats.jeux.moisDormant}">6</span> mois) :
+                <span th:text="${stats.jeux.dormants}">2</span></figcaption>
+            <p class="aide" th:if="${stats.jeux.dormantsListe.isEmpty()}">Aucun jeu dormant.</p>
+            <table class="tableau-stats" th:unless="${stats.jeux.dormantsListe.isEmpty()}">
+                <tr th:each="l : ${stats.jeux.dormantsListe}">
+                    <th scope="row" th:text="${l.libelle}">Jeu</th>
+                    <td th:text="${l.valeur}">01/01/2026</td>
+                </tr>
+            </table>
+        </figure>
+    </div>
+</section>
+
+<section th:fragment="joueurs" id="bloc-joueurs" class="bloc" aria-labelledby="titre-joueurs">
+    <h2 id="titre-joueurs">Joueurs</h2>
+    <div class="grille-diagrammes">
+        <th:block th:replace="~{statistiques/diagrammes :: lignes('Classement par taux de victoire', ${stats.joueurs.classement}, 'Minimum de parties non atteint.')}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Parties par joueur', ${stats.joueurs.partiesParJoueur})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Jeux différents joués', ${stats.joueurs.polyvalence})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: lignes('Records de score par jeu', ${stats.joueurs.records}, 'Aucun score renseigné.')}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: lignes('Duos les plus fréquents', ${stats.joueurs.duos}, 'Aucun duo.')}"></th:block>
+    </div>
+    <p class="aide">Classement : au moins <span th:text="${stats.joueurs.minimumParties}">5</span> parties.
+        Les joueurs supprimés n'apparaissent pas dans les classements.</p>
+</section>
+
+<section th:fragment="ludotheque" id="bloc-ludotheque" class="bloc" aria-labelledby="titre-ludotheque">
+    <h2 id="titre-ludotheque">Ludothèque</h2>
+    <div class="grille-diagrammes">
+        <th:block th:replace="~{statistiques/diagrammes :: barres('Achats par mois', ${stats.ludotheque.achatsParMois})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barres('Achats par année', ${stats.ludotheque.achatsParAnnee})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: courbe('Investissement cumulé', ${stats.ludotheque.investissement}, '€')}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: lignes('Jeux les plus chers', ${stats.ludotheque.plusChers}, 'Aucun prix renseigné.')}"></th:block>
+    </div>
+    <p class="aide">Qualité des données :
+        <span th:text="${stats.ludotheque.sansPrix}">0</span> jeu(x) sans prix,
+        <span th:text="${stats.ludotheque.sansDate}">0</span> jeu(x) sans date d'achat.</p>
+</section>
+
+<section th:fragment="prets" id="bloc-prets" class="bloc" aria-labelledby="titre-prets">
+    <h2 id="titre-prets">Prêts</h2>
+    <div class="grille-diagrammes">
+        <th:block th:replace="~{statistiques/diagrammes :: barres('Prêts par mois', ${stats.prets.parMois})}"></th:block>
+        <th:block th:replace="~{statistiques/diagrammes :: barresH('Principaux emprunteurs', ${stats.prets.emprunteurs})}"></th:block>
+
+        <figure class="diagramme">
+            <figcaption>Durée moyenne des prêts rendus</figcaption>
+            <p class="aide" th:if="${stats.prets.dureeMoyenne == null}">Aucun prêt rendu sur la période.</p>
+            <p class="chiffre" th:unless="${stats.prets.dureeMoyenne == null}"><strong th:text="${stats.prets.dureeMoyenne}">12 jours</strong></p>
+        </figure>
+
+        <figure class="diagramme">
+            <figcaption>Prêts en cours : <span th:text="${stats.prets.enCours}">1</span></figcaption>
+            <p class="aide" th:if="${stats.prets.enCoursListe.isEmpty()}">Aucun jeu n'est prêté.</p>
+            <table class="tableau-stats" th:unless="${stats.prets.enCoursListe.isEmpty()}">
+                <tr th:each="p : ${stats.prets.enCoursListe}" th:classappend="${p.longue} ? 'pret-long'">
+                    <th scope="row" th:text="${p.jeu}">Catan</th>
+                    <td th:text="${p.emprunteur}">Voisin</td>
+                    <td class="detail"><span th:text="${p.jours} + ' jours'">12 jours</span>
+                        <strong th:if="${p.longue}"> · long (plus de <span th:text="${stats.prets.seuilJours}">30</span> jours)</strong></td>
+                </tr>
+            </table>
+        </figure>
+    </div>
+</section>
+
+</body>
+</html>

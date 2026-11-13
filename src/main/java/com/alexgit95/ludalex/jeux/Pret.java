@@ -2,8 +2,11 @@ package com.alexgit95.ludalex.jeux;
 
 import java.time.LocalDate;
 
+import com.alexgit95.ludalex.donnees.ChangementDonnees;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +18,7 @@ import jakarta.persistence.Table;
 
 /** Prêt d'un jeu ; en cours tant que la date de retour est vide. */
 @Entity
+@EntityListeners(ChangementDonnees.class)
 @Table(name = "pret", indexes = @Index(name = "idx_pret_jeu", columnList = "jeu_id"))
 public class Pret {
 

@@ -75,6 +75,48 @@ class ValidateurSauvegardeTest {
         assertThat(validateur().valider(archive.ecrire(dossier)).manifeste().formatVersion()).isEqualTo(2);
     }
 
+    private static ArchiveDeTest archiveV4(String reglages, int compteur) {
+        return ArchiveDeTest.valide()
+                .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4")
+                .modifier("manifest.json", "\"images\":1", "\"images\":1,\"reglages\":" + compteur)
+                .avec("donnees/reglages.json", reglages);
+    }
+
+    @Test
+    void accepteLeFormatV4AvecReglages() {
+        ArchiveDeTest archive = archiveV4("[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"12\"},"
+                + "{\"cle\":\"statistiques.pret-long-jours\",\"valeur\":\"45\"}]", 2);
+
+        ValidateurSauvegarde.Resultat resultat = validateur().valider(archive.ecrire(dossier));
+
+        assertThat(resultat.manifeste().formatVersion()).isEqualTo(4);
+        assertThat(resultat.manifeste().compteurs()).containsEntry("reglages", 2L);
+    }
+
+    @Test
+    void accepteLeFormatV4SansAucunReglage() {
+        assertThat(validateur().valider(archiveV4("[]", 0).ecrire(dossier)).manifeste().formatVersion()).isEqualTo(4);
+    }
+
+    @Test
+    void refuseLesReglagesInvalidesOuIncoherents() {
+        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4"),
+                "donnees/reglages.json");
+        refuse(archiveV4("[{\"cle\":\"inconnue\",\"valeur\":\"1\"}]", 1), "Réglage inconnu");
+        refuse(archiveV4("[{\"cle\":null,\"valeur\":\"1\"}]", 1), "Réglage inconnu");
+        refuse(archiveV4("[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"0\"}]", 1), "Valeur invalide");
+        refuse(archiveV4("[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"abc\"}]", 1), "Valeur invalide");
+        refuse(archiveV4("[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"6\"},"
+                + "{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"7\"}]", 2), "en double");
+        refuse(archiveV4("[{\"cle\":\"statistiques.jeu-dormant-mois\",\"valeur\":\"6\"}]", 3), "manifeste (reglages)");
+    }
+
+    @Test
+    void refuseUnFichierDeReglagesDansUnFormatAnterieur() {
+        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":3")
+                .avec("donnees/reglages.json", "[]"), "Entrée inattendue");
+    }
+
         @Test
         void accepteUneCopieAssocieeEtRefuseLesAssociationsDangereusesOuManquantes() {
         String source = "\"reference\":\"https://exemple.org/b.png\"";
@@ -158,8 +200,8 @@ class ValidateurSauvegardeTest {
 
     @Test
     void refuseUneVersionDeFormatInconnue() {
-        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4"),
-            "versions acceptées : [1, 2, 3]");
+        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":5"),
+            "versions acceptées : [1, 2, 3, 4]");
     }
 
     @Test

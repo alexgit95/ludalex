@@ -10,8 +10,12 @@ import java.util.function.UnaryOperator;
 import java.util.zip.ZipFile;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alexgit95.ludalex.donnees.ChangementDonnees;
+import com.alexgit95.ludalex.reglages.Reglage;
 import com.alexgit95.ludalex.images.ImageSource;
 import com.alexgit95.ludalex.images.TypeImage;
 import com.alexgit95.ludalex.images.CopieImage;
@@ -43,9 +47,15 @@ import jakarta.persistence.EntityManager;
 public class ImportDonnees {
 
     private final EntityManager em;
+    private ApplicationEventPublisher publieur;
 
     public ImportDonnees(EntityManager em) {
         this.em = em;
+    }
+
+    @Autowired(required = false)
+    void publieur(ApplicationEventPublisher publieur) {
+        this.publieur = publieur;
     }
 
     @Transactional
@@ -124,14 +134,21 @@ public class ImportDonnees {
             }
             persister(pret, compteur);
         });
+        if (zip.getEntry(FormatSauvegarde.REGLAGES) != null) {
+            lire(zip, FormatSauvegarde.REGLAGES, DonneesSauvegarde.ReglageDto.class,
+                    d -> persister(new Reglage(d.cle(), d.valeur()), compteur));
+        }
         em.flush();
         em.clear();
+        if (publieur != null) {
+            ChangementDonnees.signaler(publieur);
+        }
     }
 
     /** Ordre inverse des dépendances ; les tokens de fin de partie ne sont jamais restaurés. */
     private void supprimerTout() {
         for (Class<?> type : new Class<?>[] { CopieImage.class, TokenFinPartie.class, Participation.class, Equipe.class,
-                Partie.class, Pret.class, Jeu.class, Joueur.class }) {
+                Partie.class, Pret.class, Jeu.class, Joueur.class, Reglage.class }) {
             em.createQuery("delete from " + type.getSimpleName()).executeUpdate();
         }
         em.clear();

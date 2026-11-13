@@ -2,6 +2,23 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [3.0.0] - 2026-11-13
+
+### Added
+- Onglet **Statistiques** (`/statistiques`) : tableau de bord global en chiffres et diagrammes SVG/CSS rendus côté serveur (barres, anneaux, calendrier de chaleur, courbes, tableaux de données accessibles), sans JavaScript ni dépendance supplémentaire, aux couleurs de la charte. Périodes : 30 jours, 12 mois (défaut), année civile, tout l'historique ; blocs chargés en HTMX à partir d'un même instantané.
+- Contenu : chiffres clés (parties et évolution, jeux joués, joueurs actifs, ludothèque, valeur, prêts, série de semaines), activité (par mois, par jour de semaine, calendrier, cumul, lieux), jeux (plus joués, plus gagnés coopératifs, jamais joués, dormants, coopératif/compétitif, taux de victoire coopératif et jeu le plus difficile, variantes, coût par partie), joueurs (classement, parties, jeux différents, records de score, duos), ludothèque (achats, investissement cumulé, plus chers, qualité des données), prêts (par mois, emprunteurs, durée moyenne, en cours et longs). Les joueurs anonymisés comptent dans les totaux mais sont exclus des classements nominatifs.
+- Cache en mémoire de 10 minutes par période (`ludalex.statistiques.cache-ttl`), un seul calcul à la fois, vidé après le commit de toute écriture (écouteur JPA `ChangementDonnees` sur jeux, joueurs, prêts, parties, participations, équipes et réglages, signal explicite à la restauration) : aucun bouton d'actualisation.
+- Admin > **Réglages** (`/admin/reglages`) : seuils des statistiques modifiables et rétablissables (jeu dormant 6 mois, classement 5 parties minimum, prêt long 30 jours), validés et protégés par CSRF et Cloudflare Access ; table générique `reglage` (clé/valeur, catalogue `ReglageCle`).
+- Index `partie(date_partie, statut)` ; `docs/database.puml` mis à jour.
+- Tests : périodes, géométrie des diagrammes, cache (expiration, concurrence, invalidation pendant calcul), invalidation par chaque chemin d'écriture et après commit seulement, requêtes sur H2 et SQLite, nombre de requêtes constant, rendu des blocs (échappement, aucune ressource externe), réglages, JWT exigé en `prod`.
+
+### Changed
+- Le ZIP de sauvegarde passe au format v4 : `donnees/reglages.json` (tous les réglages présents en base) et compteur `reglages` au manifeste ; la restauration accepte les formats v1 à v4, les réglages revenant aux valeurs par défaut pour v1 à v3, et refuse avant toute suppression une clé inconnue, une valeur invalide, un doublon ou un compteur incohérent.
+- Navigation principale et menu burger : lien « Statistiques » ; cache statique PWA `ludalex-statique-3.0.0`.
+
+### [BREAKING CHANGE]
+- Les archives v4 ne peuvent pas être restaurées par les versions précédentes. **Migration** : sauvegarder la base et le volume avant mise à jour ; Hibernate ajoute la table `reglage` sans migration de données. Pour revenir à une ancienne version, utiliser un ZIP v1 à v3 pris avant la mise à jour, pas un ZIP v4.
+
 ## [2.0.0] - 2026-11-13
 
 ### Added

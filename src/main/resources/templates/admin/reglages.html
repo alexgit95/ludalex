@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Réglages', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Réglages</h1>
+    <p class="message" th:if="${message}" th:text="${message}">Réglages enregistrés</p>
+
+    <form method="post" th:action="@{/admin/reglages}" class="formulaire">
+        <h2>Statistiques</h2>
+        <div th:each="ligne : ${lignes}">
+            <label>
+                <span th:text="${ligne.libelle}">Libellé</span>
+                <input type="number" inputmode="numeric" required
+                       th:name="${ligne.nom}" th:value="${ligne.valeur}" th:min="${ligne.min}" th:max="${ligne.max}">
+            </label>
+            <p class="aide">Par défaut : <span th:text="${ligne.defaut}">6</span>
+                (de <span th:text="${ligne.min}">1</span> à <span th:text="${ligne.max}">120</span>)</p>
+            <p class="erreur" th:if="${ligne.erreur != null}" th:text="${ligne.erreur}"></p>
+        </div>
+        <p>
+            <button type="submit">Enregistrer</button>
+            <a th:href="@{/admin}">Retour</a>
+        </p>
+    </form>
+
+    <h2>Valeurs par défaut</h2>
+    <ul>
+        <li th:each="ligne : ${lignes}">
+            <form method="post" th:action="@{/admin/reglages/{cle}/retablir(cle=${ligne.nom})}">
+                <span th:text="${ligne.libelle}">Libellé</span>
+                <button type="submit">Rétablir (<span th:text="${ligne.defaut}">6</span>)</button>
+            </form>
+        </li>
+    </ul>
+</main>
+</body>
+</html>

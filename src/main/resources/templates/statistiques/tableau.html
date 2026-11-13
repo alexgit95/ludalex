@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Statistiques', ~{::main})}">
+<body>
+<main class="contenu tableau-bord">
+    <h1>Statistiques</h1>
+
+    <nav class="periodes" aria-label="Période">
+        <a th:each="p : ${periodes}" th:href="@{/statistiques(periode=${p.code()})}" th:text="${p.libelle()}"
+           th:classappend="${p == periode} ? 'actif'"
+           th:attr="aria-current=${p == periode} ? 'page' : 'false'">12 derniers mois</a>
+    </nav>
+
+    <section th:each="bloc : ${blocs}" class="bloc bloc-chargement" th:id="'bloc-' + ${bloc}"
+             th:attr="hx-get=@{/statistiques/bloc/{nom}(nom=${bloc},periode=${periode.code()})}"
+             hx-trigger="load" hx-swap="outerHTML" aria-busy="true">
+        <p class="aide">Chargement…</p>
+    </section>
+</main>
+</body>
+</html>

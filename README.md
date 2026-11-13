@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **2.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **3.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques par jeu et tableau de bord global, réglages, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -42,20 +42,20 @@ Réglages : `ludalex.affichage.url-publique` (origine du QR, déduite de la requ
 
 L'écran **Admin > Sauvegarde et restauration** (`/admin/sauvegarde`) permet de ne rien perdre si la carte SD du Raspberry Pi meurt ou si le moteur de base change.
 
-- **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes), les images uploadées et les copies disponibles des images par URL avec leurs associations. Les copies partagées sont incluses une seule fois ; les URL sans copie restent exportées. Les tokens de fin de partie, la configuration et les erreurs techniques de collecte ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
-- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les archives v1/v2 restent acceptées ; les nouvelles archives v3 nécessitent LUDALEX 2.0.0 ou ultérieur. Les copies absentes sont automatiquement planifiées ; les copies restaurées ne sont pas retéléchargées. Gardez la sauvegarde et le volume d'avant mise à jour pour revenir à une ancienne version. Les liens de fin de partie existants deviennent invalides.
+- **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes, réglages), les images uploadées et les copies disponibles des images par URL avec leurs associations. Les copies partagées sont incluses une seule fois ; les URL sans copie restent exportées. Les tokens de fin de partie, la configuration et les erreurs techniques de collecte ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
+- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les archives v1 à v3 restent acceptées (les réglages reviennent alors aux valeurs par défaut) ; les nouvelles archives v4 nécessitent LUDALEX 3.0.0 ou ultérieur. Les copies absentes sont automatiquement planifiées ; les copies restaurées ne sont pas retéléchargées. Gardez la sauvegarde et le volume d'avant mise à jour pour revenir à une ancienne version. Les liens de fin de partie existants deviennent invalides.
 - **Sûreté** : le ZIP est entièrement validé avant la moindre suppression (chemins dangereux ou « zip slip », entrées hors `manifest.json`, `donnees/`, `images/`, nombre d'entrées, taille et taux de décompression, images réelles PNG/JPEG/GIF/WebP de 2 Mo maximum, version du format, références cohérentes, compteurs du manifeste). Le remplacement des données est une seule transaction : en cas d'échec, données et images précédentes sont conservées. Une seule restauration à la fois.
 - **Limites** : le ZIP est reçu comme corps brut de la requête (pas en multipart) et écrit dans un fichier temporaire. Réglages : `ludalex.sauvegarde.taille-max` (512MB), `ludalex.sauvegarde.taille-decompressee-max` (1GB), `ludalex.sauvegarde.entrees-max` (10000), `ludalex.sauvegarde.ratio-max` (200) et `ludalex.sauvegarde.repertoire-temporaire` (répertoire temporaire du système par défaut, variable Docker `LUDALEX_SAUVEGARDE_REPERTOIRE_TEMPORAIRE`). Derrière Cloudflare, l'envoi est limité par l'offre (100 Mo en gratuit).
 
-### Format de sauvegarde (version 3)
+### Format de sauvegarde (version 4)
 
 ```
 manifest.json            formatVersion, appVersion, date, compteurs par type
-donnees/joueurs.json     un tableau JSON par type : joueurs, jeux, parties, equipes, participations, prets
+donnees/joueurs.json     un tableau JSON par type : joueurs, jeux, parties, equipes, participations, prets, reglages
 images/<nom>.<ext>       uploads et copies disponibles référencés par les données
 ```
 
-Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference, copie}` : `copie` est le nom facultatif du fichier de secours pour une source URL. Les associations de `copie_image` sont intégrées aux images, pas à un tableau de travaux techniques. `jeux.json` inclut l'indicateur `plusieursVariantes`; `parties.json` inclut le libellé facultatif `variante`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. Les archives v1/v2 sans les nouvelles propriétés sont restaurées avec les valeurs par défaut. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
+`donnees/reglages.json` (obligatoire à partir de la v4) contient les paires `{cle, valeur}` de la table `reglage` : tout réglage présent en base, y compris ajouté plus tard, est exporté sans changer le format. Une clé inconnue, une valeur invalide ou un compteur incohérent font refuser l'archive avant toute suppression. Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference, copie}` : `copie` est le nom facultatif du fichier de secours pour une source URL. Les associations de `copie_image` sont intégrées aux images, pas à un tableau de travaux techniques. `jeux.json` inclut l'indicateur `plusieursVariantes`; `parties.json` inclut le libellé facultatif `variante`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. Les archives v1/v2 sans les nouvelles propriétés sont restaurées avec les valeurs par défaut. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
 
 ## Import MyLudo
 
@@ -82,6 +82,27 @@ Thème « heroic fantasy » sobre, sur toute l'application (y compris l'écran A
 - Pour changer de police, modifier `--police-titre` / `--police-texte` (une police embarquée devra être placée dans `static/`, jamais chargée depuis un CDN).
 
 ## Statistiques
+
+### Tableau de bord (onglet Statistiques, `/statistiques`)
+
+Vue globale en chiffres et diagrammes (barres, anneaux, calendrier de chaleur, courbes) rendus **en SVG et CSS par le serveur**, sans JavaScript ni bibliothèque supplémentaire, aux couleurs de la charte. Chaque diagramme a une alternative textuelle et un tableau de données. Seules les parties **terminées** sont comptées.
+
+- **Période** : 30 derniers jours, 12 derniers mois (défaut), année civile ou tout l'historique ; elle s'applique à tous les blocs. Une période inconnue revient à 12 mois.
+- **Chiffres clés** : parties (avec l'évolution par rapport à la période précédente de même durée), jeux joués sur le total, joueurs actifs, ludothèque (dont coopératifs), valeur et prix moyen, prêts, série de semaines consécutives avec au moins une partie.
+- **Activité** : parties par mois (par jour sur 30 jours), par jour de la semaine, calendrier de chaleur, cumul, répartition par lieu.
+- **Jeux** : plus joués, coopératifs les plus gagnés, jamais joués, dormants, compétitif/coopératif, taux de victoire coopératif et jeu le plus difficile, variantes, coût par partie (jeux avec prix, sur tout l'historique).
+- **Joueurs** : classement par taux de victoire (nombre minimal de parties), parties par joueur, jeux différents joués, records de score par jeu, duos les plus fréquents. Les joueurs anonymisés comptent dans les totaux mais pas dans les classements.
+- **Ludothèque** : achats par mois et par année (jeux avec date d'achat), investissement cumulé, jeux les plus chers, jeux sans prix ou sans date d'achat.
+- **Prêts** : par mois, principaux emprunteurs, durée moyenne des prêts rendus, prêts en cours dont ceux dépassant le seuil de prêt long.
+- **Hors périmètre** (données absentes) : durée des parties, heure de jeu, retards de prêt.
+
+**Cache** : un instantané par période est conservé 10 minutes en mémoire (`ludalex.statistiques.cache-ttl`) ; tous les blocs d'un affichage proviennent du même instantané et l'heure de mise à jour est indiquée. Le cache est vidé dès qu'une donnée change (parties, jeux, prêts, joueurs, réglages, restauration, import MyLudo) : il n'y a donc pas de bouton d'actualisation. Le premier accès après expiration ou modification recalcule les chiffres. Calculs par requêtes agrégées en nombre constant, compatibles SQLite et PostgreSQL.
+
+### Réglages (Admin > Réglages, `/admin/reglages`)
+
+Seuils des statistiques, modifiables et rétablissables : jeu dormant (6 mois sans partie), nombre minimal de parties au classement (5), prêt long (30 jours). Ils sont stockés dans la table générique `reglage` (seules les valeurs modifiées) et inclus dans la sauvegarde et la restauration.
+
+### Statistiques d'un jeu
 
 La fiche d'un jeu affiche ses statistiques, calculées sur les parties **terminées** :
 
@@ -134,6 +155,10 @@ Chaque image (jeu, joueur) est soit un **fichier uploadé**, soit une **URL**.
 - **Tentatives et limites** : au plus trois tentatives pour une erreur transitoire, avec au moins une minute puis quinze minutes d'attente ; refus SSRF et format invalide sans relance automatique. Une URL déjà morte avant la première copie reste irrécupérable. Une URL copiée n'est pas rafraîchie automatiquement si son contenu change. Le repli attend l'événement d'erreur du navigateur : une connexion suspendue n'entraîne pas un repli immédiat. Le réglage `ludalex.images.copies.actif=false` désactive le worker (notamment dans les tests), sans supprimer les copies.
 - **Couleur de fond** : calculée une seule fois à l'enregistrement (image réduite, couleur la plus fréquente, hors blanc, noir et transparent), stockée et modifiable à la main ; `#3a3a3a` en cas d'échec. Le téléchargement ponctuel servant au calcul est distinct de la copie en arrière-plan, qui ne modifie pas la couleur choisie.
 - **Sécurité SSRF** : tout téléchargement refuse les adresses locales ou privées (y compris après redirection ou résolution DNS) et plafonne délai et taille. Une URL du réseau local peut être enregistrée, mais sa couleur reste neutre.
+
+### Mise à jour vers 3.0.0
+
+Sauvegarder la base et le volume des images avant déploiement. Hibernate ajoute la table `reglage` et l'index des dates de parties sans outil de migration ; aucune donnée à migrer, les seuils valent leurs valeurs par défaut. Les nouveaux ZIP v4 ne sont pas lisibles par les versions antérieures : pour revenir en arrière, utiliser un ZIP v1 à v3 pris avant la mise à jour.
 
 ### Mise à jour vers 2.0.0
 

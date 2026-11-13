@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alexgit95.ludalex.donnees.ChangementDonnees;
 import com.alexgit95.ludalex.jeux.Jeu;
 import com.alexgit95.ludalex.joueurs.Joueur;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -24,7 +26,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "partie", indexes = @Index(name = "idx_partie_jeu", columnList = "jeu_id, statut"))
+@EntityListeners(ChangementDonnees.class)
+@Table(name = "partie", indexes = { @Index(name = "idx_partie_jeu", columnList = "jeu_id, statut"),
+        @Index(name = "idx_partie_date", columnList = "date_partie, statut") })
 public class Partie {
 
     public static final int LIEU_MAX = 100;

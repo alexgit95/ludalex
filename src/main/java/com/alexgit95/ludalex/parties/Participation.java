@@ -1,9 +1,11 @@
 package com.alexgit95.ludalex.parties;
 
+import com.alexgit95.ludalex.donnees.ChangementDonnees;
 import com.alexgit95.ludalex.joueurs.Joueur;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,7 @@ import jakarta.persistence.UniqueConstraint;
 
 /** Présence d'un joueur dans une partie : score facultatif et victoire. */
 @Entity
+@EntityListeners(ChangementDonnees.class)
 @Table(name = "participation",
         uniqueConstraints = @UniqueConstraint(name = "uk_participation", columnNames = { "partie_id", "joueur_id" }),
         indexes = { @Index(name = "idx_participation_partie", columnList = "partie_id"),

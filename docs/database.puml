@@ -61,7 +61,7 @@ Jeu "1" <-- "0..*" Pret
 class Partie <<table partie>> {
   id : BIGINT <<PK>>
   jeu_id : BIGINT <<FK>>
-  date_partie : DATE
+  date_partie : DATE  ' index (date_partie, statut) pour les statistiques
   lieu : VARCHAR(100) nullable
   variante : VARCHAR(200) nullable
   statut : VARCHAR(12)  ' TERMINEE | EN_COURS | EN_PAUSE
@@ -96,6 +96,12 @@ class TokenFinPartie <<table token_fin_partie>> {
   utilise : BOOLEAN  ' usage unique
 }
 Partie "1" <-- "0..*" TokenFinPartie
+
+class Reglage <<table reglage>> {
+  id : BIGINT <<PK>>
+  cle : VARCHAR(100)  ' unique ; clé du catalogue (ex. statistiques.jeu-dormant-mois)
+  valeur : VARCHAR(200)  ' seules les valeurs modifiées sont stockées ; défaut sinon
+}
 Partie "1" *-- "1..*" Participation
 Partie "1" *-- "0..*" Equipe
 Joueur "1" <-- "0..*" Participation

@@ -41,4 +41,7 @@ final class DonneesSauvegarde {
 
     record PretDto(Long idSauvegarde, Long jeuId, String emprunteur, String datePret, String dateRetour) {
     }
+
+    record ReglageDto(String cle, String valeur) {
+    }
 }

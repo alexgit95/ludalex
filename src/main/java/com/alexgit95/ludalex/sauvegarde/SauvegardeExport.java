@@ -41,6 +41,7 @@ import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.Manifeste;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.ParticipationDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.PartieDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.PretDto;
+import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.ReglageDto;
 
 import jakarta.persistence.EntityManager;
 import tools.jackson.core.JsonGenerator;
@@ -118,6 +119,9 @@ public class SauvegardeExport {
                 "select x.id, x.jeu.id, x.emprunteur, x.datePret, x.dateRetour from Pret x "
                         + "where x.id > :apres order by x.id",
                 (l, secours) -> new PretDto((Long) l[0], (Long) l[1], (String) l[2], texte(l[3]), texte(l[4]))));
+        compteurs.put("reglages", tableau(zip, FormatSauvegarde.REGLAGES,
+                "select x.id, x.cle, x.valeur from Reglage x where x.id > :apres order by x.id",
+                (l, secours) -> new ReglageDto((String) l[1], (String) l[2])));
 
         for (String nom : images) {
             copierImage(zip, nom);

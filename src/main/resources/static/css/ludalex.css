@@ -278,3 +278,81 @@ summary { cursor: pointer; font-family: var(--police-titre); }
     .js .navigation.ouvert { display: flex; }
     .js .navigation a { padding: 0.5rem 0; font-size: 1.1rem; border-bottom: 1px solid var(--bordure); }
 }
+
+/* Tableau de bord des statistiques : diagrammes en CSS et SVG, couleurs de la charte uniquement */
+.tableau-bord { max-width: 72rem; }
+.periodes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.periodes a {
+    padding: 0.3rem 0.8rem; border: 1px solid var(--bordure); border-radius: 999px; background: var(--surface);
+    color: var(--encre); text-decoration: none;
+}
+.periodes a.actif { background: var(--lierre); border-color: var(--lierre); color: var(--fond); }
+.periodes a:hover, .periodes a:focus { border-color: var(--or); }
+.bloc { margin: 0 0 1.5rem; }
+.bloc h2 { margin: 0 0 0.75rem; }
+.maj { margin: 0 0 0.5rem; }
+.grille-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; }
+.kpi {
+    display: flex; flex-direction: column; gap: 0.15rem; padding: 0.75rem; background: var(--surface);
+    border: 1px solid var(--bordure); border-top: 3px solid var(--or); border-radius: 6px;
+}
+.kpi-etiquette { color: var(--encre-douce); font-size: 0.85rem; }
+.kpi-valeur { font-family: var(--police-titre); font-size: 1.6rem; color: var(--lierre-fonce); }
+.kpi-detail { color: var(--encre-douce); font-size: 0.8rem; }
+.grille-diagrammes { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 0.75rem; }
+.diagramme {
+    margin: 0; padding: 0.75rem; background: var(--surface); border: 1px solid var(--bordure); border-radius: 6px;
+    min-width: 0;
+}
+.diagramme-large { grid-column: 1 / -1; }
+.diagramme figcaption { font-family: var(--police-titre); font-weight: 600; margin-bottom: 0.5rem; }
+.chiffre { font-size: 1.1rem; margin: 0.25rem 0; }
+.liste-simple { margin: 0; padding-left: 1.2rem; }
+
+.barres { display: flex; align-items: flex-end; gap: 2px; height: 9rem; overflow-x: auto; }
+.barre { flex: 1 0 1.1rem; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; min-width: 0; }
+.barre .colonne { display: block; width: 100%; background: var(--lierre); border-radius: 2px 2px 0 0; min-height: 0; }
+.barre .valeur, .barre .libelle { font-size: 0.65rem; color: var(--encre-douce); line-height: 1.1; white-space: nowrap; }
+.barre .libelle { overflow: hidden; text-overflow: clip; max-width: 100%; }
+
+.barres-h { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.barres-h li { display: grid; grid-template-columns: minmax(0, 9rem) 1fr 2.5rem; gap: 0.5rem; align-items: center; }
+.barres-h .libelle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barres-h .piste { display: block; height: 0.7rem; background: var(--parchemin); border-radius: 4px; overflow: hidden; }
+.barres-h .remplissage { display: block; height: 100%; background: var(--lierre); }
+.barres-h .valeur { text-align: right; font-weight: 600; }
+
+.c0 { --teinte: var(--lierre); }
+.c1 { --teinte: var(--or); }
+.c2 { --teinte: var(--encre-douce); }
+.c3 { --teinte: var(--erreur); }
+.c4 { --teinte: var(--lierre-fonce); }
+.c5 { --teinte: var(--bordure); }
+.anneau-conteneur { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+.anneau { width: 8rem; height: 8rem; flex: none; }
+.anneau-fond { stroke: var(--parchemin); }
+.anneau-tranche { stroke: var(--teinte); }
+.legende { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; font-size: 0.9rem; }
+.pastille { display: inline-block; width: 0.75rem; height: 0.75rem; margin-right: 0.35rem; border-radius: 2px; background: var(--teinte); }
+
+.calendrier { overflow-x: auto; }
+.calendrier svg { width: 100%; min-width: 16rem; max-height: 9rem; }
+.cellule { fill: var(--parchemin); }
+.cellule.n1 { fill: var(--lierre); fill-opacity: 0.3; }
+.cellule.n2 { fill: var(--lierre); fill-opacity: 0.55; }
+.cellule.n3 { fill: var(--lierre); fill-opacity: 0.8; }
+.cellule.n4 { fill: var(--lierre-fonce); }
+
+.courbe svg { width: 100%; height: 5rem; background: var(--parchemin); border-radius: 4px; }
+.courbe polyline { stroke: var(--lierre); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.courbe .total { margin: 0.35rem 0 0; }
+
+.tableau-stats { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+.tableau-stats th, .tableau-stats td { border-bottom: 1px solid var(--bordure); padding: 0.3rem 0.4rem; text-align: left; }
+.tableau-stats .detail { color: var(--encre-douce); font-size: 0.8rem; }
+.pret-long th, .pret-long td { color: var(--erreur); }
+.donnees { margin-top: 0.4rem; font-size: 0.85rem; }
+.donnees summary { cursor: pointer; color: var(--lierre); }
+@media (prefers-reduced-motion: no-preference) {
+    .barre .colonne, .barres-h .remplissage { transition: height 0.3s ease, width 0.3s ease; }
+}

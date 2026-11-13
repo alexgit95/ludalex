@@ -13,7 +13,7 @@
 
     <groupId>com.alexgit95</groupId>
     <artifactId>ludalex</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <name>ludalex</name>
     <description></description>

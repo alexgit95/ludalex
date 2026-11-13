@@ -41,6 +41,7 @@ import com.alexgit95.ludalex.parties.Equipe;
 import com.alexgit95.ludalex.parties.Partie;
 import com.alexgit95.ludalex.parties.ResultatCooperatif;
 import com.alexgit95.ludalex.parties.StatutPartie;
+import com.alexgit95.ludalex.reglages.ReglageCle;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.EquipeDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.ImageDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.JeuDto;
@@ -49,6 +50,7 @@ import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.Manifeste;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.ParticipationDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.PartieDto;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.PretDto;
+import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.ReglageDto;
 
 /**
  * Valide entièrement un ZIP de sauvegarde avant toute modification : chemins, limites de taille, images,
@@ -78,6 +80,7 @@ public class ValidateurSauvegarde {
             Budget budget = new Budget(proprietes.tailleDecompresseeMax().toBytes());
             Set<String> entrees = verifierEntrees(zip);
             Manifeste manifeste = lireManifeste(zip, budget);
+            verifierPresenceReglages(manifeste, entrees);
             Map<String, Long> imagesDuZip = verifierImages(zip, entrees, budget);
             Etat etat = verifierDonnees(zip, entrees, budget);
             verifierCopies(zip, etat);
@@ -144,6 +147,7 @@ public class ValidateurSauvegarde {
 
     private static boolean estEntreeAutorisee(String nom) {
         return nom.equals(FormatSauvegarde.MANIFESTE) || FormatSauvegarde.FICHIERS_DONNEES.contains(nom)
+                || nom.equals(FormatSauvegarde.REGLAGES)
                 || (nom.startsWith(DOSSIER_IMAGES) && StockageImages.estNomValide(nom.substring(DOSSIER_IMAGES.length())));
     }
 
@@ -172,6 +176,20 @@ public class ValidateurSauvegarde {
     }
 
     // ---- Images ----
+
+    private static boolean avecReglages(Manifeste manifeste) {
+        return manifeste.formatVersion() >= FormatSauvegarde.VERSION_REGLAGES;
+    }
+
+    private static void verifierPresenceReglages(Manifeste manifeste, Set<String> entrees) {
+        boolean present = entrees.contains(FormatSauvegarde.REGLAGES);
+        if (avecReglages(manifeste) && !present) {
+            throw refus("Fichier manquant dans la sauvegarde : " + FormatSauvegarde.REGLAGES);
+        }
+        if (!avecReglages(manifeste) && present) {
+            throw refus("Entrée inattendue dans la sauvegarde");
+        }
+    }
 
     private Map<String, Long> verifierImages(ZipFile zip, Set<String> entrees, Budget budget) throws IOException {
         long max = imagesProprietes.tailleMax().toBytes();
@@ -222,6 +240,7 @@ public class ValidateurSauvegarde {
         final Map<Long, Long> equipes = new HashMap<>();
         final Set<Long> participations = new HashSet<>();
         final Set<Long> prets = new HashSet<>();
+        final Set<String> reglages = new HashSet<>();
         final Set<String> couples = new HashSet<>();
         final Set<String> uploads = new TreeSet<>();
         final Map<String, String> copies = new HashMap<>();
@@ -240,6 +259,9 @@ public class ValidateurSauvegarde {
         lire(zip, FormatSauvegarde.EQUIPES, EquipeDto.class, budget, d -> equipe(d, etat));
         lire(zip, FormatSauvegarde.PARTICIPATIONS, ParticipationDto.class, budget, d -> participation(d, etat));
         lire(zip, FormatSauvegarde.PRETS, PretDto.class, budget, d -> pret(d, etat));
+        if (entrees.contains(FormatSauvegarde.REGLAGES)) {
+            lire(zip, FormatSauvegarde.REGLAGES, ReglageDto.class, budget, d -> reglage(d, etat));
+        }
         return etat;
     }
 
@@ -331,6 +353,19 @@ public class ValidateurSauvegarde {
     }
 
     // ---- Contrôles unitaires ----
+
+    private void reglage(ReglageDto d, Etat etat) {
+        ReglageCle cle = d.cle() == null ? null : ReglageCle.depuisCle(d.cle()).orElse(null);
+        if (cle == null) {
+            throw refus("Réglage inconnu dans la sauvegarde");
+        }
+        if (cle.analyser(d.valeur()).isEmpty()) {
+            throw refus("Valeur invalide pour le réglage " + d.cle());
+        }
+        if (!etat.reglages.add(d.cle())) {
+            throw refus("Réglage en double dans la sauvegarde");
+        }
+    }
 
     private void image(ImageDto image, Etat etat) {
         if (image == null) {
@@ -426,6 +461,9 @@ public class ValidateurSauvegarde {
         attendus.put("equipes", (long) etat.equipes.size());
         attendus.put("participations", (long) etat.participations.size());
         attendus.put("prets", (long) etat.prets.size());
+        if (avecReglages(manifeste)) {
+            attendus.put("reglages", (long) etat.reglages.size());
+        }
         attendus.put(COMPTEUR_IMAGES, (long) images);
         for (Map.Entry<String, Long> attendu : attendus.entrySet()) {
             if (!attendu.getValue().equals(manifeste.compteurs().get(attendu.getKey()))) {

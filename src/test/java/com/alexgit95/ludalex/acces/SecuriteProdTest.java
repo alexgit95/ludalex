@@ -68,6 +68,22 @@ class SecuriteProdTest {
     }
 
     @Test
+    void protegeLeTableauDeBordEtLesReglages() throws Exception {
+        for (String chemin : new String[] { "/statistiques", "/statistiques/bloc/kpi", "/admin/reglages" }) {
+            mvc.perform(get(chemin)).andExpect(status().isUnauthorized());
+            mvc.perform(get(chemin).header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                    .andExpect(status().isOk());
+            String mauvaiseAudience = EMETTEUR.jeton(JwtDeTest.EMETTEUR, "autre-application",
+                    Instant.now().plusSeconds(600));
+            mvc.perform(get(chemin).header(CloudflareAccessFilter.HEADER_JWT, mauvaiseAudience))
+                    .andExpect(status().isForbidden());
+        }
+        mvc.perform(post("/admin/reglages").with(csrf())).andExpect(status().isUnauthorized());
+        mvc.perform(post("/admin/reglages").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void accepteUnJwtValide() throws Exception {
         mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));

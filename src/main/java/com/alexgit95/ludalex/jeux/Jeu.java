@@ -3,18 +3,21 @@ package com.alexgit95.ludalex.jeux;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.alexgit95.ludalex.donnees.ChangementDonnees;
 import com.alexgit95.ludalex.images.CalculateurCouleurFond;
 import com.alexgit95.ludalex.images.ImageSource;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
+@EntityListeners(ChangementDonnees.class)
 @Table(name = "jeu")
 public class Jeu {
 

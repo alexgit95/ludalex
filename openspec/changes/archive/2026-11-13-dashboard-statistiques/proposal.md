@@ -17,7 +17,7 @@ Les statistiques existantes sont limitées à la fiche d'un jeu. Il manque une v
 - Cache en mémoire de 10 minutes par période, **invalidé à toute écriture** (parties, jeux, prêts, joueurs, restauration, import MyLudo) ; aucun bouton d'actualisation ; le premier accès après expiration paie le calcul.
 - Réglages des seuils (jeu dormant : 6 mois, classement : 5 parties minimum, prêt long : 30 jours) modifiables depuis l'administration, persistés dans une nouvelle table générique de réglages, et **inclus dans la sauvegarde et la restauration** (ainsi que tout réglage futur).
 - Les joueurs anonymisés comptent dans les totaux mais sont exclus des classements nominatifs.
-- **BREAKING** : la sauvegarde passe au format v3 (ajout des réglages) ; un ZIP v3 n'est pas restaurable par les versions précédentes. Version majeure 2.0.0.
+- **BREAKING** : la sauvegarde passe au format v4 (ajout des réglages) ; un ZIP v4 n'est pas restaurable par les versions précédentes. Version majeure 3.0.0.
 
 ## Capabilities
 
@@ -26,13 +26,13 @@ Les statistiques existantes sont limitées à la fiche d'un jeu. Il manque une v
 - `reglages-application`: réglages persistés (clé/valeur) modifiables depuis l'administration, dont les seuils des statistiques.
 
 ### Modified Capabilities
-- `sauvegarde-restauration`: le ZIP v3 exporte et restaure l'ensemble des réglages ; la restauration accepte toujours les formats v1 et v2 (réglages par défaut).
+- `sauvegarde-restauration`: le ZIP v4 exporte et restaure l'ensemble des réglages ; la restauration accepte toujours les formats v1 à v3 (réglages par défaut).
 - `interface-pwa`: nouvel onglet « Statistiques » dans la navigation principale.
 
 ## Impact
 
 - Code : nouveaux composants `statistiques` (requêtes agrégées, cache, contrôleur, fragments SVG), module de réglages, appels d'invalidation dans les services de parties, jeux, prêts, joueurs, restauration et import.
 - Base : nouvelle table `reglage` (compatible SQLite et PostgreSQL), `docs/database.puml` mis à jour ; index éventuels sur `partie(date_partie)`.
-- Sauvegarde : format v3, exhaustivité des entités exportées étendue aux réglages.
+- Sauvegarde : format v4, exhaustivité des entités exportées étendue aux réglages.
 - Dépendances : aucune.
-- Documentation : `README.md`, `CHANGELOG.md` avec rubrique `[BREAKING CHANGE]`, version 2.0.0 dans le `pom.xml` et le changelog ; cache du service worker si les ressources statiques changent.
+- Documentation : `README.md`, `CHANGELOG.md` avec rubrique `[BREAKING CHANGE]`, version 3.0.0 dans le `pom.xml` et le changelog ; cache du service worker si les ressources statiques changent.
