@@ -1,6 +1,10 @@
 package com.alexgit95.ludalex.images;
 
 import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.imageio.ImageIO;
 
 /** Formats d'image autorisés, reconnus à leur signature et non à l'extension. */
 public enum FormatImage {
@@ -53,6 +57,41 @@ public enum FormatImage {
             }
         }
         return Optional.empty();
+    }
+
+    public static FormatImage validerFichier(Path fichier) {
+        try (var flux = Files.newInputStream(fichier)) {
+            FormatImage format = detecter(flux.readNBytes(12))
+                    .orElseThrow(() -> new CopieRefuseeException("Format d'image non autorise"));
+            try (var image = ImageIO.createImageInputStream(fichier.toFile())) {
+                var lecteurs = ImageIO.getImageReaders(image);
+                if (!lecteurs.hasNext()) {
+                    throw new CopieRefuseeException("Image indecodable");
+                }
+                var lecteur = lecteurs.next();
+                try {
+                    lecteur.setInput(image, true, true);
+                    int largeur = lecteur.getWidth(0);
+                    int hauteur = lecteur.getHeight(0);
+                    if (largeur <= 0 || hauteur <= 0 || (long) largeur * hauteur > 50_000_000) {
+                        throw new CopieRefuseeException("Dimensions d'image non autorisees");
+                    }
+                    var parametres = lecteur.getDefaultReadParam();
+                    int facteur = Math.max(1, (Math.max(largeur, hauteur) + 255) / 256);
+                    parametres.setSourceSubsampling(facteur, facteur, 0, 0);
+                    var miniature = lecteur.read(0, parametres);
+                    if (miniature == null) {
+                        throw new CopieRefuseeException("Image indecodable");
+                    }
+                    miniature.flush();
+                } finally {
+                    lecteur.dispose();
+                }
+            }
+            return format;
+        } catch (IOException | IllegalArgumentException exception) {
+            throw new CopieRefuseeException("Image indecodable");
+        }
     }
 
     private static boolean commence(byte[] octets, int... signature) {

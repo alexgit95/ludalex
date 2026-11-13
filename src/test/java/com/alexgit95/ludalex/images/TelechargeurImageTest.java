@@ -9,10 +9,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.util.unit.DataSize;
 
 import com.sun.net.httpserver.HttpServer;
@@ -22,6 +25,7 @@ class TelechargeurImageTest {
     private HttpServer serveur;
     private int port;
     private TelechargeurImage telechargeur;
+    @TempDir Path dossier;
 
     @BeforeEach
     void demarrer() throws IOException {
@@ -81,6 +85,23 @@ class TelechargeurImageTest {
     void telechargeUneImage() {
         assertThat(telechargeur.telecharger(url("/ok"))).hasSize(1024);
     }
+
+        @Test
+        void telechargeEnFluxEtRevalideLesRedirections() throws IOException {
+        Path cible = dossier.resolve("image.tmp");
+        telechargeur.telecharger(url("/relatif"), cible);
+        assertThat(Files.size(cible)).isEqualTo(1024);
+        assertThatThrownBy(() -> telechargeur.telecharger(url("/vers-interne"), cible))
+            .isInstanceOf(CopieRefuseeException.class);
+        assertThatThrownBy(() -> telechargeur.telecharger(url("/gros-sans-longueur"), cible))
+            .isInstanceOf(CopieRefuseeException.class);
+        assertThatThrownBy(() -> telechargeur.telecharger(url("/gros"), cible))
+            .isInstanceOf(CopieRefuseeException.class);
+        assertThatThrownBy(() -> telechargeur.telecharger(url("/absent"), cible))
+            .isInstanceOf(ImageInvalideException.class);
+        assertThatThrownBy(() -> telechargeur.telecharger(url("/lent"), cible))
+            .isInstanceOf(ImageInvalideException.class);
+        }
 
     @Test
     void suitUneRedirectionRelative() {

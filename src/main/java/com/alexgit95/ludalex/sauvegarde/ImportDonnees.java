@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alexgit95.ludalex.images.ImageSource;
 import com.alexgit95.ludalex.images.TypeImage;
+import com.alexgit95.ludalex.images.CopieImage;
 import com.alexgit95.ludalex.jeux.Jeu;
 import com.alexgit95.ludalex.jeux.Pret;
 import com.alexgit95.ludalex.joueurs.Joueur;
@@ -129,7 +130,7 @@ public class ImportDonnees {
 
     /** Ordre inverse des dépendances ; les tokens de fin de partie ne sont jamais restaurés. */
     private void supprimerTout() {
-        for (Class<?> type : new Class<?>[] { TokenFinPartie.class, Participation.class, Equipe.class,
+        for (Class<?> type : new Class<?>[] { CopieImage.class, TokenFinPartie.class, Participation.class, Equipe.class,
                 Partie.class, Pret.class, Jeu.class, Joueur.class }) {
             em.createQuery("delete from " + type.getSimpleName()).executeUpdate();
         }
@@ -156,9 +157,17 @@ public class ImportDonnees {
         return nouveau;
     }
 
-    private static ImageSource image(ImageDto image) {
+    private ImageSource image(ImageDto image) {
         if (image == null) {
             return null;
+        }
+        if (TypeImage.URL.name().equals(image.type())) {
+            CopieImage copie = em.find(CopieImage.class, CopieImage.cle(image.reference()));
+            if (copie == null) {
+                copie = new CopieImage(image.reference());
+                em.persist(copie);
+            }
+            if (image.copie() != null) { copie.disponible(image.copie(), 0); }
         }
         return TypeImage.UPLOAD.name().equals(image.type()) ? ImageSource.upload(image.reference())
                 : ImageSource.url(image.reference());

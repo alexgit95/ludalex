@@ -23,7 +23,7 @@
 - Toute modification de ce mécanisme doit être couverte par des tests (JWT valide, expiré, mauvaise audience, absent en `prod` ; accès libre en `dev` ; token de fin de partie valide, expiré, déjà utilisé, d'une autre partie).
 
 ## Images et sauvegarde
-- Images uploadées : stockées sur un **volume** (jamais en base ni en mémoire complète). Images par URL : seule l'URL est conservée, l'image n'est pas copiée.
+- Images uploadées : stockées sur un **volume** (jamais en base ni en mémoire complète). Images par URL : URL prioritaire et copie locale de secours sur ce volume, téléchargée automatiquement en arrière-plan avec suivi admin, SSRF, format et taille contrôlés ; repli sur toute erreur de chargement d'une ressource image uniquement.
 - Toute URL d'image saisie est protégée contre la SSRF (y compris le téléchargement ponctuel servant au calcul de la couleur de fond).
 - La couleur de fond d'un jeu est calculée **une seule fois à l'enregistrement** (image réduite par sous-échantillonnage, classe de couleur la plus fréquente) et stockée ; modifiable manuellement ; couleur neutre en cas d'échec. Une bibliothèque tierce gère le format WebP.
 - Sauvegarde/restauration : un seul ZIP (données indépendantes du moteur + images uploadées) téléchargeable puis ré-uploadable **sans modification** ; la restauration remplace tout l'existant, protégée par confirmation et CSRF, traitée en flux, avec contrôle du contenu (zip slip, taille, types).

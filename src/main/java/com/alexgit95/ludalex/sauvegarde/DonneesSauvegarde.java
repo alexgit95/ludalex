@@ -15,7 +15,10 @@ final class DonneesSauvegarde {
     }
 
     /** {@code type} vaut UPLOAD (référence = nom du fichier de {@code images/}) ou URL (référence = adresse). */
-    record ImageDto(String type, String reference) {
+        record ImageDto(String type, String reference, String copie) {
+                ImageDto(String type, String reference) {
+                        this(type, reference, null);
+                }
     }
 
     record JoueurDto(Long idSauvegarde, String nom, ImageDto avatar, ImageDto imageVictoire, boolean anonymise) {

@@ -11,7 +11,8 @@
 
         <section th:case="'EN_COURS'" class="partie-en-cours" th:with="pres=${etat.presentation}">
             <img th:if="${etat.vue.jeu.image != null}" class="fond-jeu" th:src="${etat.vue.jeu.image.url}"
-                 alt="" aria-hidden="true" onerror="this.remove()">
+                  th:attr="data-secours=${copiesImages[etat.vue.jeu.image.url]}"
+                  alt="" aria-hidden="true" data-retirer onerror="repliImage(this)">
             <div class="jeu">
                 <h1 class="titre-jeu" th:text="${etat.vue.jeu.nom}">Jeu</h1>
             </div>
@@ -22,7 +23,8 @@
                         <ul class="joueurs">
                             <li th:each="j : ${g.joueurs}">
                                 <img class="avatar" th:src="${j.avatar != null} ? ${j.avatar.url} : '/icons/defaut.svg'"
-                                     th:alt="${j.nom}" onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                                      th:attr="data-secours=${j.avatar != null ? copiesImages[j.avatar.url] : null}"
+                                      th:alt="${j.nom}" onerror="repliImage(this)">
                                 <span class="nom" th:text="${j.nom}">Joueur</span>
                             </li>
                         </ul>
@@ -45,12 +47,14 @@
 
         <section th:case="'EN_PAUSE'" class="partie-en-pause">
             <img th:if="${etat.vue.jeu.image != null}" class="fond-jeu" th:src="${etat.vue.jeu.image.url}"
-                 alt="" aria-hidden="true" onerror="this.remove()">
+                  th:attr="data-secours=${copiesImages[etat.vue.jeu.image.url]}"
+                  alt="" aria-hidden="true" data-retirer onerror="repliImage(this)">
             <p class="bandeau">Partie en pause</p>
             <div th:if="${etat.vue.joueurSuivant != null}" class="suivant">
                 <img class="avatar avatar-geant"
                      th:src="${etat.vue.joueurSuivant.avatar != null} ? ${etat.vue.joueurSuivant.avatar.url} : '/icons/defaut.svg'"
-                     th:alt="${etat.vue.joueurSuivant.nom}" onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                     th:attr="data-secours=${etat.vue.joueurSuivant.avatar != null ? copiesImages[etat.vue.joueurSuivant.avatar.url] : null}"
+                     th:alt="${etat.vue.joueurSuivant.nom}" onerror="repliImage(this)">
                 <h1>À <strong th:text="${etat.vue.joueurSuivant.nom}">Marie</strong> de jouer</h1>
             </div>
             <p class="titre-jeu" th:text="${etat.vue.jeu.nom}">Jeu</p>
@@ -67,9 +71,11 @@
                     <li class="vainqueur anime" th:each="v : ${etat.vainqueurs}">
                         <img class="avatar avatar-geant"
                              th:src="${v.avatar != null} ? ${v.avatar.url} : '/icons/defaut.svg'" th:alt="${v.nom}"
-                             onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+                                th:attr="data-secours=${v.avatar != null ? copiesImages[v.avatar.url] : null}"
+                                onerror="repliImage(this)">
                         <img th:if="${v.imageVictoire != null}" class="image-victoire" th:src="${v.imageVictoire.url}"
-                             alt="" onerror="this.remove()">
+                                th:attr="data-secours=${copiesImages[v.imageVictoire.url]}"
+                                alt="" data-retirer onerror="repliImage(this)">
                         <span class="nom" th:text="${v.nom}">Joueur</span>
                     </li>
                 </ul>

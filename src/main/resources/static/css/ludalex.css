@@ -157,6 +157,18 @@ legend { font-family: var(--police-titre); padding: 0 0.4rem; }
 }
 .pagination { display: flex; gap: 1rem; align-items: center; }
 
+.compteurs-images { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; margin: 1rem 0; }
+.compteurs-images dt { color: var(--encre-douce); font-size: 0.88rem; }
+.compteurs-images dd { margin: 0; font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tableau-images { max-width: 100%; overflow-x: auto; margin: 1rem 0; }
+.tableau-images table { width: 100%; min-width: 48rem; border-collapse: collapse; font-size: 0.88rem; }
+.tableau-images th, .tableau-images td { text-align: left; vertical-align: top; padding: 0.5rem; border-bottom: 1px solid var(--bordure); }
+.tableau-images th { background: var(--parchemin); }
+.tableau-images .reference-image { min-width: 12rem; max-width: 20rem; overflow-wrap: anywhere; }
+.reference-image a, .reference-image span { display: block; }
+.tableau-images button { white-space: nowrap; }
+#suivi-images button:disabled { opacity: 0.6; cursor: default; }
+
 /* Ludothèque : la couleur du jeu (inline) forme un cadre, le texte repose toujours sur un cartouche clair. */
 .entete-ludotheque { max-width: 40rem; margin: 0 auto; }
 .grille-jeux {

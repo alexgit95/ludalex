@@ -2,6 +2,22 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [2.0.0] - 2026-11-13
+
+### Added
+- Copie locale automatique des images par URL des jeux et des joueurs (avatar et victoire), y compris les URL existantes : collecte par lots, téléchargement unique à la fois, protection SSRF, limite de 2 Mo, validation du contenu et écriture en flux sur le volume persistant.
+- Table `copie_image` : copie partagée par URL exacte, état durable, échéances et trois tentatives au maximum ; reprise après redémarrage, nettoyage des copies orphelines et relance des échecs.
+- Admin > Copies des images distantes (`/admin/images`) : compteurs, stockage occupé, références paginées, erreurs, dates et relances protégées par CSRF et Cloudflare Access en prod, actualisation HTMX.
+
+### Changed
+- Images : priorité à l'URL distante, puis copie locale sur toute erreur de chargement d'image, puis secours terminal sans boucle ; fragments HTMX, aperçus et écran Affichage inclus. Aucune interception des autres ressources.
+- ZIP v3 : associations URL/copie et fichiers disponibles dédupliqués, lecture des ZIP v1/v2 conservée ; coordination avec les publications du worker pendant les sauvegardes et restaurations.
+- Cache statique PWA `ludalex-statique-2.0.0` ; modèle PlantUML, documentation et tests mis à jour.
+
+### [BREAKING CHANGE]
+- Les images par URL sont désormais copiées sur le volume ; prévoir l'espace disque et conserver `/data/images` avec la base lors d'un redéploiement.
+- Les ZIP v3 nécessitent LUDALEX 2.0.0 ou ultérieur. **Migration** : sauvegarder la base et le volume avant mise à jour ; Hibernate ajoute la table et la collecte démarre automatiquement. Les ZIP v1/v2 restent restaurables. Pour revenir à une ancienne version, utiliser les données, le volume et un ZIP du format accepté sauvegardés avant mise à jour, pas un ZIP v3.
+
 ## [1.0.0] - 2026-11-13
 
 ### Added

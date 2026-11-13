@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 
 /** Point d'entrée commun des jeux et des joueurs pour leurs images. */
 @Service
@@ -20,6 +22,16 @@ public class ServiceImages {
     private final TelechargeurImage telechargeur;
     private final CalculateurCouleurFond calculateur;
     private final long tailleMax;
+    private ApplicationEventPublisher evenements;
+
+    @Autowired
+    void evenements(ApplicationEventPublisher evenements) {
+        this.evenements = evenements;
+    }
+
+    private void planifier(String url) {
+        if (evenements != null) { evenements.publishEvent(new CopiesImages.Referencee(url)); }
+    }
 
     public ServiceImages(StockageImages stockage, UrlSortanteValidateur validateur, TelechargeurImage telechargeur,
             CalculateurCouleurFond calculateur, ImagesProperties proprietes) {
@@ -40,9 +52,11 @@ public class ServiceImages {
         return stocker(fichier).source();
     }
 
-    /** Pour les images sans couleur de fond (joueurs) : aucun téléchargement, seule l'URL est conservée. */
+    /** Enregistre la source URL sans telechargement synchrone et signale la collecte apres commit. */
     public ImageSource enregistrerUrl(String url) {
-        return ImageSource.url(validateur.validerSyntaxe(url).toString());
+        String adresse = validateur.validerSyntaxe(url).toString();
+        planifier(adresse);
+        return ImageSource.url(adresse);
     }
 
     private record Upload(ImageSource source, byte[] octets) {
@@ -66,7 +80,7 @@ public class ServiceImages {
         return new Upload(source, octets);
     }
 
-    /** Seule l'URL est conservée ; l'image est téléchargée une fois pour la couleur, avec repli neutre. */
+    /** Calcule la couleur une fois, avec repli neutre, puis signale la copie de secours apres commit. */
     public ImagePreparee preparerUrl(String url) {
         String adresse = validateur.validerSyntaxe(url).toString();
         String couleur;
@@ -76,6 +90,7 @@ public class ServiceImages {
             LOG.info("Couleur de fond neutre pour une image distante : {}", e.getMessage());
             couleur = CalculateurCouleurFond.NEUTRE;
         }
+        planifier(adresse);
         return new ImagePreparee(ImageSource.url(adresse), couleur);
     }
 

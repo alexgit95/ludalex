@@ -24,6 +24,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import com.alexgit95.ludalex.images.StockageImages;
+import com.alexgit95.ludalex.images.CoordinationImages;
+import com.alexgit95.ludalex.images.CopiesImages;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.alexgit95.ludalex.sauvegarde.DonneesSauvegarde.Manifeste;
 
 /**
@@ -45,6 +48,14 @@ public class RestaurationSauvegarde {
     private final ImportDonnees importDonnees;
     private final StockageImages stockage;
     private final ReentrantLock verrou = new ReentrantLock();
+    private CoordinationImages coordination = new CoordinationImages();
+    private CopiesImages copies;
+
+    @Autowired
+    void copies(CoordinationImages coordination, CopiesImages copies) {
+        this.coordination = coordination;
+        this.copies = copies;
+    }
 
     public RestaurationSauvegarde(SauvegardeProperties proprietes, ValidateurSauvegarde validateur,
             ImportDonnees importDonnees, StockageImages stockage) {
@@ -67,7 +78,14 @@ public class RestaurationSauvegarde {
         try {
             temporaire = recevoir(flux);
             ValidateurSauvegarde.Resultat resultat = validateur.valider(temporaire);
-            appliquer(temporaire, resultat);
+            coordination.verrou().lock();
+            try {
+                coordination.invalider();
+                appliquer(temporaire, resultat);
+            } finally {
+                try { if (copies != null) { copies.apresRestauration(); } }
+                finally { coordination.verrou().unlock(); }
+            }
             return resultat.manifeste();
         } catch (IOException e) {
             throw new UncheckedIOException("Restauration impossible", e);

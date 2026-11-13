@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.alexgit95.ludalex.jeux.Jeu;
+import com.alexgit95.ludalex.images.CopieImage;
 import com.alexgit95.ludalex.jeux.Pret;
 import com.alexgit95.ludalex.joueurs.Joueur;
 import com.alexgit95.ludalex.parties.Equipe;
@@ -14,11 +15,11 @@ import com.alexgit95.ludalex.parties.TokenFinPartie;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
-/** Format v2 du ZIP : manifeste, un fichier JSON par type d'enregistrement, images uploadées. */
+/** Format v3 du ZIP : donnees, images uploadees et copies de secours des URL. */
 final class FormatSauvegarde {
 
-    static final int VERSION = 2;
-    static final List<Integer> VERSIONS_ACCEPTEES = List.of(1, VERSION);
+    static final int VERSION = 3;
+    static final List<Integer> VERSIONS_ACCEPTEES = List.of(1, 2, VERSION);
 
     static final String MANIFESTE = "manifest.json";
     static final String DOSSIER_DONNEES = "donnees/";
@@ -36,7 +37,7 @@ final class FormatSauvegarde {
 
     /** Toute entité JPA doit figurer dans l'une de ces deux listes (vérifié par un test). */
     static final Set<Class<?>> ENTITES_EXPORTEES = Set.of(Joueur.class, Jeu.class, Pret.class, Partie.class,
-            Participation.class, Equipe.class);
+            Participation.class, Equipe.class, CopieImage.class);
     static final Set<Class<?>> ENTITES_EXCLUES = Set.of(TokenFinPartie.class);
 
     static final String COMPTEUR_IMAGES = "images";

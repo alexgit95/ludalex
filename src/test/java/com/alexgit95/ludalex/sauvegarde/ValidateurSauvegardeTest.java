@@ -75,6 +75,23 @@ class ValidateurSauvegardeTest {
         assertThat(validateur().valider(archive.ecrire(dossier)).manifeste().formatVersion()).isEqualTo(2);
     }
 
+        @Test
+        void accepteUneCopieAssocieeEtRefuseLesAssociationsDangereusesOuManquantes() {
+        String source = "\"reference\":\"https://exemple.org/b.png\"";
+        ArchiveDeTest archive = ArchiveDeTest.valide()
+            .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":3")
+            .modifier("donnees/joueurs.json", source, source + ",\"copie\":\"" + ArchiveDeTest.IMAGE + "\"");
+        assertThat(validateur().valider(archive.ecrire(dossier)).images()).contains(ArchiveDeTest.IMAGE);
+        refuse(archive.avec("images/" + ArchiveDeTest.IMAGE,
+            new byte[] { (byte) 0x89, 'P', 'N', 'G', 13, 10, 26, 10 }), "indecodable");
+        refuse(ArchiveDeTest.valide().modifier("donnees/joueurs.json", source,
+            source + ",\"copie\":\"../../secret.png\""), "Nom de copie invalide");
+        refuse(ArchiveDeTest.valide().modifier("donnees/joueurs.json", source,
+            source + ",\"copie\":\"00000000-0000-0000-0000-000000000000.png\""), "absente");
+        refuse(ArchiveDeTest.valide().modifier("donnees/joueurs.json", "\"type\":\"UPLOAD\"",
+            "\"type\":\"UPLOAD\",\"copie\":\"" + ArchiveDeTest.IMAGE + "\""), "upload");
+        }
+
     @ParameterizedTest
     @ValueSource(strings = { "../../etc/cron.d/x", "donnees/../../x.json", "/etc/passwd", "images\\x.png",
             "C:/windows/x", "donnees//joueurs.json" })
@@ -141,8 +158,8 @@ class ValidateurSauvegardeTest {
 
     @Test
     void refuseUneVersionDeFormatInconnue() {
-        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":3"),
-            "versions acceptées : [1, 2]");
+        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":4"),
+            "versions acceptées : [1, 2, 3]");
     }
 
     @Test

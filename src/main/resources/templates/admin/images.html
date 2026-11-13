@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Images distantes', ~{::main})}">
+<body>
+<main class="contenu">
+    <h1>Images distantes</h1>
+    <section th:fragment="suivi" id="suivi-images" hx-get="/admin/images/etat"
+             th:attr="hx-get=@{/admin/images/etat(page=${page.number})}" hx-trigger="every 5s" hx-swap="outerHTML">
+        <dl class="compteurs-images" aria-live="polite">
+            <div th:each="compteur : ${compteurs}">
+                <dt th:text="${libellesEtats[compteur.key]}">En attente</dt>
+                <dd th:text="${compteur.value}">0</dd>
+            </div>
+            <div><dt>Stockage</dt><dd th:text="${#numbers.formatDecimal(octetsCopies / 1048576.0, 1, 2)} + ' Mo'">0 Mo</dd></div>
+        </dl>
+        <form th:action="@{/admin/images/relancer}" method="post" hx-post="/admin/images/relancer" hx-target="#suivi-images" hx-swap="outerHTML">
+            <input type="hidden" name="page" th:value="${page.number}">
+            <button type="submit" th:disabled="${compteurs['ECHEC'] == 0}">Relancer les échecs</button>
+        </form>
+        <p th:if="${page.empty}">Aucune image distante.</p>
+        <div class="tableau-images" th:unless="${page.empty}">
+            <table>
+                <thead><tr><th>Image</th><th>État</th><th>Tentatives</th><th>Dernière tentative</th><th>Prochaine tentative</th><th>Erreur</th><th>Action</th></tr></thead>
+                <tbody>
+                <tr th:each="copie : ${page.content}">
+                    <td class="reference-image">
+                        <a th:each="fiche : ${fiches[copie.url]}" th:href="${fiche.lien}" th:text="${fiche.nom}">Fiche</a>
+                        <span th:text="${copie.url}">URL</span>
+                    </td>
+                    <td th:text="${libellesEtats[copie.etat.name()]}">En attente</td>
+                    <td th:text="${copie.tentatives}">0</td>
+                    <td th:text="${copie.derniereTentative != null ? #temporals.format(copie.derniereTentative, 'dd/MM/yyyy HH:mm', 'Europe/Paris') : '—'}"></td>
+                    <td th:text="${copie.prochaineTentative != null ? #temporals.format(copie.prochaineTentative, 'dd/MM/yyyy HH:mm', 'Europe/Paris') : '—'}"></td>
+                    <td th:text="${copie.erreur}"></td>
+                    <td>
+                        <form th:if="${copie.etat.name() == 'ECHEC'}" th:action="@{/admin/images/relancer}" method="post"
+                              hx-post="/admin/images/relancer" hx-target="#suivi-images" hx-swap="outerHTML">
+                            <input type="hidden" name="cle" th:value="${copie.cle}">
+                            <input type="hidden" name="page" th:value="${page.number}">
+                            <button type="submit">Relancer</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav class="pagination" aria-label="Pages des images" th:if="${page.totalPages > 1}">
+            <a th:if="${page.hasPrevious()}" th:href="@{/admin/images(page=${page.number - 1})}">Précédent</a>
+            <span th:text="${page.number + 1} + ' / ' + ${page.totalPages}"></span>
+            <a th:if="${page.hasNext()}" th:href="@{/admin/images(page=${page.number + 1})}">Suivant</a>
+        </nav>
+    </section>
+</main>
+</body>
+</html>

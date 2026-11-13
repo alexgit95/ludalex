@@ -7,7 +7,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
-/** Image d'une entité : fichier uploadé sur le volume, ou simple URL (jamais copiée). */
+/** Image d'une entite : upload ou URL prioritaire, avec copie de secours geree separement. */
 @Embeddable
 public class ImageSource {
 

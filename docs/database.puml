@@ -36,6 +36,19 @@ class Jeu <<table jeu>> {
 }
 Jeu *-- ImageSource : image
 
+class CopieImage <<table copie_image>> {
+  cle : VARCHAR(64) <<PK>> ' SHA-256 de l'URL exacte
+  url : VARCHAR(2048)
+  etat : VARCHAR(16) ' EN_ATTENTE | EN_COURS | DISPONIBLE | ECHEC
+  fichier : VARCHAR(64) nullable
+  taille : BIGINT
+  tentatives : INTEGER
+  derniere_tentative : TIMESTAMP nullable
+  prochaine_tentative : TIMESTAMP nullable
+  erreur : VARCHAR(200) nullable
+}
+ImageSource ..> CopieImage : secours partage pour une URL
+
 class Pret <<table pret>> {
   id : BIGINT <<PK>>
   jeu_id : BIGINT <<FK>>

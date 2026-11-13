@@ -57,6 +57,17 @@ class SecuriteProdTest {
     }
 
     @Test
+    void protegeLeSuiviEtLesRelancesDesCopies() throws Exception {
+        mvc.perform(get("/admin/images")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/admin/images/etat")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/admin/images/relancer").with(csrf())).andExpect(status().isUnauthorized());
+        mvc.perform(get("/admin/images").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+        mvc.perform(post("/admin/images/relancer").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void accepteUnJwtValide() throws Exception {
         mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
                 .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));

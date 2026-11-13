@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -79,6 +80,7 @@ public class ValidateurSauvegarde {
             Manifeste manifeste = lireManifeste(zip, budget);
             Map<String, Long> imagesDuZip = verifierImages(zip, entrees, budget);
             Etat etat = verifierDonnees(zip, entrees, budget);
+            verifierCopies(zip, etat);
             verifierCompteurs(manifeste, etat, imagesDuZip.size());
             long octetsImages = 0;
             for (String reference : etat.uploads) {
@@ -193,6 +195,24 @@ public class ValidateurSauvegarde {
         return tailles;
     }
 
+    private void verifierCopies(ZipFile zip, Etat etat) throws IOException {
+        for (String nom : new HashSet<>(etat.copies.values())) {
+            ZipEntry entree = zip.getEntry(DOSSIER_IMAGES + nom);
+            if (entree == null) { throw refus("Une copie est absente de la sauvegarde"); }
+            Path temporaire = Files.createTempFile("ludalex-verification-copie-", ".tmp");
+            try {
+                try (InputStream flux = new FluxBorne(zip.getInputStream(entree),
+                        new Budget(imagesProprietes.tailleMax().toBytes()), entree, imagesProprietes.tailleMax().toBytes())) {
+                    Files.copy(flux, temporaire, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
+                try { FormatImage.validerFichier(temporaire); }
+                catch (com.alexgit95.ludalex.images.CopieRefuseeException exception) {
+                    throw refus("Copie d'image indecodable dans la sauvegarde");
+                }
+            } finally { Files.deleteIfExists(temporaire); }
+        }
+    }
+
     // ---- Données ----
 
     private static final class Etat {
@@ -204,6 +224,7 @@ public class ValidateurSauvegarde {
         final Set<Long> prets = new HashSet<>();
         final Set<String> couples = new HashSet<>();
         final Set<String> uploads = new TreeSet<>();
+        final Map<String, String> copies = new HashMap<>();
     }
 
     private Etat verifierDonnees(ZipFile zip, Set<String> entrees, Budget budget) {
@@ -320,12 +341,19 @@ public class ValidateurSauvegarde {
             throw refus("Image mal décrite dans les données");
         }
         if (TypeImage.UPLOAD.name().equals(image.type())) {
+            if (image.copie() != null) { throw refus("Un upload ne peut pas porter une copie d'URL"); }
             if (!StockageImages.estNomValide(image.reference())) {
                 throw refus("Nom de fichier d'image invalide dans les données");
             }
             etat.uploads.add(image.reference());
         } else if (TypeImage.URL.name().equals(image.type())) {
             adresseWeb(image.reference());
+            if (image.copie() != null) {
+                if (!StockageImages.estNomValide(image.copie())) { throw refus("Nom de copie invalide"); }
+                String precedente = etat.copies.putIfAbsent(image.reference(), image.copie());
+                if (precedente != null && !precedente.equals(image.copie())) { throw refus("Copies incoherentes pour une URL"); }
+                etat.uploads.add(image.copie());
+            }
         } else {
             throw refus("Type d'image inconnu dans les données");
         }

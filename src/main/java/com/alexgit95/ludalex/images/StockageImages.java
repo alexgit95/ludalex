@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -22,7 +23,7 @@ public class StockageImages {
 
     private static final Logger LOG = LoggerFactory.getLogger(StockageImages.class);
     private static final Pattern NOM_VALIDE = Pattern.compile(
-            "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.(png|jpg|gif|webp)$");
+            "^(copie-)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.(png|jpg|gif|webp)$");
 
     private final Path racine;
 
@@ -39,6 +40,10 @@ public class StockageImages {
         return nom != null && NOM_VALIDE.matcher(nom).matches();
     }
 
+    public static boolean estNomCopie(String nom) {
+        return estNomValide(nom) && nom.startsWith("copie-");
+    }
+
     public ImageSource enregistrer(byte[] octets) {
         FormatImage format = FormatImage.detecter(octets).orElseThrow(() -> new ImageInvalideException(
                 "Format d'image non autorisé (JPEG, PNG, GIF ou WebP uniquement)"));
@@ -50,6 +55,46 @@ public class StockageImages {
             throw new ImageInvalideException("Impossible d'enregistrer l'image", e);
         }
         return ImageSource.upload(nom);
+    }
+
+    public Path temporaireCopie() {
+        try {
+            Files.createDirectories(racine.resolve(".copies"));
+            return Files.createTempFile(racine.resolve(".copies"), "copie-", ".tmp");
+        } catch (IOException exception) {
+            throw new ImageInvalideException("Ecriture de la copie impossible", exception);
+        }
+    }
+
+    public ImageSource publierCopie(Path temporaire) {
+        try {
+            FormatImage format = FormatImage.validerFichier(temporaire);
+            String nom = "copie-" + UUID.randomUUID() + "." + format.extension();
+            Files.move(temporaire, racine.resolve(nom), StandardCopyOption.ATOMIC_MOVE);
+            return ImageSource.upload(nom);
+        } catch (IOException exception) {
+            throw new ImageInvalideException("Publication de la copie impossible", exception);
+        }
+    }
+
+    public void nettoyerTemporairesCopies() {
+        Path dossier = racine.resolve(".copies");
+        if (!Files.isDirectory(dossier)) {
+            return;
+        }
+        try (var fichiers = Files.list(dossier)) {
+            fichiers.filter(Files::isRegularFile).forEach(this::supprimerTemporaire);
+        } catch (IOException exception) {
+            LOG.warn("Nettoyage des copies temporaires impossible");
+        }
+    }
+
+    public void supprimerTemporaire(Path chemin) {
+        try {
+            Files.deleteIfExists(chemin);
+        } catch (IOException exception) {
+            LOG.warn("Suppression d'une copie temporaire impossible");
+        }
     }
 
     /** Résout un fichier du volume ; vide pour tout nom qui n'est pas un fichier généré par l'application. */

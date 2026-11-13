@@ -17,8 +17,12 @@
             return;
         }
         if (champ.type === 'file' && champ.files.length > 0) {
+            apercu.removeAttribute('data-secours');
+            apercu.onerror = function () { repliImage(apercu); };
             apercu.src = URL.createObjectURL(champ.files[0]);
         } else if (champ.type === 'url' && champ.value) {
+            apercu.removeAttribute('data-secours');
+            apercu.onerror = function () { repliImage(apercu); };
             apercu.src = champ.value;
         }
     });

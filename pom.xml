@@ -13,7 +13,7 @@
 
     <groupId>com.alexgit95</groupId>
     <artifactId>ludalex</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
     <name>ludalex</name>
     <description></description>
@@ -134,6 +134,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>-javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
+                    <systemPropertyVariables>
+                        <ludalex.images.copies.actif>false</ludalex.images.copies.actif>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>

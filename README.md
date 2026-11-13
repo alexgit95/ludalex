@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **1.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **2.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -42,20 +42,20 @@ Réglages : `ludalex.affichage.url-publique` (origine du QR, déduite de la requ
 
 L'écran **Admin > Sauvegarde et restauration** (`/admin/sauvegarde`) permet de ne rien perdre si la carte SD du Raspberry Pi meurt ou si le moteur de base change.
 
-- **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes) et les images uploadées. Les images saisies par adresse web ne sont conservées que sous forme d'adresse. Les tokens de fin de partie et la configuration ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
-- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les archives v1 restent acceptées; les nouvelles archives v2 nécessitent LUDALEX 1.0.0 ou ultérieur et ne sont pas restaurables par les versions précédentes. Gardez une archive v1 pour revenir à une ancienne version. Les liens de fin de partie existants deviennent invalides.
+- **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes), les images uploadées et les copies disponibles des images par URL avec leurs associations. Les copies partagées sont incluses une seule fois ; les URL sans copie restent exportées. Les tokens de fin de partie, la configuration et les erreurs techniques de collecte ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
+- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les archives v1/v2 restent acceptées ; les nouvelles archives v3 nécessitent LUDALEX 2.0.0 ou ultérieur. Les copies absentes sont automatiquement planifiées ; les copies restaurées ne sont pas retéléchargées. Gardez la sauvegarde et le volume d'avant mise à jour pour revenir à une ancienne version. Les liens de fin de partie existants deviennent invalides.
 - **Sûreté** : le ZIP est entièrement validé avant la moindre suppression (chemins dangereux ou « zip slip », entrées hors `manifest.json`, `donnees/`, `images/`, nombre d'entrées, taille et taux de décompression, images réelles PNG/JPEG/GIF/WebP de 2 Mo maximum, version du format, références cohérentes, compteurs du manifeste). Le remplacement des données est une seule transaction : en cas d'échec, données et images précédentes sont conservées. Une seule restauration à la fois.
 - **Limites** : le ZIP est reçu comme corps brut de la requête (pas en multipart) et écrit dans un fichier temporaire. Réglages : `ludalex.sauvegarde.taille-max` (512MB), `ludalex.sauvegarde.taille-decompressee-max` (1GB), `ludalex.sauvegarde.entrees-max` (10000), `ludalex.sauvegarde.ratio-max` (200) et `ludalex.sauvegarde.repertoire-temporaire` (répertoire temporaire du système par défaut, variable Docker `LUDALEX_SAUVEGARDE_REPERTOIRE_TEMPORAIRE`). Derrière Cloudflare, l'envoi est limité par l'offre (100 Mo en gratuit).
 
-### Format de sauvegarde (version 2)
+### Format de sauvegarde (version 3)
 
 ```
 manifest.json            formatVersion, appVersion, date, compteurs par type
 donnees/joueurs.json     un tableau JSON par type : joueurs, jeux, parties, equipes, participations, prets
-images/<uuid>.<ext>      images uploadées référencées par les données
+images/<nom>.<ext>       uploads et copies disponibles référencés par les données
 ```
 
-Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference}`. `jeux.json` inclut l'indicateur `plusieursVariantes`; `parties.json` inclut le libellé facultatif `variante`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. Les archives v1 sans ces propriétés sont restaurées avec les valeurs par défaut. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
+Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference, copie}` : `copie` est le nom facultatif du fichier de secours pour une source URL. Les associations de `copie_image` sont intégrées aux images, pas à un tableau de travaux techniques. `jeux.json` inclut l'indicateur `plusieursVariantes`; `parties.json` inclut le libellé facultatif `variante`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. Les archives v1/v2 sans les nouvelles propriétés sont restaurées avec les valeurs par défaut. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
 
 ## Import MyLudo
 
@@ -128,9 +128,16 @@ L'écran **Admin > Joueurs** (`/admin/joueurs`) gère les fiches de joueurs, san
 Chaque image (jeu, joueur) est soit un **fichier uploadé**, soit une **URL**.
 
 - **Upload** : JPEG, PNG, GIF ou WebP, 2 Mo maximum, type vérifié sur le contenu. Le fichier est stocké sur le volume (`ludalex.images.repertoire`, par défaut `./data/images`, `/data/images` en Docker) sous un nom généré et servi par `/images/{nom}`.
-- **URL** : seule l'adresse est conservée ; l'image n'est jamais copiée et reste résolue par le navigateur.
-- **Couleur de fond** : calculée une seule fois à l'enregistrement (image réduite, couleur la plus fréquente, hors blanc, noir et transparent), stockée et modifiable à la main ; `#3a3a3a` en cas d'échec. Pour une URL, l'image est téléchargée une seule fois, uniquement pour ce calcul.
+- **URL** : l'adresse d'origine reste prioritaire. Toutes les images distantes référencées (jeux, avatars et images de victoire) sont copiées préventivement sur le même volume, une fois par URL exacte, sous un nom `copie-<uuid>.<ext>`. Le navigateur essaie la copie disponible sur toute erreur de chargement de l'image (404, refus, réseau, contenu indécodable), puis l'image par défaut ; les images décoratives sont retirées seulement après les échecs. Aucun autre type de ressource n'est concerné, et aucune boucle de repli n'est possible.
+- **Collecte automatique** : découverte par lots au démarrage puis toutes les minutes, nouvelles références signalées après commit, un téléchargement à la fois en flux. Les copies et états survivent au redémarrage et à la recréation du conteneur avec le même volume et la même base. Les copies devenues inutiles sont nettoyées ; une copie partagée est conservée tant qu'une fiche référence son URL. Une copie dont le fichier disparaît est replanifiée.
+- **Suivi** : **Admin > Copies des images distantes** (`/admin/images`) affiche les compteurs en attente/en cours/disponibles/en échec, l'espace occupé, les fiches concernées, dates et erreurs, par pages de 20, avec actualisation toutes les 5 secondes. Relance individuelle ou de tous les échecs, protégée par CSRF et Cloudflare Access en prod.
+- **Tentatives et limites** : au plus trois tentatives pour une erreur transitoire, avec au moins une minute puis quinze minutes d'attente ; refus SSRF et format invalide sans relance automatique. Une URL déjà morte avant la première copie reste irrécupérable. Une URL copiée n'est pas rafraîchie automatiquement si son contenu change. Le repli attend l'événement d'erreur du navigateur : une connexion suspendue n'entraîne pas un repli immédiat. Le réglage `ludalex.images.copies.actif=false` désactive le worker (notamment dans les tests), sans supprimer les copies.
+- **Couleur de fond** : calculée une seule fois à l'enregistrement (image réduite, couleur la plus fréquente, hors blanc, noir et transparent), stockée et modifiable à la main ; `#3a3a3a` en cas d'échec. Le téléchargement ponctuel servant au calcul est distinct de la copie en arrière-plan, qui ne modifie pas la couleur choisie.
 - **Sécurité SSRF** : tout téléchargement refuse les adresses locales ou privées (y compris après redirection ou résolution DNS) et plafonne délai et taille. Une URL du réseau local peut être enregistrée, mais sa couleur reste neutre.
+
+### Mise à jour vers 2.0.0
+
+Sauvegarder la base et le volume des images avant déploiement. Hibernate ajoute la table `copie_image` sans outil de migration ; la collecte des URL existantes démarre automatiquement. Prévoir l'espace disque supplémentaire (2 Mo maximum par copie) et conserver le volume `/data/images` avec les données. Les anciens ZIP v1/v2 restent lisibles ; les ZIP v3 ne sont pas lisibles par les anciennes versions. Un retour arrière doit utiliser les données et le volume d'avant mise à jour, pas un ZIP v3.
 
 ## Technologies
 

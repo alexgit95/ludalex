@@ -6,7 +6,8 @@
 <img th:fragment="affichage(image, alt)" class="image"
      th:src="${image != null} ? ${image.url} : '/icons/defaut.svg'"
      th:alt="${alt}" loading="lazy"
-     onerror="this.onerror=null;this.src='/icons/defaut.svg'">
+    th:attr="data-secours=${image != null and copiesImages != null ? copiesImages[image.url] : null}"
+    onerror="repliImage(this)">
 
 <!-- Saisie : champs <champ>Mode (UPLOAD|URL), <champ>Fichier et <champ>Url -->
 <fieldset th:fragment="saisie(champ, image)" class="saisie-image"
@@ -24,6 +25,8 @@
     <input type="url" th:name="${champ + 'Url'}" maxlength="2048" placeholder="https://..."
            th:value="${estUrl} ? ${image.reference}">
     <img class="apercu" alt="Aperçu"
+            th:attr="data-secours=${image != null and copiesImages != null ? copiesImages[image.url] : null}"
+            onerror="repliImage(this)"
          th:src="${image != null} ? ${image.url} : '/icons/defaut.svg'">
 </fieldset>
 

@@ -36,6 +36,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alexgit95.ludalex.images.ImageSource;
 import com.alexgit95.ludalex.images.StockageImages;
+import com.alexgit95.ludalex.images.CopieImage;
+import com.alexgit95.ludalex.images.CopieImageRepository;
+import com.alexgit95.ludalex.images.CoordinationImages;
 import com.alexgit95.ludalex.jeux.Jeu;
 import com.alexgit95.ludalex.jeux.Pret;
 import com.alexgit95.ludalex.joueurs.Joueur;
@@ -77,6 +80,8 @@ class SauvegardeIntegrationTest {
 
     @Autowired
     private ImportDonnees importDonnees;
+    @Autowired private CopieImageRepository copies;
+    @Autowired private CoordinationImages coordination;
 
     @TempDir
     Path dossier;
@@ -246,7 +251,7 @@ class SauvegardeIntegrationTest {
                 .map(e -> new String(e.getValue(), StandardCharsets.UTF_8)).collect(Collectors.joining("\n"));
         assertThat(tout).doesNotContain("empreinte").doesNotContain("empreinte-secrete").contains("https://exemple.org/p.png")
                 .contains("\"anonymise\":true").contains("Joueur supprimé");
-        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":2")
+        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":3")
                 .contains("\"joueurs\":3").contains("\"jeux\":2").contains("\"parties\":3").contains("\"equipes\":2")
                 .contains("\"participations\":5").contains("\"prets\":2").contains("\"images\":2");
         assertThat(new String(zip.get("donnees/jeux.json"), StandardCharsets.UTF_8))
@@ -289,7 +294,7 @@ class SauvegardeIntegrationTest {
 
         assertThat(entites).isEqualTo(couvertes);
         assertThat(FormatSauvegarde.ENTITES_EXPORTEES).doesNotContainAnyElementsOf(FormatSauvegarde.ENTITES_EXCLUES);
-        assertThat(FormatSauvegarde.FICHIERS_DONNEES).hasSameSizeAs(FormatSauvegarde.ENTITES_EXPORTEES);
+        assertThat(FormatSauvegarde.FICHIERS_DONNEES).hasSize(FormatSauvegarde.ENTITES_EXPORTEES.size() - 1);
     }
 
     // ---- Aller-retour ----
@@ -298,7 +303,7 @@ class SauvegardeIntegrationTest {
 
     private void viderBase() {
         tx.executeWithoutResult(s -> {
-            for (String entite : List.of("TokenFinPartie", "Participation", "Equipe", "Partie", "Pret", "Jeu",
+            for (String entite : List.of("CopieImage", "TokenFinPartie", "Participation", "Equipe", "Partie", "Pret", "Jeu",
                     "Joueur")) {
                 em.createQuery("delete from " + entite).executeUpdate();
             }
@@ -348,6 +353,74 @@ class SauvegardeIntegrationTest {
         restauration.restaurer(new ByteArrayInputStream(exporter()));
 
         assertThat(sansTokens(instantane())).containsExactlyElementsOf(premiere);
+    }
+
+    @Test
+    void exporteEtRestaureUneCopiePartageeSansHistoriqueTechnique() throws IOException {
+        String url = "https://example.org/partage.png";
+        ImageSource fichier = stockage.enregistrer(octetsPng(6));
+        tx.executeWithoutResult(statut -> {
+            Jeu jeu = new Jeu("Copie partagee");
+            jeu.setImage(ImageSource.url(url));
+            em.persist(jeu);
+            Joueur joueur = new Joueur("Copie partagee");
+            joueur.setAvatar(ImageSource.url(url));
+            em.persist(joueur);
+            CopieImage copie = new CopieImage(url);
+            copie.commencer(Instant.now());
+            copie.disponible(fichier.getReference(), octetsPng(6).length);
+            em.persist(copie);
+        });
+        long generation = coordination.generation();
+        byte[] archive = exporter();
+        Files.write(Path.of("target/test-sauvegarde-copies.zip"), archive);
+        Map<String, byte[]> entrees = lireZip(archive);
+        assertThat(entrees.keySet().stream().filter(nom -> nom.startsWith("images/"))).hasSize(1);
+        assertThat(new String(entrees.get("donnees/jeux.json"), StandardCharsets.UTF_8))
+                .contains("\"copie\":\"" + fichier.getReference()).doesNotContain("tentatives", "derniereTentative");
+        restauration.restaurer(new ByteArrayInputStream(archive));
+        assertThat(coordination.generation()).isGreaterThan(generation);
+        CopieImage relue = copies.findById(CopieImage.cle(url)).orElseThrow();
+        assertThat(relue.getEtat()).isEqualTo(CopieImage.Etat.DISPONIBLE);
+        assertThat(relue.getFichier()).isEqualTo(fichier.getReference());
+        assertThat(relue.getTaille()).isEqualTo(octetsPng(6).length);
+        assertThat(relue.getTentatives()).isZero();
+        assertThat(stockage.charger(relue.getFichier())).isPresent();
+    }
+
+    @Test
+    void restaureLesAnciensFormatsAvecCollecteEnAttente() {
+        for (int version : List.of(1, 2)) {
+            restauration.restaurer(new ByteArrayInputStream(ArchiveDeTest.valide()
+                    .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":" + version).octets()));
+            CopieImage copie = copies.findById(CopieImage.cle("https://exemple.org/b.png")).orElseThrow();
+            assertThat(copie.getEtat()).isEqualTo(CopieImage.Etat.EN_ATTENTE);
+            assertThat(copie.getFichier()).isNull();
+        }
+    }
+
+    @Test
+    void exportAttendLaFinDunePublicationSansAttendreUnTelechargementReseau() throws Exception {
+        creerDonnees();
+        var demarre = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.Future<byte[]> resultat;
+        try (var execution = java.util.concurrent.Executors.newSingleThreadExecutor()) {
+            coordination.verrou().lock();
+            try {
+                resultat = execution.submit(() -> { demarre.countDown(); return exporter(); });
+                assertThat(demarre.await(5, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+                org.awaitility.Awaitility.await().atMost(java.time.Duration.ofSeconds(5))
+                        .until(() -> coordination.verrou().hasQueuedThreads());
+                assertThat(resultat.isDone()).isFalse();
+            } finally { coordination.verrou().unlock(); }
+            Map<String, byte[]> archive = lireZip(resultat.get(5, java.util.concurrent.TimeUnit.SECONDS));
+            assertThat(archive).containsKey("manifest.json");
+            Path fichier = Files.write(dossier.resolve("export-coherent.zip"), resultat.get());
+            new ValidateurSauvegarde(new SauvegardeProperties(org.springframework.util.unit.DataSize.ofMegabytes(512),
+                    org.springframework.util.unit.DataSize.ofGigabytes(1), 10000, 200, ""),
+                    new com.alexgit95.ludalex.images.ImagesProperties("inutile", org.springframework.util.unit.DataSize.ofMegabytes(2),
+                            50_000_000, java.time.Duration.ofSeconds(5), 5)).valider(fichier);
+        }
     }
 
     @Test
