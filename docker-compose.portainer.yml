@@ -2,7 +2,7 @@
 # Utilise l'image publiée sur Docker Hub (arm64) ; renseigner les variables dans l'interface (voir .env.example).
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ludalex}
