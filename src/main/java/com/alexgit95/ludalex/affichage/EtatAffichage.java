@@ -20,4 +20,9 @@ public record EtatAffichage(Type type, VuePartie vue, String qrSvg, List<Joueur>
     public String fond() {
         return vue == null ? null : vue.jeu().getCouleurFond();
     }
+
+    /** Présentation des joueurs de la partie en cours, nulle en veille. */
+    public PresentationJoueurs presentation() {
+        return vue == null ? null : PresentationJoueurs.de(vue);
+    }
 }

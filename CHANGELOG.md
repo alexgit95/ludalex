@@ -2,6 +2,19 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.13.0] - 2026-11-13
+
+### Added
+- Écran Affichage, partie en cours : cartouche « VS » (épées croisées en SVG, pulsation de 4 % sur 2,8 s, désactivée avec `prefers-reduced-motion`) ; duel, VS entre chaque paire à partir de trois joueurs, colonnes d'équipes nommées séparées par le VS, libellé « Ensemble » pour un jeu coopératif, aucun VS pour un joueur seul.
+- `PresentationJoueurs` (mode et groupes d'affichage) exposé par `EtatAffichage.presentation()`, avec tests unitaires.
+
+### Changed
+- Écran Affichage : l'image du jeu devient le fond (floutée, assombrie) sur la couleur de fond du jeu, aussi pendant la pause ; le titre du jeu reste affiché en haut ; QR code réduit en coin.
+- Cache du service worker `ludalex-statique-0.13.0`.
+
+### Fixed
+- Écran Affichage : les avatars des joueurs n'étaient plus rognés en bas de l'écran et sont nettement plus grands (taille selon la hauteur de l'écran, grille `minmax(0, 1fr)`).
+
 ## [0.12.2] - 2026-11-12
 
 ### Added

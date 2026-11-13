@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.12.2**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **0.13.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -27,8 +27,8 @@ Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir 
 
 `/affichage` est conçu pour tourner en continu sur une télé ou une tablette (plein écran, lisible de loin). Il se met à jour tout seul (interrogation légère toutes les 3 s) :
 
-- **Partie en cours** : image du jeu sur sa couleur de fond (ou titre seul sans image), avatars et noms des joueurs, QR code de fin de partie.
-- **Partie en pause** : le joueur à qui c'est de jouer, en grand, sans QR code.
+- **Partie en cours** : l'image du jeu sert de fond (floutée, assombrie) sur la couleur de fond du jeu ; titre du jeu en haut, QR code de fin de partie en coin, joueurs en grand sur toute la hauteur restante (jamais rognés). Un cartouche **VS** (épées croisées, pulsation lente, désactivée si le navigateur demande un mouvement réduit) matérialise l'affrontement : duel face à face, VS entre chaque paire de joueurs à partir de trois, parties par équipes en colonnes nommées séparées par le VS (joueurs sans équipe dans un groupe à part), libellé « Ensemble » pour un jeu coopératif, aucun VS pour un joueur seul.
+- **Partie en pause** : le joueur à qui c'est de jouer, en grand, sans QR code, sur le même fond.
 - **Victoire** : animation du ou des vainqueurs pendant 15 s après la fin de la partie (message de défaite pour une défaite coopérative), puis retour à la veille.
 - **Veille** : diaporama en fondu d'illustrations (château, village, nœud celtique, menhirs). Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; sans image, l'écran affiche LUDALEX.
 

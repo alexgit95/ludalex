@@ -14,28 +14,44 @@ body.kiosque { margin: 0; background: var(--nuit); color: var(--encre); overflow
 .zone section { position: relative; z-index: 1; width: 100%; }
 
 /* Cartouche parchemin réutilisé pour tous les textes */
-.titre-jeu, .nom, .bandeau, .victoire h1, .suivant h1, .veille-vide {
+.titre-jeu, .nom, .bandeau, .victoire h1, .suivant h1, .veille-vide, .nom-equipe, .ensemble, .vs-texte {
     background: var(--parchemin) var(--decor-parchemin); color: var(--encre); border: 2px solid var(--or);
     border-radius: .6rem; box-shadow: 0 .4rem 1.2rem rgba(0,0,0,.45); font-family: var(--police-titre); }
 
-/* Partie en cours */
-.partie-en-cours { display: grid; grid-template-columns: 1fr minmax(14rem, 22vw); grid-template-rows: 1fr auto;
-                   gap: 2vh 3vw; padding: 3vh 3vw; min-height: 100vh; box-sizing: border-box; }
-.partie-en-cours .jeu { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2vh; }
-.image-jeu { max-width: 100%; max-height: 62vh; border-radius: 1rem; border: .3rem solid var(--or); box-shadow: 0 1rem 3rem rgba(0,0,0,.5); }
+/* Fond : image du jeu floutée et assombrie, sur la couleur de fond de .zone (repli si l'image échoue) */
+.fond-jeu { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover;
+            filter: blur(10px) brightness(.55); transform: scale(1.1); pointer-events: none; }
+
+/* Partie en cours : le titre et le QR en haut, les joueurs prennent toute la hauteur restante */
+.partie-en-cours { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto minmax(0, 1fr);
+                   gap: 2vh 3vw; padding: 3vh 3vw; height: 100vh; box-sizing: border-box; }
+.partie-en-cours .jeu { grid-row: 1; grid-column: 1; display: flex; align-items: center; justify-content: center; }
 .titre-jeu { margin: 0; font-size: clamp(1.5rem, 4vw, 3.5rem); text-align: center; padding: .2em .8em; }
-.titre-seul { font-size: clamp(3rem, 9vw, 8rem); }
-.partie-en-cours .qr { grid-row: 1; align-self: center; background: var(--surface); color: var(--encre); padding: 1rem;
-                       border: 2px solid var(--or); border-radius: 1rem; text-align: center; }
+.partie-en-cours .qr { grid-row: 1; grid-column: 2; width: clamp(7rem, 16vh, 11rem); background: var(--surface); color: var(--encre);
+                       padding: .5rem; border: 2px solid var(--or); border-radius: .8rem; text-align: center; }
 .qr-code svg { width: 100%; height: auto; display: block; }
-.qr p { margin: .5rem 0 0; font-weight: 600; }
-.joueurs { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap;
-           justify-content: center; gap: 2vh 3vw; }
-.joueurs li { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.qr p { margin: .3rem 0 0; font-size: .75rem; font-weight: 600; }
+.combat { grid-row: 2; grid-column: 1 / -1; min-height: 0; display: flex; flex-wrap: wrap; align-items: center;
+          justify-content: center; align-content: center; gap: 2vh 3vw; }
+.groupe { display: flex; flex-direction: column; align-items: center; gap: 1.5vh; }
+.nom-equipe { margin: 0; font-size: clamp(1.2rem, 3vh, 2.2rem); font-weight: 700; padding: .1em .8em; }
+.joueurs { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 2vh 2vw; }
+.joueurs li { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
 .avatar { width: clamp(4rem, 9vw, 8rem); height: clamp(4rem, 9vw, 8rem); object-fit: cover; border-radius: 50%;
           border: .3rem solid var(--or-clair); background: var(--surface); }
+.combat .avatar { width: clamp(6rem, 24vh, 15rem); height: clamp(6rem, 24vh, 15rem); }
 .avatar-geant { width: clamp(8rem, 22vw, 18rem); height: clamp(8rem, 22vw, 18rem); }
 .nom { font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 600; padding: .1em .7em; }
+.combat .nom { font-size: clamp(1.2rem, 3.4vh, 2.4rem); }
+
+/* Cartouche VS : pulsation lente, un seul élément animé (transform seulement) */
+.vs { display: flex; flex-direction: column; align-items: center; color: var(--or); will-change: transform;
+      animation: pulsation-vs 2.8s ease-in-out infinite alternate; }
+.epees { width: clamp(4rem, 12vh, 8rem); height: auto; filter: drop-shadow(0 .2rem .3rem rgba(0,0,0,.5)); }
+.vs-texte { font-size: clamp(2rem, 8vh, 5rem); font-weight: 800; letter-spacing: .1em; padding: 0 .5em; }
+.ensemble { margin: 0; font-size: clamp(1.5rem, 5vh, 3.5rem); letter-spacing: .2em; text-transform: uppercase; padding: .2em .8em; }
+@keyframes pulsation-vs { from { transform: scale(1); } to { transform: scale(1.04); } }
+@media (prefers-reduced-motion: reduce) { .vs { animation: none; will-change: auto; } }
 
 /* Pause */
 .partie-en-pause { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 3vh; padding: 3vh; }

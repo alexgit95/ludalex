@@ -123,8 +123,29 @@ class AffichageControllerTest {
         String html = page();
 
         assertThat(html).contains(jeu.getNom()).contains(anne.getNom()).contains(marc.getNom())
-                .contains("<svg").contains("Scannez pour terminer la partie").contains("titre-seul")
-                .contains("/icons/defaut.svg").doesNotContain("data-images");
+                .contains("<svg").contains("Scannez pour terminer la partie").contains("class=\"vs\"")
+                .contains("/icons/defaut.svg").doesNotContain("data-images").doesNotContain("fond-jeu");
+    }
+
+    @Test
+    void remplaceLeVsParEnsemblePourUnJeuCooperatif() throws Exception {
+        lancer(jeu("Pandemic", true), joueur("Anne"), joueur("Marc"));
+
+        assertThat(page()).contains("Ensemble").doesNotContain("class=\"vs\"");
+    }
+
+    @Test
+    void neMontrePasDeVsPourUnJoueurSeul() throws Exception {
+        lancer(jeu("Solitaire", false), joueur("Anne"));
+
+        assertThat(page()).doesNotContain("class=\"vs\"").doesNotContain("Ensemble");
+    }
+
+    @Test
+    void metUnVsEntreChaquePaireDeJoueursAuDelaDeDeux() throws Exception {
+        lancer(jeu("Catan", false), joueur("Anne"), joueur("Marc"), joueur("Léa"));
+
+        assertThat(page().split("class=\"vs\"", -1)).hasSize(3);
     }
 
     @Test
