@@ -3,6 +3,7 @@
 <body>
 <main class="contenu">
     <h1>Administration</h1>
+    <p class="aide version-application">Version <span th:text="${versionApplication}">0.13.2</span></p>
     <ul>
         <li><a th:href="@{/admin/joueurs}">Joueurs</a></li>
         <li><a th:href="@{/admin/sauvegarde}">Sauvegarde et restauration</a></li>

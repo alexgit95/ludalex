@@ -2,6 +2,11 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.13.3] - 2026-11-13
+
+### Added
+- Page Admin : affichage de la version du POM et des 7 premiers caractères du SHA de commit lorsqu'il est disponible; en exécution locale sans SHA, la version seule est affichée.
+
 ## [0.13.2] - 2026-11-13
 
 ### Changed

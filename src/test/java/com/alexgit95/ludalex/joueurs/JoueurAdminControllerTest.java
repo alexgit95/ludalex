@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.mock.web.MockMultipartFile;
@@ -53,6 +54,9 @@ class JoueurAdminControllerTest {
     @Autowired
     private JoueurService service;
 
+    @Autowired
+    private BuildProperties build;
+
     private static String nomUnique() {
         return "J-" + UUID.randomUUID();
     }
@@ -66,7 +70,10 @@ class JoueurAdminControllerTest {
 
     @Test
     void afficheLAdministrationEtLaListe() throws Exception {
-        mvc.perform(get("/admin")).andExpect(status().isOk()).andExpect(content().string(containsString("Joueurs")));
+        mvc.perform(get("/admin")).andExpect(status().isOk())
+            .andExpect(content().string(containsString("Joueurs")))
+            .andExpect(content().string(containsString("version-application")))
+                .andExpect(content().string(containsString("Version <span>" + build.getVersion() + "</span>")));
         mvc.perform(get("/admin/joueurs")).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Ajouter un joueur")));
     }

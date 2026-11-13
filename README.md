@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.13.2**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **0.13.3**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -113,6 +113,8 @@ L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre des
 - **Suppression** : avec confirmation ; refusée si le jeu a des parties. Elle supprime aussi l'historique des prêts et l'image uploadée.
 
 ## Administration des joueurs
+
+La page **Admin** (`/admin`) affiche la version du POM et les 7 premiers caractères du SHA de commit lorsqu'il est disponible. En exécution locale sans SHA, seule la version est affichée.
 
 L'écran **Admin > Joueurs** (`/admin/joueurs`) gère les fiches de joueurs, sans compte ni lien avec Cloudflare.
 
