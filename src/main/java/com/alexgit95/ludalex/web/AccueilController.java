@@ -11,7 +11,7 @@ public class AccueilController {
 
     @GetMapping("/")
     public String accueil() {
-        return "accueil";
+        return "redirect:/jeux";
     }
 
     /** Le type MIME du manifeste n'est pas connu du serveur de ressources statiques. */

@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/base :: layout('Ludothèque', ~{::main})}">
 <body>
 <main class="contenu">
-    <h1>Ma ludothèque</h1>
-    <p class="message" th:if="${message}" th:text="${message}"></p>
-    <p><a class="bouton" th:href="@{/jeux/nouveau}">Ajouter un jeu</a></p>
+    <div class="entete-ludotheque">
+        <h1>Ma ludothèque</h1>
+        <p class="message" th:if="${message}" th:text="${message}"></p>
+        <p><a class="bouton" th:href="@{/jeux/nouveau}">Ajouter un jeu</a></p>
+        <p th:if="${page.empty}">Aucun jeu pour l'instant.</p>
+    </div>
 
-    <p th:if="${page.empty}">Aucun jeu pour l'instant.</p>
     <ul class="grille-jeux">
         <li class="vignette" th:each="vignette : ${page.content}"
             th:style="'background-color:' + ${vignette.jeu.couleurFond}">

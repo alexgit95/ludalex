@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.13.1**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **0.13.2**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -94,7 +94,7 @@ La fiche d'un jeu affiche ses statistiques, calculées sur les parties **termin�
 
 L'écran **Parties** (`/parties`) liste les parties de la plus récente à la plus ancienne (filtre par jeu) et permet d'en déclarer après coup.
 
-- **Déclaration** : choisir le jeu (son image s'affiche dès le choix pour confirmer visuellement), cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs). Les champs de score vides des joueurs non participants sont ignorés.
+- **Déclaration** : choisir le jeu (son image s'affiche dès le choix pour confirmer visuellement), cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs).
 - **Jeu compétitif** : désigner au moins un gagnant parmi les participants ; plusieurs gagnants sont possibles.
 - **Jeu coopératif** : choisir « Victoire » ou « Défaite » ; une victoire compte pour chaque participant.
 - **Équipes** : jusqu'à 4 équipes propres à la partie (nom facultatif) ; désigner une équipe gagnante rend gagnants tous ses membres.
@@ -104,7 +104,7 @@ L'écran **Parties** (`/parties`) liste les parties de la plus récente à la pl
 
 ## Ludothèque
 
-L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu), 2 par ligne sur petit écran et 3 sur grand écran. Sous le titre, un petit parchemin affiche la coupe, l'avatar et le nom du ou des champions (à la ligne en cas d'égalité) ; la hauteur est réservée pour les jeux sans champion.
+L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu), 2 par ligne sur petit écran et 3 sur grand écran. L'ouverture de `/` (logo ou lancement PWA) redirige vers cette liste; son titre et l'action « Ajouter un jeu » sont alignés sur le bord gauche de la grille centrée. Sous le titre de chaque vignette, un petit parchemin affiche la coupe, l'avatar et le nom du ou des champions (à la ligne en cas d'égalité) ; la hauteur est réservée pour les jeux sans champion.
 
 - **Jeu** : nom (obligatoire), image (upload ou URL), prix (positif, deux décimales), date d'achat (pas dans le futur), jeu coopératif ou non. Sans image, une image par défaut est affichée.
 - **Couleur de fond** : calculée à l'enregistrement depuis l'image ; « Choisir la couleur manuellement » permet de la corriger. Elle est conservée tant que l'image ne change pas.

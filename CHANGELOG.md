@@ -2,10 +2,13 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
-## [0.13.1] - 2026-11-13
+## [0.13.2] - 2026-11-13
+
+### Changed
+- La route `/` ouvre directement la ludothèque en redirigeant vers `/jeux`; le lancement PWA et le logo continuent d'utiliser `/`.
 
 ### Fixed
-- Déclaration et modification de partie : les champs de score laissés vides pour des joueurs non participants ne bloquent plus l'enregistrement ; un score réellement renseigné pour un non-participant reste refusé.
+- Ludothèque : le titre, le bouton « Ajouter un jeu » et le message d'absence de jeux sont alignés sur le bord gauche de la grille centrée, sur petits et grands écrans.
 
 ## [0.13.0] - 2026-11-13
 

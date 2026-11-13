@@ -158,6 +158,7 @@ legend { font-family: var(--police-titre); padding: 0 0.4rem; }
 .pagination { display: flex; gap: 1rem; align-items: center; }
 
 /* Ludothèque : la couleur du jeu (inline) forme un cadre, le texte repose toujours sur un cartouche clair. */
+.entete-ludotheque { max-width: 40rem; margin: 0 auto; }
 .grille-jeux {
     list-style: none; padding: 0; margin: 0 auto; max-width: 40rem;
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;

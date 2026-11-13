@@ -2,6 +2,7 @@ package com.alexgit95.ludalex.parties;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,8 @@ class FinPartieLimitationTest {
     @Test
     void nApplliquePasLaLimiteAuResteDeLApplication() throws Exception {
         for (int i = 0; i < 20; i++) {
-            mvc.perform(get("/").header("X-Test-Ip", "198.51.100.3")).andExpect(status().isOk());
+            mvc.perform(get("/").header("X-Test-Ip", "198.51.100.3"))
+                    .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));
         }
     }
 }

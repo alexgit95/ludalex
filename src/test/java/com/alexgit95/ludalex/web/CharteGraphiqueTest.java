@@ -115,6 +115,16 @@ class CharteGraphiqueTest {
     }
 
     @Test
+    void lenteteDeLaLudothequeEstAligneeSurLaGrille() throws IOException {
+        String template = lire(TEMPLATES.resolve("jeux/liste.html"));
+        String css = lire(STATIC.resolve("css/ludalex.css"));
+        assertThat(template).contains("class=\"entete-ludotheque\"");
+        assertThat(css).contains(".entete-ludotheque { max-width: 40rem; margin: 0 auto; }")
+                .contains(".grille-jeux {")
+                .contains("list-style: none; padding: 0; margin: 0 auto; max-width: 40rem;");
+    }
+
+    @Test
     void laPwaUtiliseLesCouleursDeLaCharte() throws IOException {
         Map<String, String> p = palette();
         String manifeste = lire(STATIC.resolve("manifest.webmanifest"));

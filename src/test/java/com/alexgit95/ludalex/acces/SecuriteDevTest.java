@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -38,13 +39,15 @@ class SecuriteDevTest {
 
     @Test
     void autoriseTousLesAccesSansAuthentification() throws Exception {
-        mvc.perform(get("/")).andExpect(status().isOk())
+        mvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));
+        mvc.perform(get("/jeux")).andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Ludothèque")));
     }
 
     @Test
     void ignoreUnJwtInvalideEnDev() throws Exception {
-        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, "invalide")).andExpect(status().isOk());
+        mvc.perform(get("/").header(CloudflareAccessFilter.HEADER_JWT, "invalide"))
+            .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/jeux"));
     }
 
     @Test
@@ -60,7 +63,7 @@ class SecuriteDevTest {
 
     @Test
     void exposeLeJetonCsrfAuxPages() throws Exception {
-        mvc.perform(get("/")).andExpect(content().string(org.hamcrest.Matchers.containsString("name=\"_csrf\"")));
+        mvc.perform(get("/jeux")).andExpect(content().string(org.hamcrest.Matchers.containsString("name=\"_csrf\"")));
     }
 
     @Test

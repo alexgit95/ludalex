@@ -88,6 +88,7 @@ class JeuControllerTest {
         jeuExistant();
 
         mvc.perform(get("/jeux")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("class=\"entete-ludotheque\"")))
                 .andExpect(content().string(containsString("class=\"champions-vignette\"")))
                 .andExpect(content().string(containsString("aria-expanded=\"false\"")))
                 .andExpect(content().string(containsString("aria-controls=\"navigation\"")))
