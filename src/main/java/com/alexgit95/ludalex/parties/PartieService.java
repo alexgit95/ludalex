@@ -114,9 +114,15 @@ public class PartieService {
         if (jeu == null) {
             throw new PartieInvalideException("jeu", "Choisissez un jeu");
         }
+        boolean memeJeu = partie.getJeu() != null && partie.getJeu().getId().equals(jeu.getId());
         partie.setJeu(jeu);
         partie.setDatePartie(validerDate(saisie.date()));
         partie.setLieu(validerLieu(saisie.lieu()));
+        if (jeu.isPlusieursVariantes()) {
+            partie.setVariante(validerVariante(saisie.variante()));
+        } else if (!memeJeu) {
+            partie.setVariante(null);
+        }
 
         List<Long> ids = valeurs(saisie.joueurIds());
         Map<Long, Joueur> participants = chargerJoueurs(ids, dejaPresents);
@@ -140,6 +146,9 @@ public class PartieService {
         }
         Partie partie = new Partie(jeu, LocalDate.now(horloge));
         partie.setStatut(StatutPartie.EN_COURS);
+        if (jeu.isPlusieursVariantes()) {
+            partie.setVariante(validerVariante(lancement.variante()));
+        }
         List<Long> ids = valeurs(lancement.joueurIds());
         Map<Long, Joueur> participants = chargerJoueurs(ids, Set.of());
         Map<Integer, List<Long>> membres = grouperEquipes(lancement.equipeDe(), lancement.equipeNoms(), ids);
@@ -200,6 +209,18 @@ public class PartieService {
         String propre = lieu.trim();
         if (propre.length() > Partie.LIEU_MAX) {
             throw new PartieInvalideException("lieu", "Le lieu ne doit pas dépasser " + Partie.LIEU_MAX + " caractères");
+        }
+        return propre;
+    }
+
+    private String validerVariante(String variante) {
+        if (!StringUtils.hasText(variante)) {
+            return null;
+        }
+        String propre = variante.trim();
+        if (propre.length() > Partie.VARIANTE_MAX) {
+            throw new PartieInvalideException("variante",
+                    "La variante ne doit pas dépasser " + Partie.VARIANTE_MAX + " caractères");
         }
         return propre;
     }

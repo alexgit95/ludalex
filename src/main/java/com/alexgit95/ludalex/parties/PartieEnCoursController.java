@@ -45,6 +45,15 @@ public class PartieEnCoursController {
         return PAGE;
     }
 
+    @GetMapping("/variante")
+    public String variante(@RequestParam(required = false) Long jeuId, Model model) {
+        LancementForm form = new LancementForm();
+        form.setJeuId(jeuId);
+        model.addAttribute("form", form);
+        model.addAttribute("jeuAvecVariantes", jeuAvecVariantes(jeuId));
+        return "parties/direct :: variante";
+    }
+
     @PostMapping("/lancer")
     public String lancer(@ModelAttribute("form") LancementForm form, BindingResult erreurs, Model model,
             RedirectAttributes redirection) {
@@ -155,7 +164,13 @@ public class PartieEnCoursController {
     private void preparerLancement(Model model, LancementForm form) {
         model.addAttribute("form", form);
         model.addAttribute("jeux", jeux.tousParNom());
+        model.addAttribute("jeuAvecVariantes", jeuAvecVariantes(form.getJeuId()));
         model.addAttribute("joueurs", joueurs.selectionnables());
         model.addAttribute("equipesMax", PartieService.EQUIPES_MAX);
+    }
+
+    private boolean jeuAvecVariantes(Long jeuId) {
+        return jeuId != null && jeux.tousParNom().stream()
+                .anyMatch(jeu -> jeu.getId().equals(jeuId) && jeu.isPlusieursVariantes());
     }
 }

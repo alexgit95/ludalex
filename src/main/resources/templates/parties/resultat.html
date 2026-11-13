@@ -4,6 +4,10 @@
 
 <!-- Utilise form, joueurs, cooperatif et equipesMax du modèle -->
 <div th:fragment="resultat">
+    <label th:if="${jeuAvecVariantes}">Campagne, enquête ou version (facultatif)
+        <input type="text" name="variante" maxlength="200" th:value="${form.variante}">
+    </label>
+
     <fieldset th:if="${cooperatif}" class="resultat-cooperatif">
         <legend>Résultat de la partie coopérative</legend>
         <label><input type="radio" name="resultat" value="VICTOIRE" th:checked="${form.resultat != null and form.resultat.name() == 'VICTOIRE'}"> Victoire</label>

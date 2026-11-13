@@ -18,6 +18,7 @@ public class JeuForm {
     private LocalDate dateAchat;
 
     private boolean cooperatif;
+    private boolean plusieursVariantes;
 
     private String couleur;
     private boolean couleurManuelle;
@@ -36,7 +37,8 @@ public class JeuForm {
         } else {
             image = new EntreeImage(imageFichier, null, false);
         }
-        return new JeuSaisie(nom, prix, dateAchat, cooperatif, couleurManuelle ? couleur : null, image);
+        return new JeuSaisie(nom, prix, dateAchat, cooperatif, couleurManuelle ? couleur : null, image,
+            plusieursVariantes);
     }
 
     static JeuForm depuis(Jeu jeu) {
@@ -45,6 +47,7 @@ public class JeuForm {
         form.prix = jeu.getPrix();
         form.dateAchat = jeu.getDateAchat();
         form.cooperatif = jeu.isCooperatif();
+        form.plusieursVariantes = jeu.isPlusieursVariantes();
         form.couleur = jeu.getCouleurFond();
         return form;
     }
@@ -79,6 +82,14 @@ public class JeuForm {
 
     public void setCooperatif(boolean cooperatif) {
         this.cooperatif = cooperatif;
+    }
+
+    public boolean isPlusieursVariantes() {
+        return plusieursVariantes;
+    }
+
+    public void setPlusieursVariantes(boolean plusieursVariantes) {
+        this.plusieursVariantes = plusieursVariantes;
     }
 
     public String getCouleur() {

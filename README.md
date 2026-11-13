@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **0.13.3**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **1.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images, joueurs, ludothèque, parties, statistiques, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -43,11 +43,11 @@ Réglages : `ludalex.affichage.url-publique` (origine du QR, déduite de la requ
 L'écran **Admin > Sauvegarde et restauration** (`/admin/sauvegarde`) permet de ne rien perdre si la carte SD du Raspberry Pi meurt ou si le moteur de base change.
 
 - **Sauvegarde** : « Télécharger la sauvegarde » fournit un seul fichier `ludalex-sauvegarde-<date>.zip` avec les données (joueurs, jeux, prêts, parties, participations, équipes) et les images uploadées. Les images saisies par adresse web ne sont conservées que sous forme d'adresse. Les tokens de fin de partie et la configuration ne sont pas sauvegardés. Le fichier est écrit en flux (lecture par lots de 500 enregistrements), sans charger la base en mémoire.
-- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les liens de fin de partie existants deviennent invalides.
+- **Restauration** : on ré-uploade le ZIP **tel quel**, sans le modifier. Elle **remplace tout** (données et images) et n'est lancée qu'après saisie du mot `RESTAURER` et avec un jeton CSRF valide. Une sauvegarde faite en `dev` (SQLite) se restaure en `prod` (PostgreSQL) et inversement. Les archives v1 restent acceptées; les nouvelles archives v2 nécessitent LUDALEX 1.0.0 ou ultérieur et ne sont pas restaurables par les versions précédentes. Gardez une archive v1 pour revenir à une ancienne version. Les liens de fin de partie existants deviennent invalides.
 - **Sûreté** : le ZIP est entièrement validé avant la moindre suppression (chemins dangereux ou « zip slip », entrées hors `manifest.json`, `donnees/`, `images/`, nombre d'entrées, taille et taux de décompression, images réelles PNG/JPEG/GIF/WebP de 2 Mo maximum, version du format, références cohérentes, compteurs du manifeste). Le remplacement des données est une seule transaction : en cas d'échec, données et images précédentes sont conservées. Une seule restauration à la fois.
 - **Limites** : le ZIP est reçu comme corps brut de la requête (pas en multipart) et écrit dans un fichier temporaire. Réglages : `ludalex.sauvegarde.taille-max` (512MB), `ludalex.sauvegarde.taille-decompressee-max` (1GB), `ludalex.sauvegarde.entrees-max` (10000), `ludalex.sauvegarde.ratio-max` (200) et `ludalex.sauvegarde.repertoire-temporaire` (répertoire temporaire du système par défaut, variable Docker `LUDALEX_SAUVEGARDE_REPERTOIRE_TEMPORAIRE`). Derrière Cloudflare, l'envoi est limité par l'offre (100 Mo en gratuit).
 
-### Format de sauvegarde (version 1)
+### Format de sauvegarde (version 2)
 
 ```
 manifest.json            formatVersion, appVersion, date, compteurs par type
@@ -55,7 +55,7 @@ donnees/joueurs.json     un tableau JSON par type : joueurs, jeux, parties, equi
 images/<uuid>.<ext>      images uploadées référencées par les données
 ```
 
-Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference}`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
+Les dates sont en ISO-8601, les décimaux en chaînes, les images par `{type: UPLOAD|URL, reference}`. `jeux.json` inclut l'indicateur `plusieursVariantes`; `parties.json` inclut le libellé facultatif `variante`. Les identifiants d'origine (`idSauvegarde`) ne servent que de références : de nouveaux identifiants sont générés à la restauration, ce qui rend le format indépendant du moteur. Les archives v1 sans ces propriétés sont restaurées avec les valeurs par défaut. **Règle d'évolution** : toute nouvelle entité ou colonne doit être ajoutée au format (un test vérifie que chaque entité JPA est exportée) ; un changement incompatible incrémente `formatVersion`, la restauration refuse toute version inconnue, et une évolution du format est un breaking change documenté dans le changelog.
 
 ## Import MyLudo
 
@@ -94,7 +94,7 @@ La fiche d'un jeu affiche ses statistiques, calculées sur les parties **termin�
 
 L'écran **Parties** (`/parties`) liste les parties de la plus récente à la plus ancienne (filtre par jeu) et permet d'en déclarer après coup.
 
-- **Déclaration** : choisir le jeu (son image s'affiche dès le choix pour confirmer visuellement), cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif) et les scores (facultatifs).
+- **Déclaration** : choisir le jeu (son image s'affiche dès le choix pour confirmer visuellement), cocher les joueurs, indiquer la date (aujourd'hui par défaut, jamais dans le futur), le lieu (facultatif), la campagne/enquête/version si le jeu en propose, et les scores (facultatifs).
 - **Jeu compétitif** : désigner au moins un gagnant parmi les participants ; plusieurs gagnants sont possibles.
 - **Jeu coopératif** : choisir « Victoire » ou « Défaite » ; une victoire compte pour chaque participant.
 - **Équipes** : jusqu'à 4 équipes propres à la partie (nom facultatif) ; désigner une équipe gagnante rend gagnants tous ses membres.
@@ -106,7 +106,7 @@ L'écran **Parties** (`/parties`) liste les parties de la plus récente à la pl
 
 L'écran **Ludothèque** (`/jeux`) liste les jeux en vignettes (image, titre dessous, fond de la couleur du jeu), 2 par ligne sur petit écran et 3 sur grand écran. L'ouverture de `/` (logo ou lancement PWA) redirige vers cette liste; son titre et l'action « Ajouter un jeu » sont alignés sur le bord gauche de la grille centrée. Sous le titre de chaque vignette, un petit parchemin affiche la coupe, l'avatar et le nom du ou des champions (à la ligne en cas d'égalité) ; la hauteur est réservée pour les jeux sans champion.
 
-- **Jeu** : nom (obligatoire), image (upload ou URL), prix (positif, deux décimales), date d'achat (pas dans le futur), jeu coopératif ou non. Sans image, une image par défaut est affichée.
+- **Jeu** : nom (obligatoire), image (upload ou URL), prix (positif, deux décimales), date d'achat (pas dans le futur), jeu coopératif ou non, et indicateur de campagnes/enquêtes/versions. Sans image, une image par défaut est affichée.
 - **Couleur de fond** : calculée à l'enregistrement depuis l'image ; « Choisir la couleur manuellement » permet de la corriger. Elle est conservée tant que l'image ne change pas.
 - **Fiche** : date d'achat, prix, type, prêt en cours et historique des prêts ; zone réservée aux statistiques de parties.
 - **Prêts** : « Prêter » demande l'emprunteur (texte libre) et la date (aujourd'hui par défaut) ; « Enregistrer le retour » clot le prêt. Un jeu ne peut être prêché qu'à une personne à la fois ; l'historique est conservé, l'emprunteur courant apparaît sur la vignette.

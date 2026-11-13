@@ -22,11 +22,11 @@ final class DonneesSauvegarde {
     }
 
     record JeuDto(Long idSauvegarde, String nom, ImageDto image, String couleurFond, String prix, String dateAchat,
-            boolean cooperatif) {
+            boolean cooperatif, Boolean plusieursVariantes) {
     }
 
     record PartieDto(Long idSauvegarde, Long jeuId, String datePartie, String lieu, String statut,
-            String resultatCooperatif, Long joueurSuivantId, String termineeLe) {
+            String resultatCooperatif, Long joueurSuivantId, String termineeLe, String variante) {
     }
 
     record EquipeDto(Long idSauvegarde, Long partieId, String nom) {

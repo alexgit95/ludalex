@@ -97,6 +97,7 @@ public class JeuService {
         jeu.setPrix(validerPrix(saisie.prix()));
         jeu.setDateAchat(validerDate(saisie.dateAchat()));
         jeu.setCooperatif(saisie.cooperatif());
+        jeu.setPlusieursVariantes(saisie.plusieursVariantes());
         appliquerImage(jeu, saisie);
     }
 

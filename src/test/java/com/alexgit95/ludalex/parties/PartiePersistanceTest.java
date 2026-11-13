@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import jakarta.persistence.EntityManager;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alexgit95.ludalex.images.EntreeImage;
 import com.alexgit95.ludalex.jeux.Jeu;
@@ -41,8 +44,29 @@ class PartiePersistanceTest {
     @Autowired
     private ParticipationRepository participations;
 
+    @Autowired
+    private EntityManager em;
+
     private static String unique(String prefixe) {
         return prefixe + "-" + UUID.randomUUID();
+    }
+
+    @Test
+    @Transactional
+    void persisteLeDefautEtLesValeursDesVariantes() {
+        Jeu jeu = new Jeu(unique("Jeu"));
+        assertThat(jeu.isPlusieursVariantes()).isFalse();
+        jeu.setPlusieursVariantes(true);
+        em.persist(jeu);
+
+        Partie partie = new Partie(jeu, LocalDate.of(2026, 5, 2));
+        partie.setVariante("Enquête du Pharaon noir");
+        em.persist(partie);
+        em.flush();
+        em.clear();
+
+        assertThat(em.find(Jeu.class, jeu.getId()).isPlusieursVariantes()).isTrue();
+        assertThat(em.find(Partie.class, partie.getId()).getVariante()).isEqualTo("Enquête du Pharaon noir");
     }
 
     private Jeu jeu(boolean cooperatif) {

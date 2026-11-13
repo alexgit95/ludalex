@@ -120,6 +120,9 @@ class ImportMyLudoIntegrationTest {
         assertThat(rapport.totalIgnorees()).isZero();
         assertThat(compter("Jeu")).isEqualTo(jeuxFichier.size());
         assertThat(compter("Partie")).isEqualTo(partiesFichier.size());
+        assertThat(lignes("select j.plusieursVariantes from Jeu j"))
+            .allSatisfy(l -> assertThat(l[0]).isEqualTo(false));
+        assertThat(lignes("select p.variante from Partie p")).allSatisfy(l -> assertThat(l[0]).isNull());
         assertThat(lignes("select j.nom from Joueur j")).extracting(l -> l[0]).containsExactlyInAnyOrder("Alice",
                 "Bruno", "Camille", "David", "Emma", "Anonyme", "Anonyme 2");
         assertThat(rapport.joueursCrees()).isEqualTo(7);

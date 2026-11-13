@@ -14,11 +14,11 @@ import com.alexgit95.ludalex.parties.TokenFinPartie;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
-/** Format v1 du ZIP : manifeste, un fichier JSON par type d'enregistrement, images uploadées. */
+/** Format v2 du ZIP : manifeste, un fichier JSON par type d'enregistrement, images uploadées. */
 final class FormatSauvegarde {
 
-    static final int VERSION = 1;
-    static final List<Integer> VERSIONS_ACCEPTEES = List.of(VERSION);
+    static final int VERSION = 2;
+    static final List<Integer> VERSIONS_ACCEPTEES = List.of(1, VERSION);
 
     static final String MANIFESTE = "manifest.json";
     static final String DOSSIER_DONNEES = "donnees/";

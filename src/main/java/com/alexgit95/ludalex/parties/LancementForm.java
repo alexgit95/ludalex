@@ -10,12 +10,13 @@ import java.util.TreeMap;
 public class LancementForm {
 
     private Long jeuId;
+    private String variante;
     private List<Long> joueurIds = new ArrayList<>();
     private Map<Long, Integer> equipeDe = new LinkedHashMap<>();
     private Map<Integer, String> equipeNoms = new TreeMap<>();
 
     LancementSaisie versSaisie() {
-        return new LancementSaisie(jeuId, joueurIds, equipeDe, equipeNoms);
+        return new LancementSaisie(jeuId, joueurIds, equipeDe, equipeNoms, variante);
     }
 
     public Long getJeuId() {
@@ -24,6 +25,14 @@ public class LancementForm {
 
     public void setJeuId(Long jeuId) {
         this.jeuId = jeuId;
+    }
+
+    public String getVariante() {
+        return variante;
+    }
+
+    public void setVariante(String variante) {
+        this.variante = variante;
     }
 
     public List<Long> getJoueurIds() {

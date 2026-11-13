@@ -32,6 +32,7 @@ class Jeu <<table jeu>> {
   prix : DECIMAL(10,2) nullable
   date_achat : DATE nullable
   cooperatif : BOOLEAN
+  plusieurs_variantes : BOOLEAN default false
 }
 Jeu *-- ImageSource : image
 
@@ -49,6 +50,7 @@ class Partie <<table partie>> {
   jeu_id : BIGINT <<FK>>
   date_partie : DATE
   lieu : VARCHAR(100) nullable
+  variante : VARCHAR(200) nullable
   statut : VARCHAR(12)  ' TERMINEE | EN_COURS | EN_PAUSE
   resultat_cooperatif : VARCHAR(10) nullable  ' VICTOIRE | DEFAITE
   joueur_suivant_id : BIGINT <<FK>> nullable  ' pause d'une partie en direct

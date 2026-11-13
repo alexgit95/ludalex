@@ -28,6 +28,7 @@ import jakarta.persistence.Table;
 public class Partie {
 
     public static final int LIEU_MAX = 100;
+    public static final int VARIANTE_MAX = 200;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +43,9 @@ public class Partie {
 
     @Column(length = LIEU_MAX)
     private String lieu;
+
+    @Column(length = VARIANTE_MAX)
+    private String variante;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 12)
@@ -100,6 +104,14 @@ public class Partie {
 
     public void setLieu(String lieu) {
         this.lieu = lieu;
+    }
+
+    public String getVariante() {
+        return variante;
+    }
+
+    public void setVariante(String variante) {
+        this.variante = variante;
     }
 
     public StatutPartie getStatut() {

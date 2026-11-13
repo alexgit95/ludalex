@@ -2,6 +2,17 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [1.0.0] - 2026-11-13
+
+### Added
+- Jeux : indicateur de campagnes, enquêtes ou versions; chaque partie peut conserver un libellé libre affiché dans l'historique, y compris pour les parties lancées en direct.
+
+### Changed
+- Le ZIP de sauvegarde passe au format v2 et transporte l'indicateur du jeu et la variante de chaque partie. La restauration continue d'accepter les archives v1.
+
+### [BREAKING CHANGE]
+- Les archives v2 ne peuvent pas être restaurées par les versions précédentes de l'application. **Migration** : mettre à jour vers la version 1.0.0 ou ultérieure avant de restaurer un ZIP v2; conserver un ZIP v1 pour revenir à une ancienne version.
+
 ## [0.13.3] - 2026-11-13
 
 ### Added

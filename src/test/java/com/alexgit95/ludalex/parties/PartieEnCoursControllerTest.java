@@ -85,6 +85,36 @@ class PartieEnCoursControllerTest {
     }
 
     @Test
+    void saisitEtConserveLaVariantePendantUnePartieEnDirect() throws Exception {
+        jeu = jeux.creer(new JeuSaisie("Arkham-" + UUID.randomUUID(), null, null, false, null,
+                EntreeImage.inchangee(), true));
+        mvc.perform(get("/parties/direct/variante?jeuId=" + jeu.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString("name=\"variante\"")));
+        mvc.perform(get("/parties/direct/variante?jeuId=" + jeu.getId() + "&variante=Ancienne"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString("value=\"Ancienne\""))));
+        mvc.perform(get("/parties/direct/variante?jeuId=" + (jeu.getId() - 1))).andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString("name=\"variante\""))));
+
+        String variante = "Le cycle de Dunwich";
+        mvc.perform(lancement(jeu, marie, paul).param("variante", variante))
+                .andExpect(status().is3xxRedirection());
+        Partie partie = enCours.active().orElseThrow().partie();
+        assertThat(partie.getVariante()).isEqualTo(variante);
+        mvc.perform(get("/parties/direct")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Variante : " + variante)));
+
+        mvc.perform(post("/parties/direct/" + partie.getId() + "/pause").with(csrf())
+                .param("joueurSuivantId", marie.getId().toString())).andExpect(status().is3xxRedirection());
+        mvc.perform(post("/parties/direct/" + partie.getId() + "/reprendre").with(csrf()))
+                .andExpect(status().is3xxRedirection());
+        assertThat(enCours.active().orElseThrow().partie().getVariante()).isEqualTo(variante);
+        mvc.perform(post("/parties/direct/" + partie.getId() + "/terminer").with(csrf())
+                .param("gagnantIds", marie.getId().toString())).andExpect(status().is3xxRedirection());
+        assertThat(parties.detail(partie.getId()).partie().getVariante()).isEqualTo(variante);
+    }
+
+    @Test
     void lanceUnePartiePuisAfficheLEtatEnCours() throws Exception {
         mvc.perform(lancement(jeu, marie, paul)).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/parties/direct"));
@@ -109,22 +139,27 @@ class PartieEnCoursControllerTest {
     void imposeDeTerminerLaPartiePrecedenteAvantDeLancerUneSeconde() throws Exception {
         Partie premiere = lancer();
         Jeu autre = jeux.creer(new JeuSaisie("Autre-" + UUID.randomUUID(), null, null, false, null,
-                EntreeImage.inchangee()));
+                EntreeImage.inchangee(), true));
 
-        mvc.perform(lancement(autre, marie)).andExpect(status().isOk())
+        mvc.perform(lancement(autre, marie).param("variante", "Nouvelle campagne")).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Une partie est déjà en cours")))
                 .andExpect(content().string(containsString("Terminer et lancer la nouvelle partie")))
                 .andExpect(content().string(containsString("name=\"jeuId\" value=\"" + autre.getId() + "\"")))
+                .andExpect(content().string(containsString("name=\"variante\" value=\"Nouvelle campagne\"")))
                 .andExpect(content().string(containsString("name=\"joueurIds\" value=\"" + marie.getId() + "\"")));
         assertThat(enCours.active()).get().extracting(v -> v.partie().getId()).isEqualTo(premiere.getId());
 
         mvc.perform(post("/parties/direct/" + premiere.getId() + "/terminer-et-lancer").with(csrf())
                 .param("gagnantIds", String.valueOf(marie.getId()))
-                .param("jeuId", String.valueOf(autre.getId())).param("joueurIds", String.valueOf(marie.getId())))
+                .param("jeuId", String.valueOf(autre.getId())).param("joueurIds", String.valueOf(marie.getId()))
+                .param("variante", "Nouvelle campagne"))
                 .andExpect(status().is3xxRedirection());
 
         assertThat(parties.detail(premiere.getId()).partie().getStatut()).isEqualTo(StatutPartie.TERMINEE);
-        assertThat(enCours.active()).get().satisfies(v -> assertThat(v.jeu().getId()).isEqualTo(autre.getId()));
+        assertThat(enCours.active()).get().satisfies(v -> {
+            assertThat(v.jeu().getId()).isEqualTo(autre.getId());
+            assertThat(v.partie().getVariante()).isEqualTo("Nouvelle campagne");
+        });
     }
 
     @Test

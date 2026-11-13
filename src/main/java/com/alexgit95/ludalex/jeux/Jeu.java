@@ -43,6 +43,9 @@ public class Jeu {
     @Column(nullable = false)
     private boolean cooperatif;
 
+    @Column(name = "plusieurs_variantes", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean plusieursVariantes;
+
     protected Jeu() {
     }
 
@@ -102,5 +105,13 @@ public class Jeu {
 
     public void setCooperatif(boolean cooperatif) {
         this.cooperatif = cooperatif;
+    }
+
+    public boolean isPlusieursVariantes() {
+        return plusieursVariantes;
+    }
+
+    public void setPlusieursVariantes(boolean plusieursVariantes) {
+        this.plusieursVariantes = plusieursVariantes;
     }
 }

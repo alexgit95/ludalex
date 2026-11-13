@@ -175,6 +175,22 @@ class JeuControllerTest {
     }
 
     @Test
+    void enregistreEtModifieLIndicateurDeVariantes() throws Exception {
+        var creation = mvc.perform(creation(nomUnique()).param("plusieursVariantes", "true"))
+                .andExpect(status().is3xxRedirection()).andReturn();
+        Long id = Long.valueOf(creation.getResponse().getRedirectedUrl().substring(
+                creation.getResponse().getRedirectedUrl().lastIndexOf('/') + 1));
+
+        assertThat(jeux.trouver(id).isPlusieursVariantes()).isTrue();
+        mvc.perform(get("/jeux/" + id + "/modifier")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Plusieurs campagnes, enquêtes ou versions")));
+        mvc.perform(multipart("/jeux/" + id).param("nom", "Jeu modifié").with(csrf()))
+                .andExpect(status().is3xxRedirection());
+
+        assertThat(jeux.trouver(id).isPlusieursVariantes()).isFalse();
+    }
+
+    @Test
     void repond404PourUnJeuInconnu() throws Exception {
         mvc.perform(get("/jeux/999999")).andExpect(status().isNotFound());
         mvc.perform(get("/jeux/999999/modifier")).andExpect(status().isNotFound());

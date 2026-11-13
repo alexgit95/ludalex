@@ -21,6 +21,7 @@
         <p class="erreur" th:if="${#fields.hasErrors('dateAchat')}" th:errors="*{dateAchat}"></p>
 
         <label><input type="checkbox" th:field="*{cooperatif}"> Jeu coopératif</label>
+        <label><input type="checkbox" th:field="*{plusieursVariantes}"> Plusieurs campagnes, enquêtes ou versions</label>
 
         <div th:with="image=${jeu != null} ? ${jeu.image} : null">
             <div th:replace="~{fragments/image :: saisie('image', ${image})}"></div>

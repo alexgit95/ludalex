@@ -123,6 +123,7 @@ class SauvegardeIntegrationTest {
             catan.setCouleurFond("#112233");
             catan.setPrix(new java.math.BigDecimal("39.90"));
             catan.setDateAchat(LocalDate.of(2024, 5, 1));
+            catan.setPlusieursVariantes(true);
             Jeu pandemic = new Jeu("Pandemic");
             pandemic.setImage(ImageSource.url("https://exemple.org/p.png"));
             pandemic.setCooperatif(true);
@@ -141,6 +142,7 @@ class SauvegardeIntegrationTest {
 
             Partie terminee = new Partie(catan, LocalDate.of(2025, 3, 1));
             terminee.setLieu("Salon");
+            terminee.setVariante("Tournoi des colons");
             em.persist(terminee);
             Equipe rouge = new Equipe(terminee, "Rouge");
             Equipe bleue = new Equipe(terminee, "Bleue");
@@ -159,6 +161,7 @@ class SauvegardeIntegrationTest {
             Partie enPause = new Partie(pandemic, LocalDate.of(2026, 11, 1));
             enPause.setStatut(StatutPartie.EN_PAUSE);
             enPause.setJoueurSuivant(bruno);
+            enPause.setVariante("Campagne Legacy");
             em.persist(enPause);
             em.persist(new Participation(enPause, alice));
             em.persist(new Participation(enPause, bruno));
@@ -186,10 +189,10 @@ class SauvegardeIntegrationTest {
             List<String> r = new ArrayList<>();
             lignes(r, "joueur", "select j.nom, j.anonymise, j.avatar.type, j.avatar.reference, j.imageVictoire.type, "
                     + "j.imageVictoire.reference from Joueur j");
-            lignes(r, "jeu", "select j.nom, j.couleurFond, j.prix, j.dateAchat, j.cooperatif, j.image.type, "
+                lignes(r, "jeu", "select j.nom, j.couleurFond, j.prix, j.dateAchat, j.cooperatif, j.plusieursVariantes, j.image.type, "
                     + "j.image.reference from Jeu j");
             lignes(r, "partie", "select p.jeu.nom, p.datePartie, p.lieu, p.statut, p.resultatCooperatif, s.nom, "
-                    + "p.termineeLe from Partie p left join p.joueurSuivant s");
+                    + "p.termineeLe, p.variante from Partie p left join p.joueurSuivant s");
             lignes(r, "equipe", "select e.partie.jeu.nom, e.partie.datePartie, e.nom from Equipe e");
             lignes(r, "participation", "select a.partie.jeu.nom, a.partie.datePartie, a.joueur.nom, a.score, "
                     + "a.gagnant, e.nom from Participation a left join a.equipe e");
@@ -243,9 +246,13 @@ class SauvegardeIntegrationTest {
                 .map(e -> new String(e.getValue(), StandardCharsets.UTF_8)).collect(Collectors.joining("\n"));
         assertThat(tout).doesNotContain("empreinte").doesNotContain("empreinte-secrete").contains("https://exemple.org/p.png")
                 .contains("\"anonymise\":true").contains("Joueur supprimé");
-        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":1")
+        assertThat(new String(zip.get("manifest.json"), StandardCharsets.UTF_8)).contains("\"formatVersion\":2")
                 .contains("\"joueurs\":3").contains("\"jeux\":2").contains("\"parties\":3").contains("\"equipes\":2")
                 .contains("\"participations\":5").contains("\"prets\":2").contains("\"images\":2");
+        assertThat(new String(zip.get("donnees/jeux.json"), StandardCharsets.UTF_8))
+            .contains("\"plusieursVariantes\":true");
+        assertThat(new String(zip.get("donnees/parties.json"), StandardCharsets.UTF_8))
+            .contains("\"variante\":\"Tournoi des colons\"");
         assertThat(zip.get("images/" + images.avatarAlice().getReference())).isEqualTo(octetsPng(5));
     }
 
@@ -352,8 +359,8 @@ class SauvegardeIntegrationTest {
         assertThat(instantane()).containsExactlyInAnyOrder(
                 "joueur|[Alice, false, UPLOAD, " + ArchiveDeTest.IMAGE + ", null, null]",
                 "joueur|[Bruno, false, URL, https://exemple.org/b.png, null, null]",
-                "jeu|[Catan, #112233, 39.90, 2024-05-01, false, null, null]",
-                "partie|[Catan, 2025-01-02, Salon, TERMINEE, null, null, null]",
+                "jeu|[Catan, #112233, 39.90, 2024-05-01, false, false, null, null]",
+                "partie|[Catan, 2025-01-02, Salon, TERMINEE, null, null, null, null]",
                 "equipe|[Catan, 2025-01-02, Rouge]",
                 "participation|[Catan, 2025-01-02, Alice, 10, true, Rouge]",
                 "participation|[Catan, 2025-01-02, Bruno, null, false, null]",

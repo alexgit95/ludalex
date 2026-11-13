@@ -275,6 +275,9 @@ public class ValidateurSauvegarde {
                 throw refus("Instant de fin de partie invalide");
             }
         }
+        if (d.variante() != null && d.variante().length() > Partie.VARIANTE_MAX) {
+            throw refus("Variante de partie trop longue");
+        }
     }
 
     private void equipe(EquipeDto d, Etat etat) {

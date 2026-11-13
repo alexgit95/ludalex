@@ -25,6 +25,8 @@
         <li th:each="ligne : ${page.content}">
             <div class="entete-partie">
                 <strong th:text="${ligne.partie.jeu.nom}">Jeu</strong>
+                    <span class="variante" th:if="${ligne.partie.variante != null}"
+                        th:text="'Variante : ' + ${ligne.partie.variante}">Variante</span>
                 <span th:text="${#temporals.format(ligne.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</span>
                 <span th:if="${ligne.partie.lieu != null}" th:text="'à ' + ${ligne.partie.lieu}">lieu</span>
                 <span class="statut" th:if="${ligne.partie.statut.name() != 'TERMINEE'}"

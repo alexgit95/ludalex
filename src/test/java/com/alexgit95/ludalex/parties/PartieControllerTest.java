@@ -85,6 +85,8 @@ class PartieControllerTest {
     void adapteLaZoneDeResultatAuTypeDuJeu() throws Exception {
         Jeu pandemic = jeu(true);
         Jeu catan = jeu(false);
+        Jeu arkham = jeux.creer(new JeuSaisie(unique("Arkham"), null, null, false, null,
+                EntreeImage.inchangee(), true));
 
         mvc.perform(get("/parties/resultat?jeuId=" + pandemic.getId())).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Victoire")))
@@ -92,7 +94,61 @@ class PartieControllerTest {
         mvc.perform(get("/parties/resultat?jeuId=" + catan.getId())).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Gagnants")))
                 .andExpect(content().string(containsString("Équipe 1 gagnante")));
+        mvc.perform(get("/parties/resultat?jeuId=" + arkham.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString("name=\"variante\"")));
+        mvc.perform(get("/parties/resultat?jeuId=" + arkham.getId() + "&variante=Ancienne"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString("value=\"Ancienne\""))));
+        mvc.perform(get("/parties/resultat?jeuId=" + catan.getId())).andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString("name=\"variante\""))));
         mvc.perform(get("/parties/resultat")).andExpect(status().isOk());
+    }
+
+    @Test
+    void enregistreEtAfficheUneVarianteLibre() throws Exception {
+        Jeu jeu = jeux.creer(new JeuSaisie(unique("Arkham"), null, null, false, null, EntreeImage.inchangee(), true));
+        Joueur marie = joueur();
+        String variante = "Enquête du Pharaon noir";
+
+        mvc.perform(creation(jeu, marie).param("gagnantIds", String.valueOf(marie.getId()))
+                .param("variante", "  " + variante + "  ")).andExpect(status().is3xxRedirection());
+
+        Partie partie = parties.lister(jeu.getId(), 0).getContent().get(0).partie();
+        assertThat(partie.getVariante()).isEqualTo(variante);
+        mvc.perform(get("/parties/" + partie.getId() + "/modifier")).andExpect(status().isOk())
+                .andExpect(content().string(containsString("value=\"" + variante + "\"")));
+        String autreVariante = "Le cycle de Dunwich";
+        mvc.perform(post("/parties/" + partie.getId()).with(csrf()).param("jeuId", jeu.getId().toString())
+                .param("joueurIds", marie.getId().toString()).param("gagnantIds", marie.getId().toString())
+                .param("variante", autreVariante)).andExpect(status().is3xxRedirection());
+        assertThat(parties.detail(partie.getId()).partie().getVariante()).isEqualTo(autreVariante);
+        mvc.perform(get("/parties?jeu=" + jeu.getId())).andExpect(status().isOk())
+                .andExpect(content().string(containsString(autreVariante)));
+    }
+
+    @Test
+    void conserveLaVarianteHistoriqueSiLeJeuDesactiveSonIndicateur() throws Exception {
+        Jeu jeu = jeux.creer(new JeuSaisie(unique("Arkham"), null, null, false, null, EntreeImage.inchangee(), true));
+        Joueur marie = joueur();
+        Partie partie = parties.declarer(new PartieSaisie(jeu.getId(), null, null, List.of(marie.getId()), null,
+                List.of(marie.getId()), null, null, null, null, "Enquête 1"));
+        jeux.modifier(jeu.getId(), new JeuSaisie(jeu.getNom(), null, null, false, null, EntreeImage.inchangee(), false));
+
+        mvc.perform(post("/parties/" + partie.getId()).with(csrf()).param("jeuId", jeu.getId().toString())
+                .param("joueurIds", marie.getId().toString()).param("gagnantIds", marie.getId().toString()))
+                .andExpect(status().is3xxRedirection());
+
+        assertThat(parties.detail(partie.getId()).partie().getVariante()).isEqualTo("Enquête 1");
+    }
+
+    @Test
+    void refuseUneVarianteDePlusDeDeuxCentsCaracteres() throws Exception {
+        Jeu jeu = jeux.creer(new JeuSaisie(unique("Arkham"), null, null, false, null, EntreeImage.inchangee(), true));
+        Joueur marie = joueur();
+
+        mvc.perform(creation(jeu, marie).param("gagnantIds", marie.getId().toString())
+                .param("variante", "x".repeat(201))).andExpect(status().isOk())
+                .andExpect(content().string(containsString("200 caractères")));
     }
 
     @Test

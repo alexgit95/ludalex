@@ -20,6 +20,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.util.unit.DataSize;
 
 import com.alexgit95.ludalex.images.ImagesProperties;
+import com.alexgit95.ludalex.parties.Partie;
 
 class ValidateurSauvegardeTest {
 
@@ -60,6 +61,18 @@ class ValidateurSauvegardeTest {
                 .modifier("manifest.json", "\"prets\":1,\"images\":1", "\"prets\":0,\"images\":0");
 
         assertThat(validateur().valider(archive.ecrire(dossier)).images()).isEmpty();
+    }
+
+    @Test
+    void accepteLeFormatV2AvecVariantes() {
+        ArchiveDeTest archive = ArchiveDeTest.valide()
+                .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":2")
+                .modifier("donnees/jeux.json", "\"cooperatif\":false",
+                        "\"cooperatif\":false,\"plusieursVariantes\":true")
+                .modifier("donnees/parties.json", "\"termineeLe\":null",
+                        "\"termineeLe\":null,\"variante\":\"Enquête 1\"");
+
+        assertThat(validateur().valider(archive.ecrire(dossier)).manifeste().formatVersion()).isEqualTo(2);
     }
 
     @ParameterizedTest
@@ -128,8 +141,8 @@ class ValidateurSauvegardeTest {
 
     @Test
     void refuseUneVersionDeFormatInconnue() {
-        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":2"),
-                "versions acceptées : [1]");
+        refuse(ArchiveDeTest.valide().modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":3"),
+            "versions acceptées : [1, 2]");
     }
 
     @Test
@@ -216,6 +229,16 @@ class ValidateurSauvegardeTest {
     @MethodSource("valeursInvalides")
     void refuseDesValeursInvalides(String fichier, String ancien, String nouveau, String message) {
         refuse(ArchiveDeTest.valide().modifier(fichier, ancien, nouveau), message);
+    }
+
+    @Test
+    void refuseUneVarianteTropLongueDansUneArchiveV2() {
+        ArchiveDeTest archive = ArchiveDeTest.valide()
+                .modifier("manifest.json", "\"formatVersion\":1", "\"formatVersion\":2")
+                .modifier("donnees/parties.json", "\"termineeLe\":null",
+                        "\"termineeLe\":null,\"variante\":\"" + "x".repeat(Partie.VARIANTE_MAX + 1) + "\"");
+
+        refuse(archive, "Variante de partie trop longue");
     }
 
     @Test

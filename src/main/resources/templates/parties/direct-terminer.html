@@ -12,6 +12,7 @@
     <form method="post" th:action="${action}" class="formulaire formulaire-partie">
         <th:block th:if="${lancement != null}">
             <input type="hidden" name="jeuId" th:value="${lancement.jeuId}">
+            <input type="hidden" name="variante" th:if="${lancement.variante != null}" th:value="${lancement.variante}">
             <input type="hidden" name="joueurIds" th:each="id : ${lancement.joueurIds}" th:value="${id}">
             <input type="hidden" th:each="e : ${lancement.equipeDe}" th:if="${e.value != null}"
                    th:name="|equipeDe[${e.key}]|" th:value="${e.value}">

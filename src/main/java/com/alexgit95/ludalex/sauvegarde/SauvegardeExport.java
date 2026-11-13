@@ -81,14 +81,14 @@ public class SauvegardeExport {
                         (Boolean) l[6])));
         compteurs.put("jeux", tableau(zip, FormatSauvegarde.JEUX,
                 "select x.id, x.nom, x.image.type, x.image.reference, x.couleurFond, x.prix, x.dateAchat, "
-                        + "x.cooperatif from Jeu x where x.id > :apres order by x.id",
+                    + "x.cooperatif, x.plusieursVariantes from Jeu x where x.id > :apres order by x.id",
                 l -> new JeuDto((Long) l[0], (String) l[1], image(l[2], l[3], images), (String) l[4],
-                        texte(l[5]), texte(l[6]), (Boolean) l[7])));
+                    texte(l[5]), texte(l[6]), (Boolean) l[7], (Boolean) l[8])));
         compteurs.put("parties", tableau(zip, FormatSauvegarde.PARTIES,
                 "select x.id, x.jeu.id, x.datePartie, x.lieu, x.statut, x.resultatCooperatif, "
-                        + "x.joueurSuivant.id, x.termineeLe from Partie x where x.id > :apres order by x.id",
+                    + "x.joueurSuivant.id, x.termineeLe, x.variante from Partie x where x.id > :apres order by x.id",
                 l -> new PartieDto((Long) l[0], (Long) l[1], texte(l[2]), (String) l[3], texte(l[4]), texte(l[5]),
-                        (Long) l[6], texte(l[7]))));
+                    (Long) l[6], texte(l[7]), (String) l[8])));
         compteurs.put("equipes", tableau(zip, FormatSauvegarde.EQUIPES,
                 "select x.id, x.partie.id, x.nom from Equipe x where x.id > :apres order by x.id",
                 l -> new EquipeDto((Long) l[0], (Long) l[1], (String) l[2])));

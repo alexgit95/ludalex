@@ -105,6 +105,7 @@ public class PartieController {
         model.addAttribute("form", form);
         model.addAttribute("joueurs", joueurs.selectionnables());
         model.addAttribute("cooperatif", estCooperatif(jeuId));
+        model.addAttribute("jeuAvecVariantes", aVariantes(jeuId));
         model.addAttribute("jeuApercu", jeuChoisi(jeuId));
         model.addAttribute("equipesMax", PartieService.EQUIPES_MAX);
         return "parties/resultat :: resultat-et-apercu";
@@ -137,6 +138,7 @@ public class PartieController {
         model.addAttribute("jeux", jeux.tousParNom());
         model.addAttribute("joueurs", proposes);
         model.addAttribute("cooperatif", estCooperatif(form.getJeuId()));
+        model.addAttribute("jeuAvecVariantes", aVariantes(form.getJeuId()));
         model.addAttribute("jeuApercu", jeuChoisi(form.getJeuId()));
         model.addAttribute("equipesMax", PartieService.EQUIPES_MAX);
     }
@@ -156,6 +158,11 @@ public class PartieController {
     private boolean estCooperatif(Long jeuId) {
         Jeu jeu = jeuChoisi(jeuId);
         return jeu != null && jeu.isCooperatif();
+    }
+
+    private boolean aVariantes(Long jeuId) {
+        Jeu jeu = jeuChoisi(jeuId);
+        return jeu != null && jeu.isPlusieursVariantes();
     }
 
     private Jeu jeuChoisi(Long jeuId) {

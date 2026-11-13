@@ -18,6 +18,7 @@ public class PartieForm {
     private LocalDate date;
 
     private String lieu;
+    private String variante;
     private List<Long> joueurIds = new ArrayList<>();
     private Map<Long, Integer> scores = new LinkedHashMap<>();
     private List<Long> gagnantIds = new ArrayList<>();
@@ -28,7 +29,7 @@ public class PartieForm {
 
     PartieSaisie versSaisie() {
         return new PartieSaisie(jeuId, date, lieu, joueurIds, scores, gagnantIds, equipeDe, equipeNoms,
-                equipesGagnantes, resultat);
+            equipesGagnantes, resultat, variante);
     }
 
     static PartieForm depuis(DetailPartie detail) {
@@ -37,6 +38,7 @@ public class PartieForm {
         form.jeuId = partie.getJeu().getId();
         form.date = partie.getDatePartie();
         form.lieu = partie.getLieu();
+        form.variante = partie.getVariante();
         form.resultat = partie.getResultatCooperatif();
         Map<Long, Integer> numeros = new LinkedHashMap<>();
         for (int i = 0; i < detail.equipes().size(); i++) {
@@ -80,6 +82,14 @@ public class PartieForm {
 
     public void setLieu(String lieu) {
         this.lieu = lieu;
+    }
+
+    public String getVariante() {
+        return variante;
+    }
+
+    public void setVariante(String variante) {
+        this.variante = variante;
     }
 
     public List<Long> getJoueurIds() {

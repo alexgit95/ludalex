@@ -18,5 +18,12 @@ public record PartieSaisie(
         Map<Long, Integer> equipeDe,
         Map<Integer, String> equipeNoms,
         List<Integer> equipesGagnantes,
-        ResultatCooperatif resultat) {
+                ResultatCooperatif resultat,
+                String variante) {
+
+        public PartieSaisie(Long jeuId, LocalDate date, String lieu, List<Long> joueurIds, Map<Long, Integer> scores,
+                        List<Long> gagnantIds, Map<Long, Integer> equipeDe, Map<Integer, String> equipeNoms,
+                        List<Integer> equipesGagnantes, ResultatCooperatif resultat) {
+                this(jeuId, date, lieu, joueurIds, scores, gagnantIds, equipeDe, equipeNoms, equipesGagnantes, resultat, null);
+        }
 }

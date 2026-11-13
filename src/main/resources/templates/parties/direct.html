@@ -8,6 +8,7 @@
 
     <section th:if="${active != null}" class="partie-active">
         <h2 th:text="${active.jeu.nom}">Jeu</h2>
+        <p th:if="${active.partie.variante != null}" th:text="'Variante : ' + ${active.partie.variante}">Variante</p>
         <p>
             <strong th:text="${active.partie.statut.name() == 'EN_COURS'} ? 'En cours' : 'En pause'">En cours</strong>
             depuis le <span th:text="${#temporals.format(active.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</span>
@@ -45,11 +46,17 @@
         <form method="post" th:action="@{/parties/direct/lancer}" th:object="${form}" class="formulaire formulaire-partie">
             <p class="erreur" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
             <label>Jeu
-                <select th:field="*{jeuId}" required>
+                <select th:field="*{jeuId}" required hx-get="/parties/direct/variante"
+                    hx-target="#zone-variante" hx-swap="outerHTML" hx-trigger="change">
                     <option value="">Choisir un jeu</option>
                     <option th:each="j : ${jeux}" th:value="${j.id}" th:text="${j.nom}"></option>
                 </select>
             </label>
+            <div id="zone-variante" th:fragment="variante">
+                <label th:if="${jeuAvecVariantes}">Campagne, enquête ou version (facultatif)
+                    <input type="text" name="variante" th:value="${form.variante}" maxlength="200">
+                </label>
+            </div>
 
             <table class="joueurs-partie">
                 <thead><tr><th>Joue</th><th>Joueur</th><th>Équipe</th></tr></thead>

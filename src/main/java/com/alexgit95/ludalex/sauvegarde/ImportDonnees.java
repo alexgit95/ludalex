@@ -77,6 +77,7 @@ public class ImportDonnees {
             jeu.setPrix(d.prix() == null ? null : new BigDecimal(d.prix()));
             jeu.setDateAchat(d.dateAchat() == null ? null : LocalDate.parse(d.dateAchat()));
             jeu.setCooperatif(d.cooperatif());
+            jeu.setPlusieursVariantes(Boolean.TRUE.equals(d.plusieursVariantes()));
             persister(jeu, compteur);
             jeux.put(d.idSauvegarde(), jeu.getId());
         });
@@ -94,6 +95,7 @@ public class ImportDonnees {
             if (d.termineeLe() != null) {
                 partie.setTermineeLe(Instant.parse(d.termineeLe()));
             }
+            partie.setVariante(d.variante());
             persister(partie, compteur);
             parties.put(d.idSauvegarde(), partie.getId());
         });
