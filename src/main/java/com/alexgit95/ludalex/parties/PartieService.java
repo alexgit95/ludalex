@@ -121,7 +121,7 @@ public class PartieService {
         List<Long> ids = valeurs(saisie.joueurIds());
         Map<Long, Joueur> participants = chargerJoueurs(ids, dejaPresents);
         Map<Long, Integer> scores = saisie.scores() == null ? Map.of() : saisie.scores();
-        if (!ids.containsAll(scores.keySet())) {
+        if (scores.entrySet().stream().anyMatch(score -> score.getValue() != null && !ids.contains(score.getKey()))) {
             throw new PartieInvalideException("scores", "Un score concerne un joueur qui ne participe pas");
         }
 
@@ -153,7 +153,7 @@ public class PartieService {
         List<Participation> participations = partie.getParticipations();
         List<Long> ids = participations.stream().map(participation -> participation.getJoueur().getId()).toList();
         Map<Long, Integer> scores = fin.scores() == null ? Map.of() : fin.scores();
-        if (!ids.containsAll(scores.keySet())) {
+        if (scores.entrySet().stream().anyMatch(score -> score.getValue() != null && !ids.contains(score.getKey()))) {
             throw new PartieInvalideException("scores", "Un score concerne un joueur qui ne participe pas");
         }
         Set<Long> viaEquipes = new LinkedHashSet<>();

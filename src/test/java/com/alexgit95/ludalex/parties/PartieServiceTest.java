@@ -182,6 +182,13 @@ class PartieServiceTest {
         Partie partie = service.declarer(competitive(List.of(10L, 11L), List.of(10L)));
         assertThat(partie.getParticipations()).allSatisfy(p -> assertThat(p.getScore()).isNull());
 
+        Map<Long, Integer> scoresVides = new HashMap<>();
+        scoresVides.put(10L, null);
+        scoresVides.put(12L, null);
+        Partie avecChampsVidesHorsParticipants = service.declarer(new PartieSaisie(1L, null, null, List.of(10L),
+            scoresVides, List.of(10L), null, null, null, null));
+        assertThat(avecChampsVidesHorsParticipants.getParticipations()).hasSize(1);
+
         Map<Long, Integer> scores = Map.of(12L, 5);
         assertThatThrownBy(() -> service.declarer(new PartieSaisie(1L, null, null, List.of(10L), scores, List.of(10L),
                 null, null, null, null))).isInstanceOf(PartieInvalideException.class);

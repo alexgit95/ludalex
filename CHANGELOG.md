@@ -2,6 +2,11 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [0.13.1] - 2026-11-13
+
+### Fixed
+- Déclaration et modification de partie : les champs de score laissés vides pour des joueurs non participants ne bloquent plus l'enregistrement ; un score réellement renseigné pour un non-participant reste refusé.
+
 ## [0.13.0] - 2026-11-13
 
 ### Added
