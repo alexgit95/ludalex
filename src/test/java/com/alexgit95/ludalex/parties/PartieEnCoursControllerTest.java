@@ -82,6 +82,10 @@ class PartieEnCoursControllerTest {
                 .andExpect(content().string(containsString("Lancer une partie")))
                 .andExpect(content().string(containsString(jeu.getNom())))
                 .andExpect(content().string(containsString(marie.getNom())));
+        assertThat(enCours.active()).isEmpty();
+        mvc.perform(post("/parties/direct/lancer").param("jeuId", jeu.getId().toString())
+                .param("joueurIds", marie.getId().toString())).andExpect(status().isForbidden());
+        assertThat(enCours.active()).isEmpty();
     }
 
     @Test

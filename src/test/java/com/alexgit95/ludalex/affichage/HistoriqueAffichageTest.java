@@ -82,4 +82,23 @@ class HistoriqueAffichageTest {
         verify(parties, never()).participationsDesParties(anyCollection());
         verify(statistiques, never()).joueursPodium(any(), any(Long.class), any());
     }
+
+    @Test
+    void chargeLHistoriqueGlobalEnVeilleSansCalculerLePodium() {
+        Partie partie = new Partie(new Jeu("Catan"), LocalDate.of(2026, 1, 1));
+        ReflectionTestUtils.setField(partie, "id", 7L);
+        Participation participation = new Participation(partie, joueur(1, "Anne"));
+        when(parties.findByStatutOrderByDatePartieDescIdDesc(eq(StatutPartie.TERMINEE), any()))
+                .thenReturn(List.of(partie));
+        when(parties.participationsDesParties(List.of(7L))).thenReturn(List.of(participation));
+
+        HistoriqueAffichage.Donnees donnees = service.global();
+
+        assertThat(donnees.global()).singleElement().satisfies(ligne ->
+                assertThat(ligne.participations()).containsExactly(participation));
+        assertThat(donnees.jeu()).isEmpty();
+        assertThat(donnees.podium()).isEmpty();
+        verify(parties, never()).findByJeuIdAndStatutOrderByDatePartieDescIdDesc(any(), any(), any());
+        verify(statistiques, never()).scoresPodium(any(), any());
+    }
 }

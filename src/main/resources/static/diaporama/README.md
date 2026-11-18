@@ -1,6 +1,6 @@
 # Images du diaporama
 
-Ces images sont affichées en boucle sur l'écran `/affichage` en veille et entre les vues d'une partie en cours.
+Ces images sont affichées en boucle sur l'écran `/affichage` en veille et entre les vues d'une partie en cours. En veille, la galerie des dernières parties apparaît après 2 à 5 images ; un QR de lancement est visible une image sur deux.
 
 ## Ajouter ou remplacer des images
 

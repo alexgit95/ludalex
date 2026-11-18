@@ -37,14 +37,24 @@ public class HistoriqueAffichage {
     }
 
     public Donnees pourJeu(Long jeuId) {
+        return charger(jeuId);
+    }
+
+    public Donnees global() {
+        return charger(null);
+    }
+
+    private Donnees charger(Long jeuId) {
         var limite = PageRequest.of(0, 5);
-        List<Partie> jeu = parties.findByJeuIdAndStatutOrderByDatePartieDescIdDesc(jeuId, StatutPartie.TERMINEE, limite);
+        List<Partie> jeu = jeuId == null ? List.of()
+                : parties.findByJeuIdAndStatutOrderByDatePartieDescIdDesc(jeuId, StatutPartie.TERMINEE, limite);
         List<Partie> global = parties.findByStatutOrderByDatePartieDescIdDesc(StatutPartie.TERMINEE, limite);
         List<Long> ids = Stream.concat(jeu.stream(), global.stream()).map(Partie::getId).distinct().toList();
         Map<Long, List<Participation>> participations = ids.isEmpty() ? Map.of()
                 : parties.participationsDesParties(ids).stream()
                         .collect(Collectors.groupingBy(participation -> participation.getPartie().getId()));
-        return new Donnees(lignes(jeu, participations), lignes(global, participations), podium(jeuId));
+        return new Donnees(lignes(jeu, participations), lignes(global, participations),
+            jeuId == null ? List.of() : podium(jeuId));
     }
 
     private static List<LignePartie> lignes(List<Partie> parties, Map<Long, List<Participation>> participations) {

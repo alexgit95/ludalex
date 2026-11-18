@@ -39,7 +39,10 @@
         var active = 0;
         var suivante = null;
         var rotation = document.getElementById('rotation');
-        var vues = rotation ? Array.from(rotation.querySelectorAll('[data-vue]')) : [];
+        var veille = document.getElementById('veille-rotation');
+        var racine = rotation || veille;
+        var vues = racine ? Array.from(racine.querySelectorAll('[data-vue]')) : [];
+        var qrLancement = veille ? veille.querySelector('.qr-lancement') : null;
         var ordre = rotation ? ['combat', 'image'] : [];
         if (rotation && rotation.querySelector('[data-vue="jeu"]')) {
             ordre.push('jeu', 'image');
@@ -48,6 +51,10 @@
             ordre.push('global', 'image');
         }
         var position = 0;
+        var imagesAffichees = 1;
+        var imagesDepuisGalerie = 1;
+        var prochainRecapitulatif = 2 + Math.floor(Math.random() * 4);
+        var vueVeille = 'image';
 
         function afficherImage(avancer, changement) {
             var mode = window.matchMedia('(orientation: portrait)').matches ? 'portrait' : 'paysage';
@@ -89,10 +96,13 @@
             if (nom === 'image') {
                 afficherImage(true, false);
             }
+            if (qrLancement) {
+                qrLancement.hidden = nom !== 'image' || imagesAffichees % 2 === 0;
+            }
         }
 
         changerOrientation = function () {
-            if (!rotation || ordre[position] === 'image') {
+            if ((veille && vueVeille === 'image') || (rotation && ordre[position] === 'image')) {
                 afficherImage(false, true);
             } else {
                 couches.forEach(function (couche) {
@@ -102,15 +112,30 @@
                 suivante = null;
             }
         };
-        if (!rotation) {
+        if (veille) {
             afficherImage(false, false);
         }
         minuteur = setInterval(function () {
             if (rotation) {
                 position = (position + 1) % ordre.length;
                 afficherVue(ordre[position]);
-            } else {
+            } else if (veille && vueVeille === 'global') {
+                vueVeille = 'image';
+                imagesAffichees += 1;
+                imagesDepuisGalerie = 1;
+                prochainRecapitulatif = 2 + Math.floor(Math.random() * 4);
+                afficherVue('image');
+            } else if (veille && veille.querySelector('[data-vue="global"]')
+                    && imagesDepuisGalerie >= prochainRecapitulatif) {
+                vueVeille = 'global';
+                afficherVue('global');
+            } else if (veille) {
+                imagesAffichees += 1;
+                imagesDepuisGalerie += 1;
                 afficherImage(true, false);
+                if (qrLancement) {
+                    qrLancement.hidden = imagesAffichees % 2 === 0;
+                }
             }
         }, 10000);
     }

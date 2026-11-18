@@ -95,7 +95,10 @@ class AffichageServiceTest {
 
         assertThat(etat.type()).isEqualTo(EtatAffichage.Type.VEILLE);
         assertThat(etat.images()).containsExactly("/diaporama/a.svg", "/diaporama/b.svg");
-        assertThat(etat.signature()).isEqualTo("VEILLE");
+        assertThat(etat.signature()).isEqualTo("VEILLE:0");
+        assertThat(etat.qrSvg()).isNull();
+        verify(codeQr, never()).svgLancement(anyString());
+        verify(qr, never()).regenerer(any());
         assertThat(etat.vue()).isNull();
         assertThat(etat.fond()).isNull();
     }
@@ -237,5 +240,15 @@ class AffichageServiceTest {
 
         assertThat(service.etat(ORIGINE, false).signature()).isNotEqualTo(signature);
         verify(qr, never()).regenerer(any());
+    }
+
+    @Test
+    void lesModificationsInvalidantLaVeilleChangentSaSignature() {
+        String signature = service.etat(ORIGINE, false).signature();
+        assertThat(service.etat(ORIGINE, false).signature()).isEqualTo(signature);
+
+        service.donneesModifiees();
+
+        assertThat(service.etat(ORIGINE, false).signature()).isNotEqualTo(signature);
     }
 }

@@ -64,7 +64,8 @@ public class AffichageService {
         if (!recentes.isEmpty()) {
             return etatVictoire(recentes.get(0));
         }
-        return new EtatAffichage(EtatAffichage.Type.VEILLE, null, null, List.of(), false, diaporama.urls(), "VEILLE");
+        return new EtatAffichage(EtatAffichage.Type.VEILLE, null, null, List.of(), false, diaporama.urls(),
+            "VEILLE:" + generation.get());
     }
 
     private EtatAffichage etatPartieActive(VuePartie vue, String origine, boolean nouveauToken) {

@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **5.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques par jeu et tableau de bord global, réglages, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **6.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques par jeu et tableau de bord global, réglages, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -27,12 +27,12 @@ Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir 
 
 `/affichage` est conçu pour tourner en continu sur une télé ou une tablette (plein écran, lisible de loin). Il se met à jour tout seul (interrogation légère toutes les 3 s) :
 
-- **Partie en cours** : rotation toutes les 10 s entre les joueurs, une image, les dernières parties du jeu et son podium, une image, les dernières parties tous jeux confondus, puis une image. Les historiques vides sont sautés ; le QR de fin de partie reste visible sur chaque vue. La vue des joueurs utilise l'image et la couleur du jeu en fond, et un cartouche **VS** pour les affrontements ; les jeux coopératifs affichent « Ensemble ». Le podium regroupe les trois meilleurs nombres de victoires, avec au plus trois joueurs par rang et un compteur des autres ex æquo ; il révèle les rangs du troisième au premier pendant les cinq premières secondes. Il s'affiche immédiatement si le navigateur demande un mouvement réduit.
+- **Partie en cours** : rotation toutes les 10 s entre les joueurs, une image, les dernières parties du jeu et son podium, une image, les dernières parties tous jeux confondus, puis une image. Les historiques vides sont sautés ; le QR de fin de partie reste visible sur chaque vue. En portrait, la vue du jeu présente le podium, les trois dernières parties et le QR à la verticale ; en paysage, cinq parties restent affichées. Le podium indique les victoires sous la forme `4V` et entoure la première place de lauriers ; il regroupe les trois meilleurs nombres de victoires, avec au plus trois joueurs par rang et un compteur des autres ex æquo. Il révèle les rangs du troisième au premier pendant les cinq premières secondes ou immédiatement si le navigateur demande un mouvement réduit.
 - **Partie en pause** : le joueur à qui c'est de jouer, en grand, sans QR code, sur le même fond.
 - **Victoire** : animation du ou des vainqueurs pendant 15 s après la fin de la partie (message de défaite pour une défaite coopérative), puis retour à la veille.
-- **Veille** : diaporama en fondu d'illustrations. Les noms commençant par `portrait_` sont réservés au portrait, les autres au paysage ; sans image adaptée, l'écran affiche LUDALEX. Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `jpeg`, `gif`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; voir le README de ce dossier pour l'ordre d'affichage.
+- **Veille** : diaporama en fondu d'illustrations, entrecoupé d'une galerie des cinq dernières parties après 2 à 5 images choisies aléatoirement. Un QR apparaît une image sur deux pour ouvrir le formulaire de lancement ; il ne lance pas de partie et demande Cloudflare Access en production. Les noms commençant par `portrait_` sont réservés au portrait, les autres au paysage ; sans image adaptée, l'écran affiche LUDALEX. Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `jpeg`, `gif`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; voir le README de ce dossier pour l'ordre d'affichage.
 
-Le QR change à chaque ouverture ou rechargement de la page (un QR scanné avant le rechargement n'est plus valable). L'écran demande au navigateur de rester allumé lorsque c'est possible.
+Le QR de fin change à chaque ouverture ou rechargement de la page (un QR scanné avant le rechargement n'est plus valable). Le QR de lancement utilise la même origine publique et reste protégé par Cloudflare Access en production ; aucun bypass supplémentaire n'est nécessaire. L'écran demande au navigateur de rester allumé lorsque c'est possible.
 
 La session Cloudflare Access dure un mois : à l'expiration, après trois échecs de mise à jour, la page se recharge et Cloudflare redemande la connexion ; une intervention humaine est donc nécessaire une fois par mois.
 

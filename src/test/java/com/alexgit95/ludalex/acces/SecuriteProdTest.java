@@ -154,6 +154,15 @@ class SecuriteProdTest {
     }
 
     @Test
+    void leQrDeLancementNeContourneNiCloudflareNiCsrf() throws Exception {
+        mvc.perform(get("/parties/direct")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/parties/direct").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isOk());
+        mvc.perform(post("/parties/direct/lancer").header(CloudflareAccessFilter.HEADER_JWT, EMETTEUR.jetonValide()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void exigeLeJwtPourLEcranAffichage() throws Exception {
         mvc.perform(get("/affichage")).andExpect(status().isUnauthorized());
         mvc.perform(get("/affichage/etat")).andExpect(status().isUnauthorized());

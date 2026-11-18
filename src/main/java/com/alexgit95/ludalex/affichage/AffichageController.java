@@ -17,18 +17,22 @@ public class AffichageController {
     private final AffichageService affichage;
     private final OriginePublique origine;
     private final HistoriqueAffichage historique;
+        private final CodeQr codeQr;
 
-    public AffichageController(AffichageService affichage, OriginePublique origine, HistoriqueAffichage historique) {
+        public AffichageController(AffichageService affichage, OriginePublique origine, HistoriqueAffichage historique,
+            CodeQr codeQr) {
         this.affichage = affichage;
         this.origine = origine;
         this.historique = historique;
+        this.codeQr = codeQr;
     }
 
     /** Ouverture ou rechargement : un nouveau token est généré pour le QR code. */
     @GetMapping
     public String page(HttpServletRequest requete, HttpServletResponse reponse, Model model) {
         reponse.setHeader("Cache-Control", "no-store");
-        ajouterEtat(model, affichage.etat(origine.depuis(requete), true));
+        String adresse = origine.depuis(requete);
+        ajouterEtat(model, affichage.etat(adresse, true), adresse);
         return "affichage/page";
     }
 
@@ -37,19 +41,23 @@ public class AffichageController {
     public String etat(@RequestParam(required = false) String signature, HttpServletRequest requete,
             HttpServletResponse reponse, Model model) {
         reponse.setHeader("Cache-Control", "no-store");
-        EtatAffichage etat = affichage.etat(origine.depuis(requete), false);
+        String adresse = origine.depuis(requete);
+        EtatAffichage etat = affichage.etat(adresse, false);
         if (etat.signature().equals(signature)) {
             reponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             return "affichage/vide";
         }
-        ajouterEtat(model, etat);
+        ajouterEtat(model, etat, adresse);
         return "affichage/etat :: etat";
     }
 
-    private void ajouterEtat(Model model, EtatAffichage etat) {
+    private void ajouterEtat(Model model, EtatAffichage etat, String adresse) {
         model.addAttribute("etat", etat);
         if (etat.type() == EtatAffichage.Type.EN_COURS) {
             model.addAttribute("historique", historique.pourJeu(etat.vue().jeu().getId()));
+        } else if (etat.type() == EtatAffichage.Type.VEILLE) {
+            model.addAttribute("historique", historique.global());
+            model.addAttribute("qrLancement", codeQr.svgLancement(adresse + "/parties/direct"));
         }
     }
 }

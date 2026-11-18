@@ -81,6 +81,14 @@ class CodeQrTest {
     }
 
     @Test
+    void leQrDeLancementAUnLibelleDistinctEtEncodeLaBonneAdresse() throws Exception {
+        String adresse = "https://ludalex.example.org/parties/direct";
+        assertThat(decoder(CodeQr.encoder(adresse))).isEqualTo(adresse);
+        assertThat(new CodeQr().svgLancement(adresse)).contains("aria-label=\"QR code pour lancer une partie\"")
+                .doesNotContain("/parties/direct");
+    }
+
+    @Test
     void genereDesCodesDeTailleCroissanteAvecLeContenu() throws Exception {
         assertThat(CodeQr.encoder(ADRESSE + "x".repeat(60)).getWidth()).isGreaterThan(CodeQr.encoder("a").getWidth());
     }

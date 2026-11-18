@@ -110,8 +110,52 @@ class AffichageControllerTest {
 
         assertThat(html).contains("data-images=")
             .contains("/js/htmx.min.js").contains("/js/affichage.js").contains("hx-get=\"/affichage/etat\"")
-                .contains("hx-trigger=\"every 3s\"").doesNotContain("<svg");
+                .contains("hx-trigger=\"every 3s\"").contains("QR code pour lancer une partie");
     }
+
+            @Test
+            void actualiseLHistoriqueDeVeilleApresModificationDesParties() throws Exception {
+            Jeu jeu = jeu("Veille", false);
+            Joueur anne = joueur("Anne");
+            String signature = signature(page());
+            mvc.perform(get("/affichage/etat").param("signature", signature)).andExpect(status().isNoContent());
+
+            Partie ancienne = parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+                List.of(anne.getId()), null, List.of(anne.getId()), null, null, null, null));
+            var resultat = mvc.perform(get("/affichage/etat").param("signature", signature)).andExpect(status().isOk())
+                .andReturn();
+            HistoriqueAffichage.Donnees historique = (HistoriqueAffichage.Donnees) resultat.getModelAndView()
+                .getModel().get("historique");
+            assertThat(historique.global()).extracting(ligne -> ligne.partie().getId()).contains(ancienne.getId());
+            String nouvelleSignature = signature(resultat.getResponse().getContentAsString());
+            mvc.perform(get("/affichage/etat").param("signature", nouvelleSignature)).andExpect(status().isNoContent());
+
+            parties.supprimer(ancienne.getId());
+            mvc.perform(get("/affichage/etat").param("signature", nouvelleSignature)).andExpect(status().isOk());
+            }
+
+            @Test
+            void laGalerieDeVeilleMontreLesGagnantsEtLesDefaitesSansAutresParticipants() throws Exception {
+            Jeu jeu = jeu("Galerie", false);
+            Jeu cooperatif = jeu("Cooperatif", true);
+            Joueur gagnant = joueur("Gagnant");
+            Joueur perdant = joueur("Perdant");
+            parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+                List.of(gagnant.getId(), perdant.getId()), null, List.of(gagnant.getId()), null, null, null, null));
+            parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now(), null,
+                List.of(gagnant.getId(), perdant.getId()), null, List.of(gagnant.getId()), null, null, null, null));
+            parties.declarer(new PartieSaisie(cooperatif.getId(), java.time.LocalDate.now(), null,
+                List.of(perdant.getId()), null, null, null, null, null, ResultatCooperatif.DEFAITE));
+
+            String html = page();
+            Matcher galerie = Pattern.compile("<section class=\"galerie-affichage\".*?</section>", Pattern.DOTALL)
+                .matcher(html);
+            assertThat(galerie.find()).isTrue();
+            assertThat(galerie.group()).contains(jeu.getNom(), cooperatif.getNom(), gagnant.getNom(), "Défaite collective")
+                .doesNotContain(perdant.getNom());
+            assertThat(galerie.group().split(Pattern.quote(jeu.getNom()), -1)).hasSize(3);
+            assertThat(html).contains("QR code pour lancer une partie");
+            }
 
     @Test
     void montreLaPartieEnCoursAvecUnQrCode() throws Exception {
@@ -126,6 +170,26 @@ class AffichageControllerTest {
                 .contains("<svg").contains("Scannez pour terminer la partie").contains("class=\"vs\"")
             .contains("/icons/defaut.svg").contains("data-images").contains("qr-commun")
             .doesNotContain("fond-jeu");
+    }
+
+    @Test
+    void neRecalculeNiHistoriqueNiQrQuandLaVeilleEstInchangee() {
+        AffichageService affichage = org.mockito.Mockito.mock(AffichageService.class);
+        OriginePublique origine = org.mockito.Mockito.mock(OriginePublique.class);
+        HistoriqueAffichage historique = org.mockito.Mockito.mock(HistoriqueAffichage.class);
+        CodeQr codeQr = org.mockito.Mockito.mock(CodeQr.class);
+        var requete = new org.springframework.mock.web.MockHttpServletRequest();
+        var reponse = new org.springframework.mock.web.MockHttpServletResponse();
+        var model = new org.springframework.ui.ConcurrentModel();
+        EtatAffichage veille = new EtatAffichage(EtatAffichage.Type.VEILLE, null, null, List.of(), false,
+                List.of(), "VEILLE:1");
+        org.mockito.Mockito.when(origine.depuis(requete)).thenReturn("https://ludalex.example.org");
+        org.mockito.Mockito.when(affichage.etat("https://ludalex.example.org", false)).thenReturn(veille);
+
+        new AffichageController(affichage, origine, historique, codeQr).etat("VEILLE:1", requete, reponse, model);
+
+        assertThat(reponse.getStatus()).isEqualTo(204);
+        org.mockito.Mockito.verifyNoInteractions(historique, codeQr);
     }
 
         @Test
@@ -158,7 +222,7 @@ class AffichageControllerTest {
             List.of(anne.getId(), marc.getId()), null, List.of(marc.getId()), null, null, null, null));
         String apresModification = mvc.perform(get("/affichage/etat").param("signature", signatureActualisee))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertThat(apresModification).contains("2 victoire(s)");
+        assertThat(apresModification).contains("2V").contains("aria-label=\"2 victoires\"");
         assertThat(qr.courant(active.getId())).contains(token);
         }
 

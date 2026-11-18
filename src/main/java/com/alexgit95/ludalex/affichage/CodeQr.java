@@ -18,8 +18,16 @@ public class CodeQr {
     private static final int MARGE_MODULES = 4;
 
     public String svg(String contenu) {
+        return svg(contenu, "QR code de fin de partie");
+    }
+
+    public String svgLancement(String contenu) {
+        return svg(contenu, "QR code pour lancer une partie");
+    }
+
+    private String svg(String contenu, String libelle) {
         try {
-            return versSvg(encoder(contenu));
+            return versSvg(encoder(contenu), libelle);
         } catch (WriterException e) {
             throw new IllegalStateException("QR code impossible à générer", e);
         }
@@ -35,6 +43,10 @@ public class CodeQr {
 
     /** Un segment horizontal par suite de modules noirs, sur fond blanc avec zone de silence. */
     static String versSvg(BitMatrix matrice) {
+        return versSvg(matrice, "QR code de fin de partie");
+    }
+
+    private static String versSvg(BitMatrix matrice, String libelle) {
         int total = matrice.getWidth() + 2 * MARGE_MODULES;
         StringBuilder chemin = new StringBuilder();
         for (int y = 0; y < matrice.getHeight(); y++) {
@@ -53,7 +65,7 @@ public class CodeQr {
             }
         }
         return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + total + " " + total
-                + "\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"QR code de fin de partie\">"
+                + "\" shape-rendering=\"crispEdges\" role=\"img\" aria-label=\"" + libelle + "\">"
                 + "<rect width=\"" + total + "\" height=\"" + total + "\" fill=\"#fff\"/>"
                 + "<path d=\"" + chemin + "\" fill=\"#000\"/></svg>";
     }

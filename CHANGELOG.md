@@ -2,6 +2,19 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [6.0.0] - 2026-11-18
+
+### Added
+- Veille : galerie des cinq dernières parties, insérée aléatoirement après 2 à 5 images, et QR de lancement sur une image sur deux. Le QR ouvre `/parties/direct`, protégé par Cloudflare Access en production et CSRF pour le lancement.
+- Podium : scores au format `4V`, alternative accessible et lauriers autour de la première place.
+
+### Changed
+- En portrait, la vue du jeu empile podium, trois dernières parties et QR de fin ; en paysage, elle conserve cinq parties. La galerie partagée présente les cinq derniers résultats sous forme de médaillons avec les gagnants et les résultats coopératifs.
+- La veille actualise ses résultats après modification des données ; cache statique PWA `ludalex-statique-6.0.0`.
+
+### [BREAKING CHANGE]
+- La veille affiche désormais la galerie et un QR de lancement, et la vue portrait du jeu est limitée à trois parties au lieu de cinq. **Migration** : reconstruire et redéployer l'image Docker ; le téléphone doit pouvoir joindre l'origine publique et disposer d'un accès Cloudflare en production. Aucun bypass Cloudflare supplémentaire ni changement de schéma ou de sauvegarde n'est nécessaire.
+
 ## [5.0.0] - 2026-11-18
 
 ### Added
