@@ -6,10 +6,10 @@
 ## Requirements
 
 ### Requirement: Affichage de la partie en cours
-Le système SHALL afficher sur `/affichage`, lorsqu'une partie est en cours, le titre du jeu, l'avatar et le nom de chaque joueur en grand, et un QR code, sur un fond reprenant l'image du jeu (floutée, sous un voile léger) et sa couleur de fond. Les joueurs SHALL toujours être entièrement visibles, sans rognage, quelle que soit la taille de l'image du jeu, et leurs avatars SHALL être dimensionnés selon la hauteur de l'écran. Un cartouche « VS » SHALL matérialiser l'affrontement selon la composition de la partie.
+Le système SHALL afficher sur `/affichage`, lorsqu'une partie est en cours, une vue de confrontation en alternance avec les autres vues de la rotation. Cette vue SHALL afficher le titre du jeu, l'avatar et le nom de chaque joueur en grand, et un QR code, sur un fond reprenant l'image du jeu (floutée, sous un voile léger) et sa couleur de fond. Les joueurs SHALL toujours être entièrement visibles, sans rognage, quelle que soit la taille de l'image du jeu, et leurs avatars SHALL être dimensionnés selon la hauteur de l'écran. Un cartouche « VS » SHALL matérialiser l'affrontement selon la composition de la partie.
 
 #### Scenario: Partie en cours
-- **WHEN** une partie « en cours » de « Catan » avec trois joueurs est active
+- **WHEN** la vue de confrontation d'une partie « en cours » de « Catan » avec trois joueurs est active
 - **THEN** l'écran montre le titre de Catan, les trois avatars entièrement visibles, le QR code, sur un fond issu de l'image de Catan et de sa couleur
 
 #### Scenario: Image absente
@@ -65,11 +65,11 @@ Le système SHALL afficher sur `/affichage`, lorsqu'une partie est en cours, le 
 - **THEN** le cartouche « VS » n'est pas animé
 
 ### Requirement: QR code de fin de partie
-Le système SHALL afficher un QR code encodant l'URL `/fin/{token}` de l'origine publique de la requête, généré côté serveur ; le token en clair n'est jamais stocké en base (il n'est conservé qu'en mémoire du processus pour être réutilisé tant qu'il est valide). L'origine peut être imposée par `ludalex.affichage.url-publique`.
+Le système SHALL afficher sur chaque vue de la rotation d'une partie en cours un QR code encodant l'URL `/fin/{token}` de l'origine publique de la requête, généré côté serveur ; le token en clair n'est jamais stocké en base (il n'est conservé qu'en mémoire du processus pour être réutilisé tant qu'il est valide). L'origine peut être imposée par `ludalex.affichage.url-publique`.
 
 #### Scenario: QR code valide
-- **WHEN** l'écran affiche la partie en cours
-- **THEN** le QR code encode `https://<domaine>/fin/<token>` avec un token valide non utilisé de cette partie
+- **WHEN** l'écran affiche une vue de la rotation d'une partie en cours
+- **THEN** le QR code visible encode `https://<domaine>/fin/<token>` avec un token valide non utilisé de cette partie
 
 #### Scenario: Nouveau token à l'affichage
 - **WHEN** la page est ouverte ou rechargée
@@ -145,3 +145,80 @@ L'écran SHALL demander au navigateur de ne pas se mettre en veille lorsque l'AP
 #### Scenario: API indisponible
 - **WHEN** le navigateur ne propose pas l'API de maintien d'écran
 - **THEN** l'affichage fonctionne sans erreur
+
+### Requirement: Rotation pendant une partie
+Pendant une partie en cours, l'écran SHALL alterner toutes les dix secondes les vues confrontation, historique du jeu en cours avec champions et historique tous jeux, en intercalant une image adaptée du diaporama entre chaque vue. La rotation SHALL commencer par la confrontation. Une vue d'historique vide SHALL être sautée et le diaporama SHALL avancer à chaque passage. Le QR SHALL rester visible et lisible sur toutes les vues, y compris le fond neutre.
+
+#### Scenario: Rotation complète
+- **WHEN** les deux historiques contiennent des parties terminées
+- **THEN** la séquence est confrontation, image, historique du jeu, image, historique global, image, puis confrontation, avec dix secondes par vue
+
+#### Scenario: Historique du jeu vide
+- **WHEN** aucune partie terminée n'existe pour le jeu en cours
+- **THEN** la vue d'historique du jeu est sautée sans écran vide
+
+#### Scenario: Aucun historique
+- **WHEN** aucune partie terminée n'existe
+- **THEN** la rotation alterne confrontation et diaporama sans vue d'historique vide
+
+#### Scenario: Partie mise en pause ou terminée
+- **WHEN** la partie est mise en pause ou terminée pendant une vue de la rotation
+- **THEN** la rotation s'interrompt et l'écran affiche l'état de pause ou de victoire selon les règles existantes
+
+#### Scenario: Rafraîchissement sans changement
+- **WHEN** une interrogation périodique ne révèle pas de changement pertinent
+- **THEN** la rotation et le QR ne sont pas réinitialisés
+
+### Requirement: Historiques et champions sur l'écran
+Chaque vue d'historique SHALL afficher au plus cinq parties terminées, de la plus récente à la plus ancienne selon la date de partie puis l'identifiant. Elle SHALL présenter la date, les joueurs et les gagnants, ou le résultat victoire/défaite pour une partie coopérative ; la vue globale SHALL également afficher le jeu. La vue du jeu en cours SHALL afficher en grand le nom et l'avatar des champions visibles selon la limite du podium, ainsi que le nombre d'autres champions ex æquo ; elle ne SHALL désigner aucun champion lorsqu'il n'y en a pas. Les informations SHALL rester lisibles en portrait et paysage et être actualisées après modification des données sans rechargement manuel.
+
+#### Scenario: Champion et parties du jeu
+- **WHEN** le jeu en cours a un champion et des parties terminées
+- **THEN** la vue affiche ce champion en grand et les cinq parties terminées les plus récentes au maximum
+
+#### Scenario: Champions à égalité
+- **WHEN** deux joueurs non anonymisés sont champions à égalité
+- **THEN** chacun apparaît comme champion dans la vue du jeu
+
+#### Scenario: Aucune victoire
+- **WHEN** le jeu possède des parties terminées mais aucun champion éligible
+- **THEN** la vue affiche les parties sans champion
+
+#### Scenario: Résultat coopératif
+- **WHEN** une partie récente concerne un jeu coopératif
+- **THEN** son résultat indique victoire ou défaite collective
+
+#### Scenario: Mise à jour de l'historique
+- **WHEN** une partie terminée ou les données influençant le champion sont ajoutées, modifiées ou supprimées pendant l'affichage
+- **THEN** les vues concernées sont actualisées sans rechargement manuel et les requêtes restent bornées
+
+### Requirement: Podium des joueurs du jeu
+La vue de l'historique du jeu en cours SHALL présenter un podium des trois premiers rangs de joueurs non anonymisés, classés selon leur nombre de victoires dans les parties terminées de ce jeu. Les joueurs ayant le même nombre de victoires SHALL partager le même rang ; les trois rangs correspondent aux trois nombres distincts de victoires les plus élevés. Chaque rang SHALL afficher au plus trois joueurs, triés par nom sans tenir compte de la casse puis par identifiant, avec leurs noms et avatars, et SHALL indiquer le nombre d'autres joueurs ex æquo non affichés. Les joueurs sans victoire peuvent figurer au podium, sans être désignés champions. Le podium SHALL apparaître dans les cinq premières secondes de la vue, du troisième rang au premier, et rester visible jusqu'à la fin des dix secondes ; le QR et les résultats SHALL rester lisibles.
+
+#### Scenario: Trois rangs
+- **WHEN** la vue du jeu apparaît avec au moins trois rangs de joueurs éligibles
+- **THEN** les joueurs du troisième rang apparaissent, puis ceux du deuxième, puis ceux du premier, et le podium complet est visible au plus tard cinq secondes après l'apparition de la vue
+
+#### Scenario: Égalité sur un rang
+- **WHEN** deux joueurs éligibles ont le même nombre de victoires parmi les trois premiers rangs
+- **THEN** ils apparaissent tous deux sur le même rang
+
+#### Scenario: Plus de trois joueurs ex æquo
+- **WHEN** dix joueurs éligibles sont ex æquo sur un rang du podium
+- **THEN** les trois premiers par nom puis identifiant sont affichés sur ce rang et le nombre de sept autres ex æquo est indiqué
+
+#### Scenario: Moins de trois rangs
+- **WHEN** moins de trois nombres distincts de victoires existent parmi les joueurs éligibles
+- **THEN** seuls les rangs disponibles sont affichés, révélés du moins élevé au plus élevé dans les cinq premières secondes
+
+#### Scenario: Aucun joueur éligible
+- **WHEN** aucun joueur non anonymisé n'a participé à une partie terminée du jeu
+- **THEN** aucun podium ni champion n'est affiché et les dernières parties restent visibles
+
+#### Scenario: Mouvement réduit
+- **WHEN** le navigateur demande un mouvement réduit (`prefers-reduced-motion: reduce`)
+- **THEN** le podium complet est affiché immédiatement sans animation et la vue dure toujours dix secondes
+
+#### Scenario: Retour sur la vue
+- **WHEN** la rotation revient à la vue du jeu
+- **THEN** la révélation du podium reprend pour cette nouvelle apparition, sauf si le mouvement réduit est demandé

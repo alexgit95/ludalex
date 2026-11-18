@@ -16,17 +16,19 @@ public class AffichageController {
 
     private final AffichageService affichage;
     private final OriginePublique origine;
+    private final HistoriqueAffichage historique;
 
-    public AffichageController(AffichageService affichage, OriginePublique origine) {
+    public AffichageController(AffichageService affichage, OriginePublique origine, HistoriqueAffichage historique) {
         this.affichage = affichage;
         this.origine = origine;
+        this.historique = historique;
     }
 
     /** Ouverture ou rechargement : un nouveau token est généré pour le QR code. */
     @GetMapping
     public String page(HttpServletRequest requete, HttpServletResponse reponse, Model model) {
         reponse.setHeader("Cache-Control", "no-store");
-        model.addAttribute("etat", affichage.etat(origine.depuis(requete), true));
+        ajouterEtat(model, affichage.etat(origine.depuis(requete), true));
         return "affichage/page";
     }
 
@@ -40,7 +42,14 @@ public class AffichageController {
             reponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             return "affichage/vide";
         }
-        model.addAttribute("etat", etat);
+        ajouterEtat(model, etat);
         return "affichage/etat :: etat";
+    }
+
+    private void ajouterEtat(Model model, EtatAffichage etat) {
+        model.addAttribute("etat", etat);
+        if (etat.type() == EtatAffichage.Type.EN_COURS) {
+            model.addAttribute("historique", historique.pourJeu(etat.vue().jeu().getId()));
+        }
     }
 }

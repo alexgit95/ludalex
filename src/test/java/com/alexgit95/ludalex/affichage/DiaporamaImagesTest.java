@@ -34,8 +34,7 @@ class DiaporamaImagesTest {
     void enumereLesImagesEmbarqueesParOrdreAlphabetique() {
         List<String> urls = new DiaporamaImages().urls();
 
-        assertThat(urls).contains("/diaporama/chateau.svg", "/diaporama/menhirs.svg", "/diaporama/noeud-celtique.svg",
-                "/diaporama/village.svg").isSorted();
+        assertThat(urls).isSorted();
         assertThat(urls).allMatch(url -> url.startsWith("/diaporama/"));
     }
 

@@ -1,6 +1,6 @@
 # Images du diaporama
 
-Ces images sont affichées en boucle sur l'écran `/affichage` lorsqu'aucune partie n'est en cours ou en pause.
+Ces images sont affichées en boucle sur l'écran `/affichage` en veille et entre les vues d'une partie en cours.
 
 ## Ajouter ou remplacer des images
 
@@ -11,7 +11,7 @@ Ces images sont affichées en boucle sur l'écran `/affichage` lorsqu'aucune par
 
 Les images sont détectées automatiquement au démarrage ; aucune modification du code n'est nécessaire. L'image Docker Hub préconstruite utilisée par Portainer ne contient pas vos fichiers locaux : il faut construire et déployer une image personnalisée pour les inclure. Il n'y a pas d'ajout depuis l'interface d'administration.
 
-Si aucune image n'est présente, l'écran affiche le nom LUDALEX sur un fond neutre.
+Les noms commençant exactement par `portrait_` sont utilisés en portrait (ou pour une fenêtre carrée) ; les autres sont réservés au paysage. L'écran s'adapte aux changements d'orientation sans rechargement. Si aucune image ne correspond à l'orientation, il affiche LUDALEX sur un fond neutre.
 
 ## Ordre d'affichage
 
@@ -21,6 +21,8 @@ Les fichiers sont triés par nom, puis affichés dans cet ordre en boucle, avec 
 01-chateau.jpg
 02-village.png
 03-foret.webp
+portrait_01-chateau.jpg
+portrait_02-village.png
 ```
 
-Renommez ou retirez également les images existantes selon l'ordre souhaité. Le tri est sensible à la casse ; privilégiez des noms simples en minuscules. La première image est choisie aléatoirement à chaque démarrage du diaporama : la numérotation fixe la succession, mais pas l'image de départ.
+Chaque orientation possède son propre ordre. Renommez ou retirez également les images existantes selon l'ordre souhaité. Le tri est sensible à la casse ; privilégiez des noms simples en minuscules. La première image est choisie aléatoirement : la numérotation fixe la succession, mais pas l'image de départ.

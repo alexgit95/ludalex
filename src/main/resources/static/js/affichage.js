@@ -2,6 +2,8 @@
     var ECHECS_MAX = 3;
     var echecs = 0;
     var minuteur = null;
+    var zoneCourante = null;
+    var changerOrientation = null;
 
     // Session Cloudflare expirée ou réseau coupé : on recharge la page entière pour que Cloudflare redemande la connexion
     document.addEventListener('htmx:afterRequest', function (evenement) {
@@ -15,44 +17,111 @@
         }
     });
 
-    // Diaporama : deux couches en fondu, une seule image préchargée, durée fixe par image
-    function demarrerDiaporama() {
+    function demarrerAffichage() {
+        var zone = document.getElementById('zone-affichage');
+        if (zone === zoneCourante) {
+            return;
+        }
+        zoneCourante = zone;
         if (minuteur !== null) {
             clearInterval(minuteur);
             minuteur = null;
         }
+        changerOrientation = null;
         var conteneur = document.getElementById('diaporama');
-        if (!conteneur || !conteneur.dataset.images) {
+        if (!conteneur) {
             return;
         }
-        var images = conteneur.dataset.images.split('|').filter(Boolean);
+        var images = (conteneur.dataset.images || '').split('|').filter(Boolean);
         var couches = conteneur.querySelectorAll('.couche');
-        if (images.length === 0 || couches.length < 2) {
-            return;
-        }
-        var index = Math.floor(Math.random() * images.length);
+        var vide = conteneur.querySelector('.veille-vide');
+        var indexes = { portrait: null, paysage: null };
         var active = 0;
-        couches[0].style.backgroundImage = 'url("' + images[index] + '")';
-        couches[0].classList.add('visible');
-        var suivante = new Image();
-        suivante.src = images[(index + 1) % images.length];
-        if (images.length === 1) {
-            return;
+        var suivante = null;
+        var rotation = document.getElementById('rotation');
+        var vues = rotation ? Array.from(rotation.querySelectorAll('[data-vue]')) : [];
+        var ordre = rotation ? ['combat', 'image'] : [];
+        if (rotation && rotation.querySelector('[data-vue="jeu"]')) {
+            ordre.push('jeu', 'image');
         }
-        minuteur = setInterval(function () {
-            index = (index + 1) % images.length;
+        if (rotation && rotation.querySelector('[data-vue="global"]')) {
+            ordre.push('global', 'image');
+        }
+        var position = 0;
+
+        function afficherImage(avancer, changement) {
+            var mode = window.matchMedia('(orientation: portrait)').matches ? 'portrait' : 'paysage';
+            var selection = images.filter(function (url) {
+                var nom = url.substring(url.lastIndexOf('/') + 1);
+                return (nom.indexOf('portrait_') === 0) === (mode === 'portrait');
+            });
+            if (changement) {
+                couches.forEach(function (couche) {
+                    couche.classList.remove('visible');
+                    couche.style.backgroundImage = '';
+                });
+            }
+            vide.hidden = selection.length > 0;
+            if (selection.length === 0) {
+                couches.forEach(function (couche) { couche.classList.remove('visible'); });
+                suivante = null;
+                return;
+            }
+            if (indexes[mode] === null) {
+                indexes[mode] = Math.floor(Math.random() * selection.length);
+            } else if (avancer) {
+                indexes[mode] = (indexes[mode] + 1) % selection.length;
+            }
             var cible = 1 - active;
-            couches[cible].style.backgroundImage = 'url("' + images[index] + '")';
+            couches[cible].style.backgroundImage = 'url("' + selection[indexes[mode]] + '")';
             couches[cible].classList.add('visible');
             couches[active].classList.remove('visible');
             active = cible;
             suivante = new Image();
-            suivante.src = images[(index + 1) % images.length];
+            suivante.src = selection[(indexes[mode] + 1) % selection.length];
+        }
+
+        function afficherVue(nom) {
+            vues.forEach(function (vue) {
+                vue.hidden = vue.dataset.vue !== nom;
+                vue.classList.toggle('revele-podium', !vue.hidden && nom === 'jeu');
+            });
+            if (nom === 'image') {
+                afficherImage(true, false);
+            }
+        }
+
+        changerOrientation = function () {
+            if (!rotation || ordre[position] === 'image') {
+                afficherImage(false, true);
+            } else {
+                couches.forEach(function (couche) {
+                    couche.classList.remove('visible');
+                    couche.style.backgroundImage = '';
+                });
+                suivante = null;
+            }
+        };
+        if (!rotation) {
+            afficherImage(false, false);
+        }
+        minuteur = setInterval(function () {
+            if (rotation) {
+                position = (position + 1) % ordre.length;
+                afficherVue(ordre[position]);
+            } else {
+                afficherImage(true, false);
+            }
         }, 10000);
     }
 
-    document.addEventListener('DOMContentLoaded', demarrerDiaporama);
-    document.addEventListener('htmx:afterSettle', demarrerDiaporama);
+    document.addEventListener('DOMContentLoaded', demarrerAffichage);
+    document.addEventListener('htmx:afterSettle', demarrerAffichage);
+    window.matchMedia('(orientation: portrait)').addEventListener('change', function () {
+        if (changerOrientation) {
+            changerOrientation();
+        }
+    });
 
     // Écran maintenu allumé quand le navigateur le permet (HTTPS)
     var verrou = null;

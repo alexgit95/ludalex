@@ -6,7 +6,7 @@ Les spécifications détaillées sont dans le dossier `openspec/` ; le plan des 
 
 ## État d'avancement
 
-Version courante : **4.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques par jeu et tableau de bord global, réglages, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
+Version courante : **5.0.0**. Disponible : profils, sécurité, interface de base, PWA, conteneurisation, images avec copies locales automatiques et suivi admin, joueurs, ludothèque, parties, statistiques par jeu et tableau de bord global, réglages, parties en direct, écran Affichage, sauvegarde/restauration import MyLudo et charte graphique heroic fantasy.
 
 ## Parties en direct
 
@@ -27,10 +27,10 @@ Il faut une règle Cloudflare Access de type Bypass limitée à `/fin/*` : voir 
 
 `/affichage` est conçu pour tourner en continu sur une télé ou une tablette (plein écran, lisible de loin). Il se met à jour tout seul (interrogation légère toutes les 3 s) :
 
-- **Partie en cours** : l'image du jeu sert de fond (floutée, assombrie) sur la couleur de fond du jeu ; titre du jeu en haut, QR code de fin de partie en coin, joueurs en grand sur toute la hauteur restante (jamais rognés). Un cartouche **VS** (épées croisées, pulsation lente, désactivée si le navigateur demande un mouvement réduit) matérialise l'affrontement : duel face à face, VS entre chaque paire de joueurs à partir de trois, parties par équipes en colonnes nommées séparées par le VS (joueurs sans équipe dans un groupe à part), libellé « Ensemble » pour un jeu coopératif, aucun VS pour un joueur seul.
+- **Partie en cours** : rotation toutes les 10 s entre les joueurs, une image, les dernières parties du jeu et son podium, une image, les dernières parties tous jeux confondus, puis une image. Les historiques vides sont sautés ; le QR de fin de partie reste visible sur chaque vue. La vue des joueurs utilise l'image et la couleur du jeu en fond, et un cartouche **VS** pour les affrontements ; les jeux coopératifs affichent « Ensemble ». Le podium regroupe les trois meilleurs nombres de victoires, avec au plus trois joueurs par rang et un compteur des autres ex æquo ; il révèle les rangs du troisième au premier pendant les cinq premières secondes. Il s'affiche immédiatement si le navigateur demande un mouvement réduit.
 - **Partie en pause** : le joueur à qui c'est de jouer, en grand, sans QR code, sur le même fond.
 - **Victoire** : animation du ou des vainqueurs pendant 15 s après la fin de la partie (message de défaite pour une défaite coopérative), puis retour à la veille.
-- **Veille** : diaporama en fondu d'illustrations (château, village, nœud celtique, menhirs). Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; sans image, l'écran affiche LUDALEX.
+- **Veille** : diaporama en fondu d'illustrations. Les noms commençant par `portrait_` sont réservés au portrait, les autres au paysage ; sans image adaptée, l'écran affiche LUDALEX. Pour en ajouter, déposer des images (`svg`, `png`, `jpg`, `jpeg`, `gif`, `webp`, 2 Mo maximum) dans `src/main/resources/static/diaporama/` et reconstruire ; voir le README de ce dossier pour l'ordre d'affichage.
 
 Le QR change à chaque ouverture ou rechargement de la page (un QR scanné avant le rechargement n'est plus valable). L'écran demande au navigateur de rester allumé lorsque c'est possible.
 

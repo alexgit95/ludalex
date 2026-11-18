@@ -12,6 +12,8 @@ body.kiosque { margin: 0; background: var(--nuit); color: var(--encre); overflow
 .zone::before { top: 0; left: 0; transform: scaleX(-1); }
 .zone::after { bottom: 0; right: 0; transform: scaleY(-1); }
 .zone section { position: relative; z-index: 1; width: 100%; }
+.zone [hidden] { display: none !important; }
+.rotation { width: 100%; }
 
 /* Cartouche parchemin réutilisé pour tous les textes */
 .titre-jeu, .nom, .bandeau, .victoire h1, .suivant h1, .veille-vide, .nom-equipe, .ensemble, .vs-texte {
@@ -27,8 +29,8 @@ body.kiosque { margin: 0; background: var(--nuit); color: var(--encre); overflow
                    gap: 2vh 3vw; padding: 3vh 3vw; height: 100vh; box-sizing: border-box; }
 .partie-en-cours .jeu { grid-row: 1; grid-column: 1; display: flex; align-items: center; justify-content: center; }
 .titre-jeu { margin: 0; font-size: clamp(1.5rem, 4vw, 3.5rem); text-align: center; padding: .2em .8em; }
-.partie-en-cours .qr { grid-row: 1; grid-column: 2; width: clamp(7rem, 16vh, 11rem); background: var(--surface); color: var(--encre);
-                       padding: .5rem; border: 2px solid var(--or); border-radius: .8rem; text-align: center; }
+.qr-commun { position: fixed; z-index: 10; top: 1rem; right: 1rem; width: min(8rem, 20vw); background: var(--surface);
+             color: var(--encre); padding: .5rem; border: 2px solid var(--or); border-radius: .5rem; text-align: center; }
 .qr-code svg { width: 100%; height: auto; display: block; }
 .qr p { margin: .3rem 0 0; font-size: .75rem; font-weight: 600; }
 .combat { grid-row: 2; grid-column: 1 / -1; min-height: 0; display: flex; flex-wrap: wrap; align-items: center;
@@ -80,12 +82,54 @@ body.kiosque { margin: 0; background: var(--nuit); color: var(--encre); overflow
 
 /* Veille : diaporama plein écran */
 .veille { min-height: 100vh; }
-.diaporama { position: fixed; inset: 0; background: var(--nuit); }
+.diaporama { position: fixed; inset: 0; background: var(--nuit); display: grid; place-items: center; }
 .couche { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease; }
 .couche.visible { opacity: 1; }
-.veille-vide { display: inline-block; text-align: center; font-size: clamp(3rem, 10vw, 9rem); letter-spacing: .3em; padding: .1em .5em; }
+.veille-vide { position: relative; z-index: 1; display: inline-block; text-align: center; font-size: clamp(2rem, 8vh, 6rem); padding: .1em .5em; }
+
+.historique-affichage { height: 100vh; box-sizing: border-box; padding: 1rem calc(min(8rem, 20vw) + 2.5rem) 1rem 1.5rem; overflow: auto;
+                        color: var(--encre); background: var(--surface); }
+.historique-affichage h1 { margin: 0 0 1rem; max-width: calc(100% - min(10rem, 25vw));
+                            font: bold 2rem var(--police-titre); overflow-wrap: anywhere; }
+.historique-contenu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
+.historique-liste h2 { font: bold 1.2rem var(--police-titre); margin: 0 0 .5rem; }
+.historique-liste ol, .historique-joueurs, .rang-joueurs { list-style: none; margin: 0; padding: 0; }
+.historique-liste ol { display: grid; gap: .45rem; }
+.historique-liste ol > li { border-bottom: 1px solid var(--or); padding: .4rem 0; }
+.historique-entete { display: flex; flex-wrap: wrap; gap: .3rem .8rem; font-weight: 700; }
+.historique-joueurs { display: flex; flex-wrap: wrap; gap: .2rem .8rem; margin-top: .2rem; }
+.historique-joueurs .gagnant { color: var(--lierre-fonce); }
+.podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; align-items: end; }
+.rang { display: flex; flex-direction: column; min-width: 0; text-align: center; background: var(--parchemin);
+        border: 2px solid var(--or); border-radius: .5rem; padding: .5rem; overflow-wrap: anywhere; }
+.rang[data-rang="1"] { grid-column: 2; grid-row: 1; min-height: 12rem; }
+.rang[data-rang="2"] { grid-column: 1; grid-row: 1; min-height: 10rem; }
+.rang[data-rang="3"] { grid-column: 3; grid-row: 1; min-height: 8rem; }
+.rang-titre { display: flex; flex-direction: column; font-weight: 700; }
+.rang-titre strong { font: bold 2rem var(--police-titre); }
+.rang-joueurs { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+.rang-joueurs li { display: flex; flex-direction: column; align-items: center; min-width: 0; max-width: 100%; }
+.rang-joueurs .avatar { width: 3.5rem; height: 3.5rem; }
+.rang[data-rang="1"] .avatar { width: 5rem; height: 5rem; }
+.rang-autres { margin: .4rem 0 0; font-size: .85rem; font-weight: 700; }
+.revele-podium .rang { animation: apparition .6s ease-out both; }
+.revele-podium .rang[data-rang="2"] { animation-delay: 1.6s; }
+.revele-podium .rang[data-rang="1"] { animation-delay: 3.2s; }
+@media (prefers-reduced-motion: reduce) { .revele-podium .rang { animation: none; } }
 
 @media (max-width: 48rem) {
     .partie-en-cours { grid-template-columns: 1fr; }
-    .partie-en-cours .qr { grid-row: auto; justify-self: center; max-width: 14rem; }
+    .partie-en-cours .jeu { padding-right: min(7rem, 25vw); }
+    .historique-contenu { grid-template-columns: 1fr; gap: .7rem; }
+    .historique-affichage { padding: .75rem; }
+    .historique-affichage h1 { font-size: 1.4rem; margin-bottom: .5rem; min-height: 10rem; }
+    .rang[data-rang] { min-height: 0; }
+    .rang-joueurs .avatar, .rang[data-rang="1"] .avatar { width: 2.5rem; height: 2.5rem; }
+    .rang:has(.rang-joueurs li:nth-child(2)) .rang-joueurs { gap: .25rem; }
+    .rang:has(.rang-joueurs li:nth-child(2)) .rang-joueurs li { font-size: .8rem; line-height: 1.1; }
+    .rang:has(.rang-joueurs li:nth-child(2)) .rang-joueurs .avatar { width: 1.75rem; height: 1.75rem; }
+    .rang-autres { font-size: .75rem; }
+    .historique-joueurs, .historique-entete { font-size: .85rem; }
+    .historique-liste ol > li { padding: .2rem 0; }
+    .rang-titre strong { font-size: 1.3rem; }
 }

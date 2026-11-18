@@ -4,11 +4,14 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alexgit95.ludalex.donnees.DonneesModifiees;
 import com.alexgit95.ludalex.joueurs.Joueur;
 import com.alexgit95.ludalex.parties.DetailPartie;
 import com.alexgit95.ludalex.parties.Participation;
@@ -33,6 +36,7 @@ public class AffichageService {
     private final DiaporamaImages diaporama;
     private final AffichageProperties proprietes;
     private final Clock horloge;
+    private final AtomicLong generation = new AtomicLong();
 
     public AffichageService(PartieEnCoursService enCours, PartieService parties, PartieRepository repertoire,
             QrFinPartie qr, CodeQr codeQr, DiaporamaImages diaporama, AffichageProperties proprietes, Clock horloge) {
@@ -72,8 +76,13 @@ public class AffichageService {
         }
         String clair = nouveauToken ? qr.regenerer(partie) : qr.obtenir(partie);
         String svg = codeQr.svg(origine + "/fin/" + clair);
-        return new EtatAffichage(EtatAffichage.Type.EN_COURS, vue, svg, List.of(), false, List.of(),
-                "EN_COURS:" + partie.getId() + ":" + Integer.toHexString(clair.hashCode()));
+        return new EtatAffichage(EtatAffichage.Type.EN_COURS, vue, svg, List.of(), false, diaporama.urls(),
+                "EN_COURS:" + partie.getId() + ":" + Integer.toHexString(clair.hashCode()) + ":" + generation.get());
+    }
+
+    @EventListener(DonneesModifiees.class)
+    public void donneesModifiees() {
+        generation.incrementAndGet();
     }
 
     private EtatAffichage etatVictoire(Partie terminee) {

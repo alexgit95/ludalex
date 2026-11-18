@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexgit95.ludalex.images.EntreeImage;
@@ -23,6 +24,7 @@ import com.alexgit95.ludalex.jeux.JeuSaisie;
 import com.alexgit95.ludalex.jeux.JeuService;
 import com.alexgit95.ludalex.joueurs.Joueur;
 import com.alexgit95.ludalex.joueurs.JoueurService;
+import com.alexgit95.ludalex.statistiques.StatistiqueRepository;
 
 /** Persistance réelle (H2) : clés étrangères, unicité et ordre des suppressions. */
 @SpringBootTest(properties = {
@@ -45,10 +47,84 @@ class PartiePersistanceTest {
     private ParticipationRepository participations;
 
     @Autowired
+    private PartieRepository repertoire;
+
+    @Autowired
+    private StatistiqueRepository statistiques;
+
+    @Autowired
     private EntityManager em;
 
     private static String unique(String prefixe) {
         return prefixe + "-" + UUID.randomUUID();
+    }
+
+    @Test
+    @Transactional
+    void selectionneLesDernieresPartiesTermineesTousJeuxAvecUneLimite() {
+        Jeu premierJeu = new Jeu(unique("Premier"));
+        Jeu secondJeu = new Jeu(unique("Second"));
+        em.persist(premierJeu);
+        em.persist(secondJeu);
+        List<Partie> terminees = new java.util.ArrayList<>();
+        for (int index = 0; index < 6; index++) {
+            Partie partie = new Partie(index % 2 == 0 ? premierJeu : secondJeu, LocalDate.of(2999, 1, 1));
+            em.persist(partie);
+            terminees.add(partie);
+        }
+        Partie active = new Partie(premierJeu, LocalDate.of(2999, 1, 2));
+        active.setStatut(StatutPartie.EN_COURS);
+        em.persist(active);
+        em.flush();
+        em.clear();
+
+        List<Partie> recentes = repertoire.findByStatutOrderByDatePartieDescIdDesc(StatutPartie.TERMINEE,
+                PageRequest.of(0, 5));
+
+        assertThat(recentes).extracting(Partie::getId).containsExactly(
+                terminees.get(5).getId(), terminees.get(4).getId(), terminees.get(3).getId(),
+                terminees.get(2).getId(), terminees.get(1).getId());
+        assertThat(recentes).extracting(partie -> partie.getJeu().getNom())
+                .contains(premierJeu.getNom(), secondJeu.getNom());
+    }
+
+    @Test
+    @Transactional
+    void selectionneTroisScoresDistinctsEtTousLesJoueursExAequo() {
+        Jeu jeu = new Jeu(unique("Podium"));
+        em.persist(jeu);
+        Joueur premier = new Joueur(unique("Premier"));
+        Joueur egalite = new Joueur(unique("Egalite"));
+        Joueur autreEgalite = new Joueur(unique("AutreEgalite"));
+        Joueur derniereEgalite = new Joueur(unique("DerniereEgalite"));
+        Joueur deuxieme = new Joueur(unique("Deuxieme"));
+        Joueur troisieme = new Joueur(unique("Troisieme"));
+        Joueur sansVictoire = new Joueur(unique("Sans victoire"));
+        Joueur anonymise = new Joueur(unique("Anonyme"));
+        anonymise.anonymiser();
+        for (Joueur joueur : List.of(premier, egalite, autreEgalite, derniereEgalite, deuxieme, troisieme, sansVictoire, anonymise)) {
+            em.persist(joueur);
+        }
+        for (int index = 0; index < 3; index++) {
+            Partie partie = new Partie(jeu, LocalDate.of(2026, 1, index + 1));
+            em.persist(partie);
+            for (Joueur joueur : List.of(premier, egalite, autreEgalite, derniereEgalite, deuxieme, troisieme, sansVictoire, anonymise)) {
+                Participation participation = new Participation(partie, joueur);
+                participation.setGagnant(joueur == premier || joueur == egalite || joueur == autreEgalite
+                    || joueur == derniereEgalite || joueur == anonymise
+                        || joueur == deuxieme && index < 2 || joueur == troisieme && index < 1);
+                em.persist(participation);
+            }
+        }
+        em.flush();
+
+        List<Long> scores = statistiques.scoresPodium(jeu.getId(), PageRequest.of(0, 3));
+        List<Joueur> podium = statistiques.joueursPodium(jeu.getId(), 3L, PageRequest.of(0, 3));
+
+        assertThat(scores).containsExactly(3L, 2L, 1L);
+        assertThat(podium).extracting(Joueur::getNom).containsExactly(autreEgalite.getNom(),
+            derniereEgalite.getNom(), egalite.getNom());
+        assertThat(statistiques.nombreJoueursPodium(jeu.getId(), 3L)).isEqualTo(4);
     }
 
     @Test

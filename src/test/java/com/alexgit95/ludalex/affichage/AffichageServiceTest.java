@@ -122,7 +122,7 @@ class AffichageServiceTest {
         assertThat(etat.type()).isEqualTo(EtatAffichage.Type.EN_COURS);
         assertThat(etat.qrSvg()).isEqualTo("<svg>qr</svg>");
         assertThat(etat.vue().participations()).hasSize(2);
-        assertThat(etat.images()).isEmpty();
+        assertThat(etat.images()).containsExactly("/diaporama/a.svg", "/diaporama/b.svg");
         verify(codeQr).svg("https://ludalex.example.org/fin/CLAIR");
         verify(qr, never()).regenerer(any());
         verify(repertoire, never()).terminesDepuis(any(), any());
@@ -224,5 +224,18 @@ class AffichageServiceTest {
         assertThat(premiere).isEqualTo(seconde).isNotEqualTo(apresRenouvellement).isNotEqualTo(veille);
         assertThat(apresRenouvellement).isNotEqualTo(veille);
         assertThat(premiere).startsWith("EN_COURS:5:").doesNotContain("CLAIR");
+    }
+
+    @Test
+    void lesModificationsDesDonneesInvalidantLaVueNeRenouvellentPasLeQr() {
+        Partie partie = partie(5L, StatutPartie.EN_COURS);
+        when(enCours.active()).thenReturn(Optional.of(vue(partie, null, joueur(1, "Anne"))));
+        when(qr.obtenir(partie)).thenReturn("CLAIR");
+        String signature = service.etat(ORIGINE, false).signature();
+
+        service.donneesModifiees();
+
+        assertThat(service.etat(ORIGINE, false).signature()).isNotEqualTo(signature);
+        verify(qr, never()).regenerer(any());
     }
 }

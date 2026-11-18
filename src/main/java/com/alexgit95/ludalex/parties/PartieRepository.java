@@ -36,7 +36,11 @@ public interface PartieRepository extends JpaRepository<Partie, Long> {
     List<Partie> trouverActives();
 
     /** Dernières parties d'un statut donné pour un jeu (la taille de la page borne le résultat). */
+        @EntityGraph(attributePaths = "jeu")
     List<Partie> findByJeuIdAndStatutOrderByDatePartieDescIdDesc(Long jeuId, StatutPartie statut, Pageable pageable);
+
+        @EntityGraph(attributePaths = "jeu")
+        List<Partie> findByStatutOrderByDatePartieDescIdDesc(StatutPartie statut, Pageable pageable);
 
     /** Lieux déjà saisis commençant par le motif (déjà en minuscules et échappé avec « ! »). */
     @Query("select distinct p.lieu from Partie p where p.lieu is not null "

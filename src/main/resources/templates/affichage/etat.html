@@ -9,7 +9,8 @@
 
     <th:block th:switch="${etat.type.name()}">
 
-        <section th:case="'EN_COURS'" class="partie-en-cours" th:with="pres=${etat.presentation}">
+        <div th:case="'EN_COURS'" class="rotation" id="rotation" th:with="pres=${etat.presentation}">
+        <section class="partie-en-cours" data-vue="combat">
             <img th:if="${etat.vue.jeu.image != null}" class="fond-jeu" th:src="${etat.vue.jeu.image.url}"
                   th:attr="data-secours=${copiesImages[etat.vue.jeu.image.url]}"
                   alt="" aria-hidden="true" data-retirer onerror="repliImage(this)">
@@ -39,11 +40,46 @@
                 </th:block>
                 <p class="ensemble" th:if="${pres.ensemble}">Ensemble</p>
             </div>
-            <div class="qr">
-                <div class="qr-code" th:utext="${etat.qrSvg}"></div>
-                <p>Scannez pour terminer la partie</p>
+        </section>
+        <section class="veille vue-diaporama" data-vue="image" hidden>
+            <div id="diaporama" class="diaporama" th:attr="data-images=${#strings.listJoin(etat.images, '|')}">
+                <div class="couche"></div><div class="couche"></div>
+                <h1 class="veille-vide" hidden>LUDALEX</h1>
             </div>
         </section>
+        <section class="historique-affichage" data-vue="jeu" th:if="${!historique.jeu.empty}" hidden>
+            <h1 th:text="${etat.vue.jeu.nom}">Jeu</h1>
+            <div class="historique-contenu">
+                <div class="podium" th:if="${!historique.podium.empty}">
+                    <div class="rang" th:each="rang : ${historique.podium}" th:attr="data-rang=${rang.position}">
+                        <div class="rang-titre"><strong th:text="${rang.position}">1</strong>
+                            <span th:if="${rang.position == 1 and rang.victoires > 0}">Champion</span>
+                            <span th:text="${rang.victoires + ' victoire(s)'}">0 victoire(s)</span>
+                        </div>
+                        <ul class="rang-joueurs">
+                            <li th:each="joueur : ${rang.joueurs}">
+                                <img class="avatar" th:src="${joueur.avatar != null} ? ${joueur.avatar.url} : '/icons/defaut.svg'"
+                                     th:attr="data-secours=${joueur.avatar != null ? copiesImages[joueur.avatar.url] : null}"
+                                     alt="" onerror="repliImage(this)">
+                                <span th:text="${joueur.nom}">Joueur</span>
+                            </li>
+                        </ul>
+                        <p class="rang-autres" th:if="${rang.autres > 0}"
+                           th:text="${'+' + rang.autres + (rang.autres == 1 ? ' autre ex æquo' : ' autres ex æquo')}">+1 autre ex æquo</p>
+                    </div>
+                </div>
+                <div th:replace="~{affichage/etat :: historique(${historique.jeu}, false)}"></div>
+            </div>
+        </section>
+        <section class="historique-affichage" data-vue="global" th:if="${!historique.global.empty}" hidden>
+            <h1>Dernières parties</h1>
+            <div th:replace="~{affichage/etat :: historique(${historique.global}, true)}"></div>
+        </section>
+        <div class="qr qr-commun">
+            <div class="qr-code" th:utext="${etat.qrSvg}"></div>
+            <p>Scannez pour terminer la partie</p>
+        </div>
+        </div>
 
         <section th:case="'EN_PAUSE'" class="partie-en-pause">
             <img th:if="${etat.vue.jeu.image != null}" class="fond-jeu" th:src="${etat.vue.jeu.image.url}"
@@ -83,15 +119,33 @@
         </section>
 
         <section th:case="*" class="veille">
-            <div th:if="${!etat.images.empty}" id="diaporama" class="diaporama"
-                 th:attr="data-images=${#strings.listJoin(etat.images, '|')}">
+            <div id="diaporama" class="diaporama" th:attr="data-images=${#strings.listJoin(etat.images, '|')}">
                 <div class="couche"></div>
                 <div class="couche"></div>
+                <h1 class="veille-vide" hidden>LUDALEX</h1>
             </div>
-            <h1 th:if="${etat.images.empty}" class="veille-vide">LUDALEX</h1>
         </section>
 
     </th:block>
+</div>
+<div th:fragment="historique(lignes, global)" class="historique-liste">
+    <h2>Dernières parties</h2>
+    <ol>
+        <li th:each="ligne : ${lignes}">
+            <div class="historique-entete">
+                <time th:text="${#temporals.format(ligne.partie.datePartie, 'dd/MM/yyyy')}">01/01/2026</time>
+                <strong th:if="${global}" th:text="${ligne.partie.jeu.nom}">Jeu</strong>
+                <span th:if="${ligne.partie.resultatCooperatif != null}"
+                      th:text="${ligne.partie.resultatCooperatif.name() == 'VICTOIRE'} ? 'Victoire collective' : 'Défaite collective'">Victoire</span>
+            </div>
+            <ul class="historique-joueurs">
+                <li th:each="participation : ${ligne.participations}" th:classappend="${participation.gagnant} ? 'gagnant'">
+                    <span th:text="${participation.joueur.nom}">Joueur</span>
+                    <strong th:if="${participation.gagnant and ligne.partie.resultatCooperatif == null}"> · gagnant</strong>
+                </li>
+            </ul>
+        </li>
+    </ol>
 </div>
 </body>
 </html>

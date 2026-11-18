@@ -30,6 +30,7 @@ import com.alexgit95.ludalex.parties.LancementSaisie;
 import com.alexgit95.ludalex.parties.Partie;
 import com.alexgit95.ludalex.parties.PartieEnCoursService;
 import com.alexgit95.ludalex.parties.PartieRepository;
+import com.alexgit95.ludalex.parties.PartieSaisie;
 import com.alexgit95.ludalex.parties.PartieService;
 import com.alexgit95.ludalex.parties.ResultatCooperatif;
 import com.alexgit95.ludalex.parties.TokenFinService;
@@ -107,9 +108,8 @@ class AffichageControllerTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"diaporama\"")))
                 .andReturn().getResponse().getContentAsString();
 
-        assertThat(html).contains("data-images=\"/diaporama/chateau.svg|/diaporama/menhirs.svg|"
-                + "/diaporama/noeud-celtique.svg|/diaporama/village.svg\"")
-                .contains("/js/htmx.min.js").contains("/js/affichage.js").contains("hx-get=\"/affichage/etat\"")
+        assertThat(html).contains("data-images=")
+            .contains("/js/htmx.min.js").contains("/js/affichage.js").contains("hx-get=\"/affichage/etat\"")
                 .contains("hx-trigger=\"every 3s\"").doesNotContain("<svg");
     }
 
@@ -124,7 +124,81 @@ class AffichageControllerTest {
 
         assertThat(html).contains(jeu.getNom()).contains(anne.getNom()).contains(marc.getNom())
                 .contains("<svg").contains("Scannez pour terminer la partie").contains("class=\"vs\"")
-                .contains("/icons/defaut.svg").doesNotContain("data-images").doesNotContain("fond-jeu");
+            .contains("/icons/defaut.svg").contains("data-images").contains("qr-commun")
+            .doesNotContain("fond-jeu");
+    }
+
+        @Test
+        void afficheLesHistoriquesEtLePodiumEtLesActualiseSansChangerLeToken() throws Exception {
+        Jeu jeu = jeu("Podium", false);
+        Joueur anne = joueur("Anne");
+        Joueur marc = joueur("Marc");
+        Partie ancienne = parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+            List.of(anne.getId(), marc.getId()), null, List.of(anne.getId()), null, null, null, null));
+        Partie active = lancer(jeu, anne, marc);
+        String html = page();
+        String signature = signature(html);
+        String token = qr.courant(active.getId()).orElseThrow();
+
+        assertThat(html).contains("data-vue=\"jeu\"").contains("data-vue=\"global\"")
+            .contains("class=\"podium\"").contains("Champion").contains("gagnant")
+            .contains(anne.getNom()).contains(marc.getNom());
+
+        parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now(), null,
+            List.of(anne.getId(), marc.getId()), null, List.of(marc.getId()), null, null, null, null));
+        String fragment = mvc.perform(get("/affichage/etat").param("signature", signature))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+        assertThat(fragment).contains("data-rang=\"1\"").contains(anne.getNom()).contains(marc.getNom());
+        assertThat(qr.courant(active.getId())).contains(token);
+        assertThat(tokens.verifier(token)).isPresent();
+
+        String signatureActualisee = signature(fragment);
+        parties.modifier(ancienne.getId(), new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+            List.of(anne.getId(), marc.getId()), null, List.of(marc.getId()), null, null, null, null));
+        String apresModification = mvc.perform(get("/affichage/etat").param("signature", signatureActualisee))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertThat(apresModification).contains("2 victoire(s)");
+        assertThat(qr.courant(active.getId())).contains(token);
+        }
+
+        @Test
+        void lesHistoriquesAffichentLeResultatCooperatifEtLaSuppressionActualiseLaVue() throws Exception {
+        Jeu jeu = jeu("Cooperatif", true);
+        Joueur anne = joueur("Anne");
+        Partie ancienne = parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+            List.of(anne.getId()), null, null, null, null, null, ResultatCooperatif.DEFAITE));
+        lancer(jeu, anne);
+        String html = page();
+        String signature = signature(html);
+
+        assertThat(html).contains("Défaite collective").contains("data-vue=\"jeu\"")
+            .doesNotContain("Champion");
+        parties.supprimer(ancienne.getId());
+        String fragment = mvc.perform(get("/affichage/etat").param("signature", signature))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertThat(fragment).doesNotContain("data-vue=\"jeu\"");
+        }
+
+    @Test
+    void limiteLesExAequoVisiblesEtIndiqueLesAutres() throws Exception {
+        Jeu jeu = jeu("Egalites", true);
+        Joueur alice = joueur("Alice");
+        Joueur benoit = joueur("Benoit");
+        Joueur claire = joueur("Claire");
+        Joueur david = joueur("David");
+        Joueur elise = joueur("Elise");
+        List<Long> ids = List.of(alice.getId(), benoit.getId(), claire.getId(), david.getId(), elise.getId());
+        parties.declarer(new PartieSaisie(jeu.getId(), java.time.LocalDate.now().minusDays(1), null,
+                ids, null, null, null, null, null, ResultatCooperatif.VICTOIRE));
+        lancer(jeu, alice);
+
+        String html = page();
+        Matcher joueursPodium = Pattern.compile("<ul class=\"rang-joueurs\">(.*?)</ul>", Pattern.DOTALL).matcher(html);
+        assertThat(joueursPodium.find()).isTrue();
+        assertThat(joueursPodium.group(1)).contains(alice.getNom(), benoit.getNom(), claire.getNom())
+                .doesNotContain(david.getNom(), elise.getNom());
+        assertThat(html).contains("+2 autres ex æquo");
     }
 
     @Test

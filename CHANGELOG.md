@@ -2,6 +2,19 @@
 
 Format basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/). La version est identique dans le `pom.xml`.
 
+## [5.0.0] - 2026-11-18
+
+### Added
+- Écran Affichage : historiques récents du jeu et tous jeux, et podium des trois premiers rangs par nombre de victoires avec égalités, trois joueurs visibles au maximum par rang, compteur des autres ex æquo, révélation progressive et respect du mouvement réduit.
+- Chargement borné des parties, participations en lot et classement agrégé ; actualisation après modification des données sans recalcul à chaque interrogation.
+
+### Changed
+- Pendant une partie, rotation de vues de 10 secondes avec images intercalées et QR de fin de partie toujours visible ; cache statique PWA `ludalex-statique-5.0.0`.
+- Le diaporama sélectionne les fichiers `portrait_` en portrait et les autres en paysage, avec fond LUDALEX en l'absence d'image adaptée.
+
+### [BREAKING CHANGE]
+- L'écran VS n'est plus permanent pendant une partie et les images `portrait_` ne sont plus affichées en paysage. **Migration** : préfixer les images destinées au portrait par `portrait_`, conserver les autres pour le paysage et reconstruire l'image Docker. Aucun changement de schéma ni de sauvegarde.
+
 ## [4.0.0] - 2026-11-13
 
 ### Added

@@ -3,13 +3,18 @@ package com.alexgit95.ludalex.parties;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexgit95.ludalex.jeux.Jeu;
 import com.alexgit95.ludalex.images.CopieImage;
+import com.alexgit95.ludalex.joueurs.Joueur;
+import com.alexgit95.ludalex.statistiques.StatistiqueRepository;
 import java.time.Instant;
 
 import jakarta.persistence.EntityManager;
@@ -25,6 +30,39 @@ class VariantesSqliteTest {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+        @Autowired
+        private StatistiqueRepository statistiques;
+
+        @Autowired
+        private PartieRepository parties;
+
+        @Test
+        @Transactional
+        void interrogeLesHistoriquesEtLePodiumAvecSQLite() {
+        Jeu jeu = new Jeu("Podium SQLite");
+        Joueur gagnant = new Joueur("Gagnant SQLite");
+        Joueur second = new Joueur("Second SQLite");
+        entityManager.persist(jeu);
+        entityManager.persist(gagnant);
+        entityManager.persist(second);
+        Partie partie = new Partie(jeu, LocalDate.of(2026, 1, 1));
+        entityManager.persist(partie);
+        Participation victoire = new Participation(partie, gagnant);
+        victoire.setGagnant(true);
+        entityManager.persist(victoire);
+        entityManager.persist(new Participation(partie, second));
+        entityManager.flush();
+
+        List<Long> scores = statistiques.scoresPodium(jeu.getId(), PageRequest.of(0, 3));
+
+        assertThat(scores).containsExactly(1L, 0L);
+        assertThat(statistiques.joueursPodium(jeu.getId(), 1L, PageRequest.of(0, 3)))
+            .extracting(Joueur::getId).containsExactly(gagnant.getId());
+        assertThat(statistiques.nombreJoueursPodium(jeu.getId(), 0L)).isEqualTo(1);
+        assertThat(parties.findByStatutOrderByDatePartieDescIdDesc(StatutPartie.TERMINEE, PageRequest.of(0, 5)))
+            .extracting(Partie::getId).contains(partie.getId());
+        }
 
     @Test
     @Transactional
